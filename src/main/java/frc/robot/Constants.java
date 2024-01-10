@@ -38,17 +38,29 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
       new Translation2d(-kWheelBase / 2, -kTrackWidth / 2), //back left
       new Translation2d(-kWheelBase / 2, kTrackWidth / 2)); //back right
 
+//start front front left to front right to back right and all drives then all steers then all absolutes
 
+    public static final int kFrontLeftDriveMotorPort = 1;
+    public static final int kFrontRightDriveMotorPort = 2;
+    public static final int kBackRightDriveMotorPort = 3;
+    public static final int kBackLeftDriveMotorPort = 4;
 
-    public static final int kFrontLeftDriveMotorPort = 3;
-    public static final int kBackLeftDriveMotorPort = 11;
-    public static final int kFrontRightDriveMotorPort = 6;
-    public static final int kBackRightDriveMotorPort = 9;
-
-    public static final int kFrontLeftTurningMotorPort = 2;
-    public static final int kBackLeftTurningMotorPort = 12;
+    public static final int kFrontLeftTurningMotorPort = 5;
+    public static final int kBackLeftTurningMotorPort = 6;
     public static final int kFrontRightTurningMotorPort = 7;
-    public static final int kBackRightTurningMotorPort = 10;
+    public static final int kBackRightTurningMotorPort = 8;
+    
+    public static final int kFrontLeftDriveAbsoluteEncoderPort = 9;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 10;
+    public static final int kFrontRightDriveAbsoluteEncoderPort = 11;
+    public static final int kBackRightDriveAbsoluteEncoderPort = 12;
+    
+
+    //TODO fix these
+    public static final double kBRDegrees = 9.405; //332.31
+    public static final double kBLDegrees = 294.875; //295.92
+    public static final double kFLDegrees = 68.82; //72.85
+    public static final double kFRDegrees = 242.93; //278.31
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;
@@ -60,27 +72,18 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final boolean kFrontRightDriveEncoderReversed = false;
     public static final boolean kBackRightDriveEncoderReversed = false;
 
-    public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
-    public static final int kFrontRightDriveAbsoluteEncoderPort = 5;
-    public static final int kBackRightDriveAbsoluteEncoderPort = 8;
-
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-    public static final double kBRDegrees = 9.405; //332.31
-    public static final double kBLDegrees = 294.875; //295.92
-    public static final double kFLDegrees = 68.82; //72.85
-    public static final double kFRDegrees = 242.93; //278.31
  
 
-    public static final double kPhysicalMaxSpeedMetersPerSecond = 4.4196;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 4.4196 * Math.PI;
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 4.572;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = kPhysicalMaxSpeedMetersPerSecond * Math.PI;
 
 
-    //4 is medium, 2.75 is pretty fast, >2 is to fast. <4 is to slow
+    
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.35;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
@@ -107,18 +110,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
 //Max speed
     public static final class OIConstants {
-      public static final int kDriverControllerPort = 1;
       public static final int kOPControllerPort = 1;
-      public static final int kPulleyStopPort = 3;
-      public static final int kliftController = 2;
-      public static final int kDriverStickPort = 0;
-      public static final int kThetaStickPort = 4;
-
-      public static final int kDriverYAxis = 1;
-      public static final int kDriverXAxis = 0;
-      public static final int kDriverRotAxis = 4;
-      public static final int kDriverFieldOrientedButtonIdx = 1;
-
       public static final double kDeadband = 0.09;
   }
   public static final class AutoConstants {
@@ -140,14 +132,30 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
 
   public static final class PneumaticsConstants {
-    //Intake numbers 5+1
-     public static final int L_INTAKE_IN = 7;
-     public static final int L_INTAKE_OUT = 2; //correct //1
-  
-    //Extension number 7+2
- public static final int EXTENSION_IN = 1;
- public static final int EXTENSION_OUT = 6;
- 
-
+    //TODO Figure these out
    }
+
+public static final class intakeConstants {
+//TODO Change these cause they are gonna be wrong
+  public static final int intakePair1Encoder = 13;
+  public static final int intakePair2Encoder = 14;
+  public static final int handoffEncoder = 15;
+
+  public static final double ramp_rate = 0.5;
+
+  public static final boolean pair1Inverted = false;
+  public static final boolean pair2Inverted = false;
+  public static final boolean handoffInverted = false;
+
+  public static final double kP_Intake = 0.05;
+  public static final double kI_Intake = 0;
+  public static final double kD_Intake = 0;
+
+  public static final double kP_Handoff = 0.05;
+  public static final double kI_Handoff = 0;
+  public static final double kD_Handoff = 0;
+
+}
+
+
 }
