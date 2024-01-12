@@ -26,6 +26,7 @@ public class Autos extends Command {
         this.s_Swerve= s_Swerve;
         this.d_Command = d_Command;
         this.p_sub = p_sub;
+        addRequirements(s_Swerve);
 
             
         // All my named commands
