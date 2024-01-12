@@ -48,7 +48,6 @@ public class DriveCommand extends Command{
     public void initialize() {
      swerveSubsystem.faceAllFoward();
 
-
     }
 
     //For pathplanner setup
@@ -117,7 +116,15 @@ public class DriveCommand extends Command{
         }
         // // 6. Output each module states to wheels
         swerveSubsystem.setModuleStates(chassisSpeeds);
+
+
+        
+
     }
+
+
+   
+
 
 
     @Override
