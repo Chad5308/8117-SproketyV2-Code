@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.w3c.dom.ls.LSLoadEvent;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -33,21 +35,24 @@ public double xSpeed, ySpeed, turningSpeed, thetaSpeed;
     @Override
     public void initialize(){
         s_Swerve.faceAllFoward();
-        LL_Sub.setPID();
+        LL_Sub.setThetaPID();
+        LL_Sub.setLinearPID();
     }
 
     @Override
     public void execute(){
         ChassisSpeeds limelightSpeeds;
-       turningSpeed = LL_Sub.turningSpeed;
+       this.turningSpeed = LL_Sub.turningSpeed;
+       this.xSpeed = LL_Sub.xSpeed;
+       this.ySpeed = LL_Sub.ySpeed;
 
         xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        // thetaSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
 
 
-        limelightSpeeds = new ChassisSpeeds(0, 0, turningSpeed);
+        limelightSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
         s_Swerve.setModuleStates(limelightSpeeds);
     }
 

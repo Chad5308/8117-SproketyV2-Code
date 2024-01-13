@@ -25,6 +25,7 @@ public class DriveCommand extends Command{
      public double xSpeed;
      public double turningSpeed;
      public CameraServer frontCamera;
+    public boolean limelightTracking = false;
 
 
 
@@ -110,9 +111,12 @@ public class DriveCommand extends Command{
         if (fieldOriented) {
             // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed, swerveSubsystem.geRotation2d());
-        } else {
+        } else if (limelightTracking = true){
             // Relative to robot. 
             chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
+        } else {
+            chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
+
         }
         // // 6. Output each module states to wheels
 

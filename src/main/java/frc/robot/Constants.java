@@ -128,6 +128,11 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
             new TrapezoidProfile.Constraints(
                     kMaxAngularSpeedRadiansPerSecond,
                     kMaxAngularAccelerationUnitsPerSecond);
+    public static final TrapezoidProfile.Constraints kLinearConstraints = 
+            new TrapezoidProfile.Constraints(
+                kMaxSpeedMetersPerSecond,
+                kMaxAccelerationMetersPerSecondSquared
+            );
   }
 
 
@@ -158,7 +163,7 @@ public static final class intakeConstants {
 }
 
 public static final class limelightConstants{
-public static final double kP = 3.5;
+public static final double kP = 0.0;
 public static final double kI = 0;
 public static final double kD = 0;
 
