@@ -5,13 +5,12 @@ import java.util.Optional;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.DoubleArraySubscriber;
-import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -23,12 +22,13 @@ public IntegerSubscriber pipeline;
 public IntegerPublisher pipelinePublisher;
 public double targetHeight = 36.5;
 public double cameraHeight = 39;
-public double xPos, yPos, hasTargets, targetNum, xSpeed, ySpeed, turningSpeed;
+public double xAng, yAng, hasTargets, targetNum, xSpeed, ySpeed, turningSpeed;
 public double correctionX, correctionY, correctionT;
 public double distanceX, distanceY;
 public double[] localizedPose;
 public ProfiledPIDController thetaPIDController;
 public ProfiledPIDController linearPIDController;
+public boolean autoAlign = false;
 
 
 
@@ -61,8 +61,13 @@ public ProfiledPIDController linearPIDController;
         thetaPIDController.setTolerance(Math.toRadians(5));
         }
     public void setLinearPID(){
-        linearPIDController.setGoal(1.25);
-        linearPIDController.setTolerance(1.5);
+        linearPIDController.setGoal(16); //inches
+        linearPIDController.setTolerance(20); //inches
+    }
+    public Command autoAlignCommand(){
+        return runOnce(() -> {
+            autoAlign = true;
+        });
     }
     
 
@@ -75,23 +80,21 @@ public void periodic(){
         }
     
  // double currentTargetX = Math.toRadians(-xPos.get());
-xPos = Math.toRadians(networkTables.getEntry("tx").getDouble(0));
-yPos = Math.toRadians(networkTables.getEntry("ty").getDouble(0));
+xAng = Math.toRadians(networkTables.getEntry("tx").getDouble(0));
+yAng = Math.toRadians(networkTables.getEntry("ty").getDouble(0));
 hasTargets = networkTables.getEntry("tv").getDouble(0);
 targetNum = networkTables.getEntry("tid").getDouble(0);
-distanceX = Math.abs(((targetHeight-cameraHeight) / Math.tan((yPos)) * 0.0235));
-distanceY = distanceX * Math.tan(xPos);
+distanceX = (targetHeight-cameraHeight) / (Math.tan(yAng));//inches
+distanceY = distanceX * Math.tan(xAng);//inches
 
  
- 
-
 //  currentTargetY = Math.toRadians(yPos);
-correctionX = linearPIDController.calculate(distanceX);
-correctionY = linearPIDController.calculate(distanceY);
-correctionT = thetaPIDController.calculate(xPos);
+correctionX = linearPIDController.calculate(distanceX);//inches
+correctionY = linearPIDController.calculate(distanceY);//inches
+correctionT = thetaPIDController.calculate(xAng);//radians
 
-// if(!pidController.atSetpoint()){
-//     turningSpeed = pidController.getSetpoint().velocity + correction;
+// if(!thetaPIDController.atSetpoint()){
+//     turningSpeed = thetaPIDController.getSetpoint().velocity + correctionT;
 // }else {
 //     turningSpeed = 0;
 // }
@@ -112,21 +115,10 @@ SmartDashboard.putNumber("Distance Y", distanceY);
 SmartDashboard.putNumber("Correction Theta", turningSpeed);
 SmartDashboard.putNumber("Correction X", xSpeed);
 SmartDashboard.putNumber("Correction Y", ySpeed);
-SmartDashboard.putNumber("TX Value", xPos);
-SmartDashboard.putNumber("TY Value", yPos);
+SmartDashboard.putNumber("TX Value", xAng);
+SmartDashboard.putNumber("TY Value", yAng);
 
 
 }
 
 }
-
-// NetworkTable table = NetworkTableInstance.getDefault().getTable("limelight");
-// NetworkTableEntry tx = table.getEntry("tx");
-// NetworkTableEntry ty = table.getEntry("ty");
-// NetworkTableEntry ta = table.getEntry("ta");
-
-// //read values periodically
-// double x = tx.getDouble(0.0);
-// double y = ty.getDouble(0.0);
-// double area = ta.getDouble(0.0);
-

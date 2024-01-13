@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
-import frc.robot.commands.LimelightCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
@@ -38,21 +37,16 @@ public class RobotContainer {
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
-  public DriveCommand d_Command = new DriveCommand(s_Swerve, opController); 
   public PneumaticsSubsystem p_sub = new PneumaticsSubsystem();
   public IntakeSubsystem int_sub = new IntakeSubsystem();
   private SendableChooser<Command> autoChooser;
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
-  public LimelightCommand LL_com = new LimelightCommand(s_Swerve, LL_sub);
+  public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController); 
 
-
-
-//TODO see if this works now
 
 
 public RobotContainer() {
-  // s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, opController));
-  s_Swerve.setDefaultCommand(new LimelightCommand(s_Swerve, LL_sub));
+  s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, LL_sub, opController));
   configureBindings();
   
   AutoBuilder.configureHolonomic(
@@ -91,6 +85,6 @@ public RobotContainer() {
     opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
     opController.button(7).toggleOnTrue(s_Swerve.resetWheels());
-
+    opController.button(1).onTrue(LL_sub.autoAlignCommand());
   }
 }

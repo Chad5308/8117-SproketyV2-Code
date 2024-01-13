@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DriveCommand extends Command{
@@ -15,28 +16,24 @@ public class DriveCommand extends Command{
 
     
     private final SwerveSubsystem swerveSubsystem;
+    public final LimelightSubsystem LL_Sub;
     public final CommandXboxController opController;
-    // private final Joystick driveStick;
-    // private final Joystick thetaStick;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=false;
-     public double ySpeed;
-     public double xSpeed;
-     public double turningSpeed;
-     public CameraServer frontCamera;
+     public double ySpeed, xSpeed, turningSpeed;
+     public double ll_ySpeed, ll_xSpeed, ll_turningSpeed;
     public boolean limelightTracking = false;
 
 
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, CommandXboxController opController) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, LimelightSubsystem LL_Sub, CommandXboxController opController) {
                 this.swerveSubsystem = swerveSubsystem;
+                this.LL_Sub = LL_Sub;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
-                addRequirements(swerveSubsystem);
-                // thetaStick = new Joystick(3);
-                // driveStick = new Joystick(0);
+                addRequirements(swerveSubsystem, LL_Sub);
                 this.opController = opController;
 
             CameraServer.startAutomaticCapture();
@@ -48,7 +45,8 @@ public class DriveCommand extends Command{
     @Override
     public void initialize() {
      swerveSubsystem.faceAllFoward();
-
+     LL_Sub.setThetaPID();
+     LL_Sub.setLinearPID();
     }
 
     //For pathplanner setup
@@ -69,56 +67,32 @@ public class DriveCommand extends Command{
         xSpeed = opController.getLeftX() / 1;//1.35
         ySpeed = opController.getLeftY() / 1;//1.35
         turningSpeed = opController.getRightX();//1.85
-        SmartDashboard.putBoolean("fieldOriented", fieldOriented);
         fieldOriented = swerveSubsystem.fieldOriented;
 
-        
-
-       
-//flight stick init and debugging code. Alt drive method
-    //     xSpeed = driveStick.getX()*-1;
-    //     ySpeed = driveStick.getY()*-1;
-    //     turningSpeed = thetaStick.getX()*-1;
-    //    SmartDashboard.putNumber("Left Stick X", driveStick.getX());
-    //     SmartDashboard.putNumber("Left Stick Y", driveStick.getY());
-    //     SmartDashboard.putNumber("turningSpeed", turningSpeed);
-        // if(driveStick.getRawButtonPressed(4)) {
-        //         swerveSubsystem.zeroHeading();
-        // }
-     
-        // if(driveStick.getRawButtonPressed(3)) {
-//     fieldOriented = swerveSubsystem.fieldOriented;
-// }
+        ll_xSpeed = LL_Sub.xSpeed;
+        ll_ySpeed = LL_Sub.ySpeed;
+        ll_turningSpeed = LL_Sub.turningSpeed;
 
 
-        // 2. Apply deadband
+        SmartDashboard.putBoolean("fieldOriented", fieldOriented);
+
          xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
          ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
          turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
-        // 3. Make the driving smoother
         xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
-        // // 2. Apply deadband again
-         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
-         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
-        // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
         if (fieldOriented) {
-            // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed, swerveSubsystem.geRotation2d());
         } else if (limelightTracking = true){
-            // Relative to robot. 
-            chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
+            chassisSpeeds = new ChassisSpeeds(ll_xSpeed, ll_ySpeed, ll_turningSpeed);
         } else {
             chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
-
         }
-        // // 6. Output each module states to wheels
 
 
         //TODO uncomment
