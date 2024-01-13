@@ -12,7 +12,8 @@ public class LimelightCommand extends Command{
 public SwerveSubsystem s_Swerve;
 public LimelightSubsystem LL_Sub;
 public final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-public double xSpeed, ySpeed, turningSpeed;
+public double xSpeed, ySpeed, turningSpeed, thetaSpeed;
+
 
 
 
@@ -25,15 +26,25 @@ public double xSpeed, ySpeed, turningSpeed;
         addRequirements(s_swerve, LL_Sub);
     }
 
+   
+
 
 
     @Override
-    public void initialize(){}
+    public void initialize(){
+        s_Swerve.faceAllFoward();
+        LL_Sub.setPID();
+    }
 
     @Override
     public void execute(){
         ChassisSpeeds limelightSpeeds;
-        turningSpeed = LL_Sub.turningSpeed;
+       turningSpeed = LL_Sub.turningSpeed;
+
+        xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        // thetaSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+
 
 
         limelightSpeeds = new ChassisSpeeds(0, 0, turningSpeed);

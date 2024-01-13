@@ -61,7 +61,7 @@ public class DriveCommand extends Command{
     @Override
     public void execute() {
 
-
+ 
         
 
 //Xbox joystick init and debugging code. Main drive method
@@ -115,6 +115,9 @@ public class DriveCommand extends Command{
             chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
         }
         // // 6. Output each module states to wheels
+
+
+        //TODO uncomment
         swerveSubsystem.setModuleStates(chassisSpeeds);
 
 

@@ -6,7 +6,9 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.LimelightCommand;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -40,6 +42,8 @@ public class RobotContainer {
   public PneumaticsSubsystem p_sub = new PneumaticsSubsystem();
   public IntakeSubsystem int_sub = new IntakeSubsystem();
   private SendableChooser<Command> autoChooser;
+  public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
+  public LimelightCommand LL_com = new LimelightCommand(s_Swerve, LL_sub);
 
 
 
@@ -47,7 +51,8 @@ public class RobotContainer {
 
 
 public RobotContainer() {
-  s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, opController));
+  // s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, opController));
+  s_Swerve.setDefaultCommand(new LimelightCommand(s_Swerve, LL_sub));
   configureBindings();
   
   AutoBuilder.configureHolonomic(
@@ -80,10 +85,12 @@ public RobotContainer() {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
+
   
   private void configureBindings() {
     opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
     opController.button(7).toggleOnTrue(s_Swerve.resetWheels());
+
   }
 }

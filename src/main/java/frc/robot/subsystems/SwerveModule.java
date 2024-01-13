@@ -98,10 +98,10 @@ public void stop() {
   CANcoderConfiguration config = new CANcoderConfiguration();
   public double getAbsoluteEncoderDeg(double AEOffset) {
 //TODO See which one of these works
-    // double angle = absoluteEncoder.getPosition().getValueAsDouble();
-    double angle = absoluteEncoder.getAbsolutePosition().getValueAsDouble();
-    angle *= 180 / Math.PI;
+    double angle = absoluteEncoder.getPosition().getValueAsDouble();
+    angle *= 360;
     return angle  * (absoluteEncoderReversed ? -1 : 1) - AEOffset;
+  // return angle  * (absoluteEncoderReversed ? -1 : 1);
   }
   
   //Motor calls
@@ -134,7 +134,6 @@ if (Math.abs(state.speedMetersPerSecond) < 0.01) {stop();return;}
 state = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(gState().angle.getDegrees()));
 driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 turningPidController.setReference(state.angle.getDegrees(), com.revrobotics.CANSparkBase.ControlType.kPosition);
-absoluteEncoder.setPosition(0);
 }
 
 public void wheelFaceForward(double AEOffset) {

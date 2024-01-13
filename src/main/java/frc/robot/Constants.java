@@ -57,20 +57,20 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     
 
     //TODO fix these
-    public static final double kBRDegrees = 9.405; //332.31
-    public static final double kBLDegrees = 294.875; //295.92
-    public static final double kFLDegrees = 68.82; //72.85
-    public static final double kFRDegrees = 242.93; //278.31
+    public static final double kBRDegrees = 96.591;//9.405
+    public static final double kBLDegrees = 26.367;//294.875
+    public static final double kFLDegrees = 158.818;//68.82
+    public static final double kFRDegrees = -26.718;//242.93
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;
     public static final boolean kFrontRightTurningEncoderReversed = false;
     public static final boolean kBackRightTurningEncoderReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = true;
-    public static final boolean kBackLeftDriveEncoderReversed = true;
-    public static final boolean kFrontRightDriveEncoderReversed = false;
-    public static final boolean kBackRightDriveEncoderReversed = false;
+    public static final boolean kFrontLeftDriveEncoderReversed = false;
+    public static final boolean kBackLeftDriveEncoderReversed = false;
+    public static final boolean kFrontRightDriveEncoderReversed = true;
+    public static final boolean kBackRightDriveEncoderReversed = true;
 
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
@@ -158,7 +158,7 @@ public static final class intakeConstants {
 }
 
 public static final class limelightConstants{
-public static final double kP = 0.05;
+public static final double kP = 3.5;
 public static final double kI = 0;
 public static final double kD = 0;
 

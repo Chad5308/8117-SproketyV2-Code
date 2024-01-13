@@ -60,7 +60,7 @@ backRightModule.getPosition()
             start();
 
         this.robot = robot;
-        alliance = robot.alliance;
+        alliance = robot.getAlliance();
     }
 
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
