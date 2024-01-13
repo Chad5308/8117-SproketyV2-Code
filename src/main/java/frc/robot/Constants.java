@@ -40,20 +40,20 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
 //start front front left to front right to back right and all drives then all steers then all absolutes
 
-    public static final int kFrontLeftDriveMotorPort = 1;
-    public static final int kFrontRightDriveMotorPort = 2;
-    public static final int kBackRightDriveMotorPort = 3;
-    public static final int kBackLeftDriveMotorPort = 4;
+    public static final int kFrontLeftDriveMotorPort = 3;
+    public static final int kFrontRightDriveMotorPort = 6;
+    public static final int kBackRightDriveMotorPort = 9;
+    public static final int kBackLeftDriveMotorPort = 11;
 
-    public static final int kFrontLeftTurningMotorPort = 5;
-    public static final int kBackLeftTurningMotorPort = 6;
+    public static final int kFrontLeftTurningMotorPort = 2;
     public static final int kFrontRightTurningMotorPort = 7;
-    public static final int kBackRightTurningMotorPort = 8;
+    public static final int kBackLeftTurningMotorPort = 12;
+    public static final int kBackRightTurningMotorPort = 10;
     
-    public static final int kFrontLeftDriveAbsoluteEncoderPort = 9;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 10;
-    public static final int kFrontRightDriveAbsoluteEncoderPort = 11;
-    public static final int kBackRightDriveAbsoluteEncoderPort = 12;
+    public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
+    public static final int kFrontRightDriveAbsoluteEncoderPort = 5;
+    public static final int kBackRightDriveAbsoluteEncoderPort = 8;
     
 
     //TODO fix these

@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -69,6 +70,27 @@ public final RelativeEncoder handoffEncoder;
 
 
 
+    }
+
+
+    public void runIntake(){
+        intakePair1Motor.set(5);
+        intakePair2Motor.set(5);
+        handoffMotor.set(5);
+    }
+
+    // public Command runIntakeCommand(){
+    // return runOnce(() -> {
+    //         runIntake();
+        
+    // )}
+    // }
+
+
+    public Command runIntakeCommand(){
+        return runOnce(() -> {
+            runIntake();
+        });
     }
 
 }

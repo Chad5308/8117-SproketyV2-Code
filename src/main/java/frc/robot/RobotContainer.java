@@ -5,8 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.Autos;
 import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -15,6 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -36,19 +38,19 @@ public class RobotContainer {
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, opController); 
   public PneumaticsSubsystem p_sub = new PneumaticsSubsystem();
-  public final Autos a_Command = new Autos(robot, s_Swerve, d_Command, p_sub);
+  public IntakeSubsystem int_sub = new IntakeSubsystem();
+  private SendableChooser<Command> autoChooser;
 
 
 
 //TODO see if this works now
-  private SendableChooser<Command> autoChooser = AutoBuilder.buildAutoChooser();
 
+
+public RobotContainer() {
+  s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, opController));
+  configureBindings();
   
-  public RobotContainer() {
-    s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, opController));
-    configureBindings();
-
-    AutoBuilder.configureHolonomic(
+  AutoBuilder.configureHolonomic(
       s_Swerve::getPose, 
       s_Swerve::resetOdometry, 
       d_Command::getSpeeds, 
@@ -60,13 +62,21 @@ public class RobotContainer {
       s_Swerve::allianceCheck,
       s_Swerve);
       
-      // addPeriodic(() -> robot_state_.setAlliance(DriverStation.getAlliance()), 1);
 
       
-    // autoChooser = AutoBuilder.buildAutoChooser();
+    autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);
+
+
+
+    NamedCommands.registerCommand("Run Intake", int_sub.runIntakeCommand());
+    
   }
 
+  public Command testAuto(){
+        return new PathPlannerAuto("Test Auto");
+    }
+  
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
