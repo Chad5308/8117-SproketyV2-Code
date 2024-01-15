@@ -163,9 +163,13 @@ public static final class intakeConstants {
 }
 
 public static final class limelightConstants{
-public static final double kP = 0.0;
-public static final double kI = 0;
-public static final double kD = 0;
+public static final double thetakP = 3.0;
+public static final double thetakI = 0;
+public static final double thetakD = 0;
+
+public static final double linearkP = 0.5;
+public static final double linearkI = 0;
+public static final double linearkD = 0;
 
 }
 

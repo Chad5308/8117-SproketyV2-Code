@@ -46,8 +46,8 @@ public boolean autoAlign = false;
 
         pipeline = networkTables.getIntegerTopic("limelight.getpipe").subscribe(0);
         pipelinePublisher = networkTables.getIntegerTopic("limelight.getpipeline").publish();
-        thetaPIDController = new ProfiledPIDController(Constants.limelightConstants.kP, Constants.limelightConstants.kI, Constants.limelightConstants.kD, Constants.AutoConstants.kThetaControllerConstraints);
-        linearPIDController = new ProfiledPIDController(Constants.limelightConstants.kP, Constants.limelightConstants.kI, Constants.limelightConstants.kD, Constants.AutoConstants.kLinearConstraints);
+        thetaPIDController = new ProfiledPIDController(Constants.limelightConstants.thetakP, Constants.limelightConstants.thetakI, Constants.limelightConstants.thetakD, Constants.AutoConstants.kThetaControllerConstraints);
+        linearPIDController = new ProfiledPIDController(Constants.limelightConstants.linearkP, Constants.limelightConstants.linearkI, Constants.limelightConstants.linearkD, Constants.AutoConstants.kLinearConstraints);
     }
 
     public Optional<Pose2d> getPoseFromAprilTags() {
@@ -78,6 +78,7 @@ public void periodic(){
     } else {
             localizedPose = networkTables.getEntry("botpose_wpiblue").getDoubleArray(new double[] {});
         }
+        
     
  // double currentTargetX = Math.toRadians(-xPos.get());
 xAng = Math.toRadians(networkTables.getEntry("tx").getDouble(0));
@@ -117,7 +118,6 @@ SmartDashboard.putNumber("Correction X", xSpeed);
 SmartDashboard.putNumber("Correction Y", ySpeed);
 SmartDashboard.putNumber("TX Value", xAng);
 SmartDashboard.putNumber("TY Value", yAng);
-
 
 }
 
