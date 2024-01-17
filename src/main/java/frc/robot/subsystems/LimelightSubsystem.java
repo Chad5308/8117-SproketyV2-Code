@@ -20,8 +20,8 @@ public SwerveSubsystem s_swerve;
 public NetworkTable networkTables;
 public IntegerSubscriber pipeline;
 public IntegerPublisher pipelinePublisher;
-public double targetHeight = 36.5;
-public double cameraHeight = 39;
+public double targetHeight = 57.125;
+public double cameraHeight = 47.5;
 public double xAng, yAng, hasTargets, targetNum, xSpeed, ySpeed, turningSpeed;
 public double correctionX, correctionY, correctionT;
 public double distanceX, distanceY;
@@ -85,7 +85,7 @@ xAng = Math.toRadians(networkTables.getEntry("tx").getDouble(0));
 yAng = Math.toRadians(networkTables.getEntry("ty").getDouble(0));
 hasTargets = networkTables.getEntry("tv").getDouble(0);
 targetNum = networkTables.getEntry("tid").getDouble(0);
-distanceX = (targetHeight-cameraHeight) / (Math.tan(yAng));//inches
+distanceX = ((targetHeight-cameraHeight) / (Math.tan(yAng)));//inches
 distanceY = distanceX * Math.tan(xAng);//inches
 
  
@@ -102,13 +102,14 @@ correctionT = thetaPIDController.calculate(xAng);//radians
 
 
 
-
+if(autoAlign == true){
 if(!(thetaPIDController.atSetpoint() && linearPIDController.atSetpoint())){
     xSpeed = linearPIDController.getSetpoint().velocity + correctionX;
     ySpeed = linearPIDController.getSetpoint().velocity + correctionY;
     turningSpeed = thetaPIDController.getSetpoint().velocity + correctionT;
 }else {
     turningSpeed = 0;
+}
 }
 
 SmartDashboard.putNumber("Distance X", distanceX);
