@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,7 +21,7 @@ public class DriveCommand extends Command{
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=false;
      public double ySpeed, xSpeed, turningSpeed;
-     public double ll_ySpeed, ll_xSpeed, ll_turningSpeed;
+     public double ll_zSpeed, ll_xSpeed, ll_turningSpeed;
     public boolean limelightTracking = false;
 
 
@@ -36,7 +35,6 @@ public class DriveCommand extends Command{
                 addRequirements(swerveSubsystem, LL_Sub);
                 this.opController = opController;
 
-            CameraServer.startAutomaticCapture();
             
 
     }
@@ -70,7 +68,7 @@ public class DriveCommand extends Command{
         fieldOriented = swerveSubsystem.fieldOriented;
 
         ll_xSpeed = LL_Sub.xSpeed;
-        ll_ySpeed = LL_Sub.ySpeed;
+        ll_zSpeed = LL_Sub.zSpeed;
         ll_turningSpeed = LL_Sub.turningSpeed;
 
 
@@ -86,11 +84,11 @@ public class DriveCommand extends Command{
 
 
         ChassisSpeeds chassisSpeeds;
-        if (fieldOriented) {
+        if (limelightTracking){
+            chassisSpeeds = new ChassisSpeeds(ll_zSpeed, ll_xSpeed, ll_turningSpeed);
+        } else if(fieldOriented){
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed, swerveSubsystem.geRotation2d());
-        } else if (limelightTracking = true){
-            chassisSpeeds = new ChassisSpeeds(ll_xSpeed, ll_ySpeed, ll_turningSpeed);
-        } else {
+        }else {
             chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
         }
 
