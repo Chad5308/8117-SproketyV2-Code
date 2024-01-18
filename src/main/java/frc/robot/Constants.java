@@ -167,7 +167,7 @@ public static final double thetakP = 3.0;
 public static final double thetakI = 0;
 public static final double thetakD = 0;
 
-public static final double linearkP = 0.005;
+public static final double linearkP = 0.4;
 public static final double linearkI = 0;
 public static final double linearkD = 0;
 

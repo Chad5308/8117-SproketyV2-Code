@@ -68,7 +68,7 @@ public class SwerveModule extends SubsystemBase{
     
     //Steer + Drive Motor Encoder
     driveMotorEncoder = driveMotor.getEncoder();
-    driveMotorEncoder.setPositionConversionFactor( 1/23.58);
+    driveMotorEncoder.setPositionConversionFactor( 1/1);//23.58
     driveMotorEncoder.setVelocityConversionFactor(Constants.ModuleConstants.kDriveEncoderRPM2MeterPerSec);
 
     steerMotorEncoder = steerMotor.getEncoder();

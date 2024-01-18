@@ -125,10 +125,10 @@ backRightModule.getPosition()
 //multiple debugging values are listed here. Names are self explanitory
 
         //Odometer and other gyro values
-       // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+       SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
        SmartDashboard.putNumber("Roll value", getRoll());
         SmartDashboard.putNumber("Robot Heading", getHeading());
-        //SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
+        SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
 
         //AE Degrees Reading
         SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kBLDegrees));

@@ -61,11 +61,11 @@ public boolean autoAlign = false;
 
     public void setThetaPID(){
         thetaPIDController.setGoal(0);
-        thetaPIDController.setTolerance(Math.toRadians(5));
+        thetaPIDController.setTolerance(Math.toRadians(10));
         }
     public void setLinearPID(){
-        ZPIDController.setGoal(1); //inches
-        ZPIDController.setTolerance(0.5); //meters
+        ZPIDController.setGoal(0.75); //inches
+        ZPIDController.setTolerance(0.25); //meters
 
         XPIDController.setGoal(0);
         XPIDController.setTolerance(0.25);
@@ -98,7 +98,7 @@ targetNum = networkTables.getEntry("tid").getDouble(0);
 // distanceX = ((targetHeight-cameraHeight) / (Math.tan(yAng)));//inches
 // distanceZ = distanceX * Math.tan(xAng);//inches
 distanceX = botPose_targetSpace[0];
-distanceZ = botPose_targetSpace[2];
+distanceZ = Math.abs(botPose_targetSpace[2]);
 
  
 correctionX = XPIDController.calculate(distanceX);//meters
@@ -114,14 +114,15 @@ correctionT = thetaPIDController.calculate(xAng);//radians
 
 
 if(autoAlign == true){
-if(!(thetaPIDController.atSetpoint() && ZPIDController.atSetpoint() && XPIDController.atSetpoint())){
-    xSpeed = XPIDController.getSetpoint().velocity + correctionX;
-    zSpeed = ZPIDController.getSetpoint().velocity + correctionZ;
+if(!thetaPIDController.atSetpoint()){
     turningSpeed = thetaPIDController.getSetpoint().velocity + correctionT;
-}else {
-    turningSpeed = 0;
-    autoAlign = false;
 }
+// if(!XPIDController.atSetpoint() && ZPIDController.atSetpoint()){
+//     xSpeed = XPIDController.getSetpoint().velocity + correctionX;
+//     zSpeed = ZPIDController.getSetpoint().velocity + correctionZ;
+//     turningSpeed = 0;
+// }
+  
 }
 
 SmartDashboard.putNumber("Distance X", distanceX);
@@ -131,6 +132,7 @@ SmartDashboard.putNumber("X Speed", zSpeed);
 SmartDashboard.putNumber("Y Speed", xSpeed);
 SmartDashboard.putNumber("TX Value", xAng);
 SmartDashboard.putNumber("TY Value", yAng);
+SmartDashboard.putBoolean("Is command running", autoAlign);
 
 
 // SmartDashboard.putNumber("BotPose X", botPose_targetSpace[0]);

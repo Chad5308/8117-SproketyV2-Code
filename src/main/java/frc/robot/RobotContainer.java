@@ -64,12 +64,11 @@ public RobotContainer() {
 
       
     autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);
+    SmartDashboard.putData("Auto Chooser", autoChooser);    
+  }
 
-
-
-    NamedCommands.registerCommand("Run Intake", int_sub.runIntakeCommand());
-    
+  public void configureAutos(){
+    autoChooser.addOption("Test Auto", testAuto());
   }
 
   public Command testAuto(){
@@ -85,6 +84,6 @@ public RobotContainer() {
     opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
     opController.button(7).toggleOnTrue(s_Swerve.resetWheels());
-    opController.button(1).onTrue(LL_sub.autoAlignCommand());
+    // opController.button(1).onTrue(LL_sub.autoAlignCommand());
   }
 }

@@ -64,12 +64,13 @@ public class DriveCommand extends Command{
 //Xbox joystick init and debugging code. Main drive method
         xSpeed = opController.getLeftX() / 1;//1.35
         ySpeed = opController.getLeftY() / 1;//1.35
-        turningSpeed = opController.getRightX();//1.85
+        turningSpeed = -opController.getRightX();//1.85
         fieldOriented = swerveSubsystem.fieldOriented;
 
         ll_xSpeed = LL_Sub.xSpeed;
         ll_zSpeed = LL_Sub.zSpeed;
         ll_turningSpeed = LL_Sub.turningSpeed;
+        limelightTracking = LL_Sub.autoAlign;
 
 
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
@@ -85,7 +86,7 @@ public class DriveCommand extends Command{
 
         ChassisSpeeds chassisSpeeds;
         if (limelightTracking){
-            chassisSpeeds = new ChassisSpeeds(ll_zSpeed, ll_xSpeed, ll_turningSpeed);
+            chassisSpeeds = new ChassisSpeeds(-ll_zSpeed, -ll_xSpeed, ll_turningSpeed);
         } else if(fieldOriented){
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed, swerveSubsystem.geRotation2d());
         }else {
