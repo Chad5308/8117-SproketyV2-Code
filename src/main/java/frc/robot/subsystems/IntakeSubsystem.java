@@ -1,9 +1,15 @@
 package frc.robot.subsystems;
 
+import org.ejml.ops.ComplexMath_F32;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -11,86 +17,87 @@ import frc.robot.Constants;
 public class IntakeSubsystem extends SubsystemBase{
     
     
-public final CANSparkMax intakePair1Motor;
-public final CANSparkMax intakePair2Motor;
+public final CANSparkMax intLeftMotor;
+public final CANSparkMax intRightMotor;
 public final CANSparkMax handoffMotor;
 
-public final SparkPIDController intakePair1PID;
-public final SparkPIDController intakePair2PID;
+public final SparkPIDController intLeftPID;
+public final SparkPIDController intRightPID;
 public final SparkPIDController handoffPID;
 
-public final RelativeEncoder intakePair1Encoder;
-public final RelativeEncoder intakePair2Encoder;
+public final RelativeEncoder intLeftEncoder;
+public final RelativeEncoder intRightEncoder;
 public final RelativeEncoder handoffEncoder;
+
+public final DoubleSolenoid intakeLift = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.intakeConstants.liftNum, Constants.intakeConstants.dropNum);
+public final Compressor intakeCompressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
 
 
 
 
     public IntakeSubsystem(){
-        intakePair1Motor = new CANSparkMax(Constants.intakeConstants.intakePair1Encoder, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
-        intakePair2Motor = new CANSparkMax(Constants.intakeConstants.intakePair2Encoder, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+        intLeftMotor = new CANSparkMax(Constants.intakeConstants.intLeftEncoder, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
+        intRightMotor = new CANSparkMax(Constants.intakeConstants.intRightEncoder, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
         handoffMotor = new CANSparkMax(Constants.intakeConstants.handoffEncoder, com.revrobotics.CANSparkLowLevel.MotorType.kBrushless);
 
-        intakePair1Motor.restoreFactoryDefaults();
-        intakePair2Motor.restoreFactoryDefaults();
+        intLeftMotor.restoreFactoryDefaults();
+        intRightMotor.restoreFactoryDefaults();
         handoffMotor.restoreFactoryDefaults();
 
-        intakePair1Motor.setInverted(Constants.intakeConstants.pair1Inverted);
-        intakePair2Motor.setInverted(Constants.intakeConstants.pair2Inverted);
+        intLeftMotor.setInverted(Constants.intakeConstants.leftInverted);
+        intRightMotor.setInverted(Constants.intakeConstants.rightInverted);
         handoffMotor.setInverted(Constants.intakeConstants.handoffInverted);
 
-        intakePair1Motor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
-        intakePair2Motor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
+        intLeftMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
+        intRightMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
         handoffMotor.setIdleMode(com.revrobotics.CANSparkBase.IdleMode.kCoast);
 
-        intakePair1Motor.setOpenLoopRampRate(Constants.intakeConstants.ramp_rate);
-        intakePair2Motor.setOpenLoopRampRate(Constants.intakeConstants.ramp_rate);
+        intLeftMotor.setOpenLoopRampRate(Constants.intakeConstants.ramp_rate);
+        intRightMotor.setOpenLoopRampRate(Constants.intakeConstants.ramp_rate);
         handoffMotor.setOpenLoopRampRate(Constants.intakeConstants.ramp_rate);
 
-        intakePair1Encoder = intakePair1Motor.getEncoder();
-        intakePair2Encoder = intakePair2Motor.getEncoder();
+        intLeftEncoder = intLeftMotor.getEncoder();
+        intRightEncoder = intRightMotor.getEncoder();
         handoffEncoder = handoffMotor.getEncoder();
 
-        intakePair1PID = intakePair1Motor.getPIDController();
-        intakePair2PID = intakePair2Motor.getPIDController();
+        intLeftPID = intLeftMotor.getPIDController();
+        intRightPID = intRightMotor.getPIDController();
         handoffPID = handoffMotor.getPIDController();
 
-        intakePair1PID.setP(Constants.intakeConstants.kP_Intake);
-        intakePair1PID.setI(Constants.intakeConstants.kI_Intake);
-        intakePair1PID.setD(Constants.intakeConstants.kD_Intake);
+        intLeftPID.setP(Constants.intakeConstants.kP_Intake);
+        intLeftPID.setI(Constants.intakeConstants.kI_Intake);
+        intLeftPID.setD(Constants.intakeConstants.kD_Intake);
 
-        intakePair2PID.setP(Constants.intakeConstants.kP_Intake);
-        intakePair2PID.setI(Constants.intakeConstants.kI_Intake);
-        intakePair2PID.setD(Constants.intakeConstants.kD_Intake);
+        intRightPID.setP(Constants.intakeConstants.kP_Intake);
+        intRightPID.setI(Constants.intakeConstants.kI_Intake);
+        intRightPID.setD(Constants.intakeConstants.kD_Intake);
 
         handoffPID.setP(Constants.intakeConstants.kP_Handoff);
         handoffPID.setI(Constants.intakeConstants.kI_Handoff);
         handoffPID.setD(Constants.intakeConstants.kD_Handoff);
 
-
-
-
     }
-
-
-    public void runIntake(){
-        intakePair1Motor.set(5);
-        intakePair2Motor.set(5);
-        handoffMotor.set(5);
-    }
-
-    // public Command runIntakeCommand(){
-    // return runOnce(() -> {
-    //         runIntake();
-        
-    // )}
-    // }
-
 
     public Command runIntakeCommand(){
         return runOnce(() -> {
-            runIntake();
+            intLeftMotor.set(5);
+            intRightMotor.set(5);
+            handoffMotor.set(5);
         });
     }
+
+    public Command liftIntakeCommand(){
+        return runOnce(() -> {
+            intakeLift.set(Value.kForward);
+        });
+    }
+
+    public Command dropIntakeCommand(){
+        return runOnce(() -> {
+            intakeLift.set(Value.kReverse);
+        });
+    }
+
+    
 
 }
