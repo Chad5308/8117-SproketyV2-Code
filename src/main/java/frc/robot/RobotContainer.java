@@ -8,7 +8,6 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,7 +36,6 @@ public class RobotContainer {
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
-  public PneumaticsSubsystem p_sub = new PneumaticsSubsystem();
   public IntakeSubsystem int_sub = new IntakeSubsystem();
   private SendableChooser<Command> autoChooser;
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);

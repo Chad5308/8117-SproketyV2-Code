@@ -105,7 +105,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kITurning = 0.00015;
     public static final double kDTurning = 0.05;
 
-    public static final double moduleRadius = 5.0660808; //meters -- measured from center of robot to furthest module.
+    public static final double moduleRadius = 0.4318; //meters -- measured from center of robot to furthest module.
 }
 
 //Max speed
@@ -118,10 +118,10 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kMaxAngularSpeedRadiansPerSecond =  DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
     public static final double kMaxAccelerationMetersPerSecondSquared = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond;
     public static final double kMaxAngularAccelerationUnitsPerSecond = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
-    public static final double kPTranslation = 0.025;
+    public static final double kPTranslation = 0.5;
     public static final double kITranslation = 0;
     public static final double kDTranslation = 0;
-    public static final double kPTheta = 0.1;
+    public static final double kPTheta = 1;
     public static final double kITheta = 0;
     public static final double kDTheta = 0;
 
