@@ -55,7 +55,8 @@ backRightModule.getPosition()
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
-                zeroHeading();
+                // zeroHeading();
+                zeroHeadingButton();
             } catch (Exception e) {}}).
             start();
 

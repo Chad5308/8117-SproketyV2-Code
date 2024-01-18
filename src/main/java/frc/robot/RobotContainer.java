@@ -54,7 +54,7 @@ public RobotContainer() {
       s_Swerve::resetOdometry, 
       d_Command::getSpeeds, 
       s_Swerve::setModuleStates, 
-      new HolonomicPathFollowerConfig(new PIDConstants(0.025, 0, 0), new PIDConstants(0.025, 0, 0), 
+      new HolonomicPathFollowerConfig(new PIDConstants(Constants.AutoConstants.kPTranslation, Constants.AutoConstants.kITranslation, Constants.AutoConstants.kDTranslation), new PIDConstants(Constants.AutoConstants.kITheta, Constants.AutoConstants.kITheta, Constants.AutoConstants.kDTheta), 
       Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
       Constants.ModuleConstants.moduleRadius, 
       new ReplanningConfig(true, true)), 
@@ -65,6 +65,9 @@ public RobotContainer() {
       
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);    
+
+
+    NamedCommands.registerCommand("FaceForward Wheels", s_Swerve.faceForwardCommand());
   }
 
   public void configureAutos(){

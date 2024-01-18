@@ -118,9 +118,13 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kMaxAngularSpeedRadiansPerSecond =  DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
     public static final double kMaxAccelerationMetersPerSecondSquared = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond;
     public static final double kMaxAngularAccelerationUnitsPerSecond = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
-    public static final double kPXController = 0.025;
-    public static final double kPYController = 0.025;
-    public static final double kPThetaController = 0.025;
+    public static final double kPTranslation = 0.025;
+    public static final double kITranslation = 0;
+    public static final double kDTranslation = 0;
+    public static final double kPTheta = 0.1;
+    public static final double kITheta = 0;
+    public static final double kDTheta = 0;
+
 
     public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
 
