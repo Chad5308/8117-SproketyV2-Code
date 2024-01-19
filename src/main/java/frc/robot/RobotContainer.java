@@ -6,7 +6,6 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.Drivebase.LimelightSubsystem;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -36,7 +35,6 @@ public class RobotContainer {
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
-  public IntakeSubsystem int_sub = new IntakeSubsystem();
   private SendableChooser<Command> autoChooser;
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController); 

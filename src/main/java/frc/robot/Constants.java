@@ -142,6 +142,7 @@ public static final class intakeConstants {
   public static final int intLeftEncoder = 13;
   public static final int intRightEncoder = 14;
   public static final int handoffEncoder = 15;
+  public static final int indexingSensor = 1;
 
   public static final double ramp_rate = 0.5;
 
@@ -177,6 +178,9 @@ public static final double linearkD = 0;
 public static final class ShooterConstants{
   public static final int fwLeftMotorNum = 17;
   public static final int fwRightMotorNum = 18;
+  public static final int indexerMotor = 19;
+  public static final int pitchEncoder = 20;
+
 
   public static final double ramp_rate = 0.1;
 
@@ -186,12 +190,11 @@ public static final class ShooterConstants{
   public static final double kP_Shooter = 0.5;
   public static final double kI_Shooter = 0;
   public static final double kD_Shooter = 0;
-
 }
 
 public static final class LateratorConstants{
-  public static final int leftMotor = 19;
-  public static final int rightMotor = 20;
+  public static final int leftMotor = 20;
+  public static final int rightMotor = 21;
 
   public static final double ramp_rate = 1;
 
