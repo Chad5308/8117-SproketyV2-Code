@@ -181,6 +181,8 @@ public static final class ShooterConstants{
   public static final int indexerMotor = 19;
   public static final int pitchEncoder = 20;
 
+  public static final int indexSensor = 2;
+
 
   public static final double ramp_rate = 0.1;
 

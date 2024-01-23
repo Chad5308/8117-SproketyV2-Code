@@ -5,12 +5,18 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
 import com.revrobotics.SparkPIDController;
+
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import frc.robot.Constants;
 
-public class ShooterSubsystem {
+public class ShooterSubsystem extends SubsystemBase{
     
 public final CANSparkMax fwLeftMotor;
 public final CANSparkMax fwRightMotor;
@@ -25,6 +31,8 @@ public final AbsoluteEncoder shooterAbsoluteEncoder;
 public final SparkPIDController fwLeftPID;
 public final SparkPIDController fwRightPID;
 public final SparkPIDController indexPID;
+
+public final DigitalOutput shooterIndexer;
 
 
 
@@ -67,8 +75,32 @@ public ShooterSubsystem(){
     indexPID.setP(Constants.ShooterConstants.kP_Shooter);
     indexPID.setI(Constants.ShooterConstants.kP_Shooter);
     indexPID.setD(Constants.ShooterConstants.kP_Shooter);
+
+    shooterIndexer = new DigitalOutput(Constants.ShooterConstants.indexSensor);
 }
 
 
 //TODO need to write basic movement commands and fuctions
+
+
+public Command upSpeedCommand() {
+     return runOnce(() -> {
+        fwLeftMotor.set(fwLeftMotor.get()+1);
+        fwRightMotor.set(fwRightMotor.get()+1);
+     });
+}
+
+public Command lowerSpeedCommand() {
+    return runOnce(() -> {
+        fwLeftMotor.set(fwLeftMotor.get()-1);
+        fwRightMotor.set(fwRightMotor.get()-1);
+    });
+}
+
+
+@Override
+public void periodic() {
+    SmartDashboard.putNumber("Speed of Shooter", fwLeftEncoder.getVelocity());
+}
+
 }

@@ -46,8 +46,8 @@ public class ArmSubsystem extends SubsystemBase{
     public final Compressor intakeCompressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
 
 
-    //indexing
-    public final DigitalOutput indexing;
+    //intakeIndexer
+    public final DigitalOutput intakeIndexer;
 
     public ArmSubsystem(){
         //Laterator motor instatiation
@@ -124,7 +124,7 @@ public class ArmSubsystem extends SubsystemBase{
         handoffPID.setD(Constants.intakeConstants.kD_Handoff);
 
 
-        indexing = new DigitalOutput(Constants.intakeConstants.indexingSensor);
+        intakeIndexer = new DigitalOutput(Constants.intakeConstants.indexingSensor);
 
 
         zeroAll();
@@ -203,11 +203,11 @@ public class ArmSubsystem extends SubsystemBase{
     public void periodic(){
 
 
-        if(indexing.get()){
+        if(intakeIndexer.get()){
             runOnce((Runnable) stopIntakeCommand());
             runOnce((Runnable) indexPositionCommand());
             
-            //TODO ended here, need to finish indexing algorithm
+            //TODO ended here, need to finish intakeIndexer algorithm
         }
     }
 
