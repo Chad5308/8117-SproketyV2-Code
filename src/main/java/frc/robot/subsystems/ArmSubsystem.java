@@ -145,27 +145,20 @@ public class ArmSubsystem extends SubsystemBase{
             intLeftMotor.set(5);
             intRightMotor.set(5);
             handoffMotor.set(5);
-        });
-    }
-
+    });}
     public Command stopIntakeCommand(){
         return runOnce(() -> {
             intLeftMotor.set(0);
             intRightMotor.set(0);
-        });
-    }
-    
+    });}
     public Command liftIntakeCommand(){
         return runOnce(() -> {
             intakeLift.set(Value.kForward);
-        });
-    }
-
+    });}
     public Command dropIntakeCommand(){
         return runOnce(() -> {
             intakeLift.set(Value.kReverse);
-        });
-    }
+    });}
 
 
 
