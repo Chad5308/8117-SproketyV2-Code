@@ -212,6 +212,7 @@ public static final class ShooterConstants{
   //Known Angles
   public static final double sourceAngle = 185.0;
   public static final double closeSpeakerAngle = 20.0;
+  public static final double podiumSpeakerAngle = 42.0;
   public static final double ampAngle = 120.0;
 }
 

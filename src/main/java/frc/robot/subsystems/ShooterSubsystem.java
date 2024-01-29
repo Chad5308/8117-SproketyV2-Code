@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import javax.naming.PartialResultException;
+
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -111,6 +113,7 @@ public Command upSpeedCommand(){            return runOnce(() -> { setShooterSpe
 public Command lowerSpeedCommand(){         return runOnce(() -> { setShooterSpeed(getShooterSpeed()-20); });}
 public Command stopCommand(){               return runOnce(() -> { setShooterSpeed(0); });}
 public Command closeSpeakerSpeedCommand(){  return runOnce(() -> { setShooterSpeed(60);});}
+public Command podiumSpeakerSpeedCommand(){ return runOnce(() -> { setShooterSpeed(60);});}
 
 
 //Angular methods
@@ -133,6 +136,11 @@ public Command stopIndexMotorCommand(){   return runOnce(() -> {    setIndexSpee
 
 
 //Combined methods
+public ParallelCommandGroup resetShooterCommand(){return
+    stopIndexMotorCommand().alongWith(
+    homeCommand()).alongWith(
+    stopCommand()
+);}
 public ParallelCommandGroup pickupPieceCommand(){return 
     runIndexMotorCommand().alongWith(
     holdPieceCommand()
@@ -147,7 +155,12 @@ public SequentialCommandGroup closeSpeakerCommand(){   return
     Commands.waitSeconds(2)).andThen(
     runIndexMotorCommand()
 );}
-
+public SequentialCommandGroup podiumSpeakerCommand(){   return
+    runOnce(() -> {  setAngle(Constants.ShooterConstants.podiumSpeakerAngle);}).andThen(
+    podiumSpeakerSpeedCommand()).andThen(
+    Commands.waitSeconds(2)).andThen(
+    runIndexMotorCommand()
+);}
 
 
 

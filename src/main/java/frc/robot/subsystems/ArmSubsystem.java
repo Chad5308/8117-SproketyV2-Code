@@ -172,29 +172,41 @@ public class ArmSubsystem extends SubsystemBase{
 
 //laterator Commands
 
+public void setPosition(double position){
+    latLeftPID.setReference(position, ControlType.kPosition);
+    latRightPID.setReference(position, ControlType.kPosition);
+}
+
 
 //TODO work out these values
     public Command fullExtensionCommand(){
         return runOnce(() -> {
-            latLeftPID.setReference(1, ControlType.kPosition);
-            latRightPID.setReference(1, ControlType.kPosition);
-        });
-    }
-
+            setPosition(1);
+    });}
     public Command indexPositionCommand(){
         return runOnce(() -> {
-            latLeftPID.setReference(1, ControlType.kPosition);
-            latRightPID.setReference(1, ControlType.kPosition);
-        });
-    }
-
+            setPosition(1);
+    });}
     public Command ampPosition(){
         return runOnce(() -> {
-            latLeftPID.setReference(1, ControlType.kPosition);
-            latRightPID.setReference(1, ControlType.kPosition);
+            setPosition(1);
+    });}
+    public Command liftLaterator(){
+        return runOnce(() -> {
+            latLeftPID.setReference(1, ControlType.kVelocity);
+            latRightPID.setReference(1, ControlType.kVelocity);
+    });}
+    public Command lowerLaterator(){
+        return runOnce(() -> {
+            latLeftPID.setReference(1, ControlType.kVelocity);
+            latRightPID.setReference(1, ControlType.kVelocity);
+    });}
+    public Command stopLaterator(){
+        return runOnce(() -> {
+            latLeftPID.setReference(0, ControlType.kVelocity);
+            latRightPID.setReference(0, ControlType.kVelocity);
         });
     }
-
     
 
 
