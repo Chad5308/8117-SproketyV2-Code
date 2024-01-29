@@ -6,6 +6,8 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.Drivebase.LimelightSubsystem;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -37,7 +39,9 @@ public class RobotContainer {
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
   private SendableChooser<Command> autoChooser;
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
-  public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController); 
+  public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
+  public ShooterSubsystem shooter_sub = new ShooterSubsystem();
+  public ArmSubsystem arm_sub = new ArmSubsystem();
 
 
 
@@ -80,9 +84,32 @@ public RobotContainer() {
 
   
   private void configureBindings() {
+    //Drive Controls
     opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
-    opController.button(7).toggleOnTrue(s_Swerve.resetWheels());
+    opController.button(7).toggleOnTrue(s_Swerve.resetWheels()); //window button
     // opController.button(1).onTrue(LL_sub.autoAlignCommand());
+
+    //Shooter Controls
+    opController.a().whileTrue(shooter_sub.upSpeedCommand());
+    opController.b().whileTrue(shooter_sub.lowerSpeedCommand());
+    opController.button(8).onTrue(shooter_sub.stopCommand());  //Lines button
+    opController.x().whileTrue(shooter_sub.retractCommand());
+    opController.x().whileFalse(shooter_sub.pitchStopCommand());
+    opController.y().whileTrue(shooter_sub.extendCommand());
+    opController.y().whileFalse(shooter_sub.pitchStopCommand());
+
+    //Index Controls
+    opController.rightBumper().onTrue(shooter_sub.runIndexMotorCommand().until(shooter_sub::isPresent));
+    opController.leftBumper().onTrue(shooter_sub.stopIndexMotorCommand());
+
+    //auto Index Controls
+    opController.povDown().onTrue(shooter_sub.pickupPieceCommand());
+    opController.povUp().onTrue(shooter_sub.holdPieceCommand());
+    
+    //Auto fire Controls
+    opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());
+
+
   }
 }

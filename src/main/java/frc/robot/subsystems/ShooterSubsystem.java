@@ -9,8 +9,12 @@ import com.revrobotics.SparkPIDController;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -26,13 +30,16 @@ public final CANSparkMax pitchMotor;
 public final RelativeEncoder fwLeftEncoder;
 public final RelativeEncoder fwRightEncoder;
 public final RelativeEncoder indexEncoder;
-public final AbsoluteEncoder shooterAbsoluteEncoder;
+public final AbsoluteEncoder pitchEncoder;
 
 public final SparkPIDController fwLeftPID;
 public final SparkPIDController fwRightPID;
 public final SparkPIDController indexPID;
+public final SparkPIDController pitchPID;
 
 public final DigitalOutput shooterIndexer;
+
+public boolean pitchEncoderReversed;
 
 
 
@@ -41,6 +48,8 @@ public ShooterSubsystem(){
     fwRightMotor = new CANSparkMax(Constants.ShooterConstants.fwRightMotorNum, MotorType.kBrushless);
     indexerMotor = new CANSparkMax(Constants.ShooterConstants.indexerMotor, MotorType.kBrushless);
     pitchMotor = new CANSparkMax(Constants.ShooterConstants.pitchEncoder, MotorType.kBrushless);
+    pitchEncoderReversed = Constants.ShooterConstants.pitchReversed;
+    
 
 
     fwLeftMotor.restoreFactoryDefaults();
@@ -58,11 +67,13 @@ public ShooterSubsystem(){
     fwLeftEncoder = fwLeftMotor.getEncoder();
     fwRightEncoder = fwRightMotor.getEncoder();
     indexEncoder = indexerMotor.getEncoder();
-    shooterAbsoluteEncoder = pitchMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+    pitchEncoder = pitchMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
 
     fwLeftPID = fwLeftMotor.getPIDController();
     fwRightPID = fwRightMotor.getPIDController();
     indexPID = indexerMotor.getPIDController();
+    pitchPID = pitchMotor.getPIDController();
+    
 
     fwLeftPID.setP(Constants.ShooterConstants.kP_Shooter);
     fwLeftPID.setI(Constants.ShooterConstants.kI_Shooter);
@@ -72,35 +83,79 @@ public ShooterSubsystem(){
     fwRightPID.setI(Constants.ShooterConstants.kI_Shooter);
     fwRightPID.setD(Constants.ShooterConstants.kD_Shooter);
 
-    indexPID.setP(Constants.ShooterConstants.kP_Shooter);
-    indexPID.setI(Constants.ShooterConstants.kP_Shooter);
-    indexPID.setD(Constants.ShooterConstants.kP_Shooter);
+    indexPID.setP(Constants.ShooterConstants.kP_Index);
+    indexPID.setI(Constants.ShooterConstants.kI_Index);
+    indexPID.setD(Constants.ShooterConstants.kD_Index);
+
+    pitchPID.setP(Constants.ShooterConstants.kP_pitch);
+    pitchPID.setI(Constants.ShooterConstants.kI_pitch);
+    pitchPID.setD(Constants.ShooterConstants.kD_pitch);
+
+    pitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
+    pitchEncoder.setZeroOffset(Constants.ShooterConstants.pitchOffset);
 
     shooterIndexer = new DigitalOutput(Constants.ShooterConstants.indexSensor);
 }
 
 
-//TODO need to write basic movement commands and fuctions
+//Shooter Speed methods
 
-
-public Command upSpeedCommand() {
-     return runOnce(() -> {
-        fwLeftMotor.set(fwLeftMotor.get()+1);
-        fwRightMotor.set(fwRightMotor.get()+1);
-     });
+public void setShooterSpeed(double speed){
+    speed = speed <=0 ? 0 : speed;
+    fwLeftPID.setReference(speed, ControlType.kVelocity);
+    fwRightPID.setReference(speed, ControlType.kVelocity);
 }
 
-public Command lowerSpeedCommand() {
-    return runOnce(() -> {
-        fwLeftMotor.set(fwLeftMotor.get()-1);
-        fwRightMotor.set(fwRightMotor.get()-1);
-    });
-}
+public double getShooterSpeed(){            return Math.max(fwLeftMotor.get(), fwRightMotor.get());}
+public Command upSpeedCommand(){            return runOnce(() -> { setShooterSpeed(getShooterSpeed()+20); });}
+public Command lowerSpeedCommand(){         return runOnce(() -> { setShooterSpeed(getShooterSpeed()-20); });}
+public Command stopCommand(){               return runOnce(() -> { setShooterSpeed(0); });}
+public Command closeSpeakerSpeedCommand(){  return runOnce(() -> { setShooterSpeed(60);});}
+
+
+//Angular methods
+// "0" degrees is the home position where a game piece would be indexed
+public double getAngle() {          return pitchEncoder.getPosition();}
+public void setAngle(double angle){ pitchPID.setReference(angle, ControlType.kPosition);}
+public Command homeCommand(){       return runOnce(() -> {  setAngle(0);    });}
+public Command extendCommand(){     return runOnce(() -> {  setAngle(getAngle()+5);    });}
+public Command retractCommand(){    return runOnce(() -> {  setAngle(getAngle()-5);    });}
+public Command pitchStopCommand(){  return runOnce(() -> {  pitchPID.setReference(0, ControlType.kVelocity);  });}
+
+
+//Indexer methods
+public boolean isPresent(){               return shooterIndexer.get();}
+public void setIndexSpeed(double speed){  indexPID.setReference(speed, ControlType.kVelocity);}
+public double getIndexSpeed(){            return indexEncoder.getVelocity();}
+public Command runIndexMotorCommand(){    return runOnce(() -> {    setIndexSpeed(1);   });}
+public Command stopIndexMotorCommand(){   return runOnce(() -> {    setIndexSpeed(0);   });}
+
+
+
+//Combined methods
+public ParallelCommandGroup pickupPieceCommand(){return 
+    runIndexMotorCommand().alongWith(
+    holdPieceCommand()
+);}
+public ParallelCommandGroup holdPieceCommand(){return
+    stopIndexMotorCommand().alongWith(
+    runOnce(() -> { setAngle(25);})
+);}
+public SequentialCommandGroup closeSpeakerCommand(){   return 
+    runOnce(() -> {  setAngle(Constants.ShooterConstants.closeSpeakerAngle);}).andThen(
+    closeSpeakerSpeedCommand()).andThen(
+    Commands.waitSeconds(2)).andThen(
+    runIndexMotorCommand()
+);}
+
+
 
 
 @Override
 public void periodic() {
-    SmartDashboard.putNumber("Speed of Shooter", fwLeftEncoder.getVelocity());
+    SmartDashboard.putNumber("Speed of Shooter", getShooterSpeed());
+    SmartDashboard.putNumber("Shooter Position", getAngle());
+    
 }
 
 }

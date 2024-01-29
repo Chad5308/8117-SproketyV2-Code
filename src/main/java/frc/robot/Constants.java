@@ -176,22 +176,43 @@ public static final double linearkD = 0;
 
 
 public static final class ShooterConstants{
+  //CAN Bus Numbers
   public static final int fwLeftMotorNum = 17;
   public static final int fwRightMotorNum = 18;
   public static final int indexerMotor = 19;
   public static final int pitchEncoder = 20;
-
   public static final int indexSensor = 2;
 
 
   public static final double ramp_rate = 0.1;
 
-  public static final boolean fwLeftInverted = false;
-  public static final boolean fwRightInverted = false;
+ 
 
+  //PID Values
   public static final double kP_Shooter = 0.5;
   public static final double kI_Shooter = 0;
   public static final double kD_Shooter = 0;
+
+  public static final double kP_Index = 0.5;
+  public static final double kI_Index = 0;
+  public static final double kD_Index = 0;
+
+  public static final double kP_pitch = 0.5;
+  public static final double kI_pitch = 0;
+  public static final double kD_pitch = 0;
+
+  //Encoder values
+  public static final double toDegrees = 360;
+  public static final double pitchOffset = 0;
+  public static final boolean pitchReversed = false;
+  public static final boolean fwLeftInverted = false;
+  public static final boolean fwRightInverted = false;
+
+
+  //Known Angles
+  public static final double sourceAngle = 185.0;
+  public static final double closeSpeakerAngle = 20.0;
+  public static final double ampAngle = 120.0;
 }
 
 public static final class LateratorConstants{

@@ -77,7 +77,6 @@ public class SwerveModule extends SubsystemBase{
 
  //reset encoders after init phase
     resetDrive();
-    System.out.println("reset encoders");
   }
 
 public static SparkPIDController getPIDController() {
@@ -86,7 +85,6 @@ public static SparkPIDController getPIDController() {
 public void resetDrive() {
   driveMotorEncoder.setPosition(0);
   steerMotorEncoder.setPosition(0);
-
 }
 //stop method that stops the motors when the stick/s are within the deadzone < 0.01
 public void stop() {
@@ -97,43 +95,46 @@ public void stop() {
   //configure our Absolute Encoder for the MK4 drive system
   CANcoderConfiguration config = new CANcoderConfiguration();
   public double getAbsoluteEncoderDeg(double AEOffset) {
-//TODO See which one of these works
     double angle = absoluteEncoder.getPosition().getValueAsDouble();
     angle *= 360;
     return angle  * (absoluteEncoderReversed ? -1 : 1) - AEOffset;
-  // return angle  * (absoluteEncoderReversed ? -1 : 1);
   }
   
   //Motor calls
   public double getDrivePosition() {
-    return driveMotorEncoder.getPosition();}
+    return driveMotorEncoder.getPosition();
+  }
   public double getDriveVelocity() {
-    return driveMotorEncoder.getVelocity();}
+    return driveMotorEncoder.getVelocity();
+  }
   public double getSteerPosition() {
-     return Math.abs(steerMotorEncoder.getPosition() % 360);}
+     return Math.abs(steerMotorEncoder.getPosition() % 360);
+  }
   public double getSteerVelocity() {
-    return steerMotorEncoder.getVelocity();}
+    return steerMotorEncoder.getVelocity();
+  }
   public double getPositionMeters() {
-    return driveMotorEncoder.getPosition();}
+    return driveMotorEncoder.getPosition();
+  }
   
  
   
 //Creating the current state of the modules. A drive velo and an angle are needed. We use an off set of -90 for the angle
 public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
-  }
-  public SwerveModulePosition getPosition() {
+}
+public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
-  }
+}
 
 //This is our setDesiredState alg. Takes the current state and the desired state shown by the controller and points the wheels to that 
 //location
 public void setDesiredState(SwerveModuleState state) {
-if (Math.abs(state.speedMetersPerSecond) < 0.01) {stop();return;}
-// state = optimizer2(state, gState().angle.getDegrees());
-state = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(gState().angle.getDegrees()));
-driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-turningPidController.setReference(state.angle.getDegrees(), com.revrobotics.CANSparkBase.ControlType.kPosition);
+  if (Math.abs(state.speedMetersPerSecond) < 0.01) {stop();return;}
+  // state = optimizer2(state, gState().angle.getDegrees());
+  state = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(gState().angle.getDegrees()));
+  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+  turningPidController.setReference(state.angle.getDegrees(), com.revrobotics.CANSparkBase.ControlType.kPosition);
 }
 
 public void wheelFaceForward(double AEOffset) {
