@@ -40,35 +40,35 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
 //start front front left to front right to back right and all drives then all steers then all absolutes
 
-    public static final int kFrontLeftDriveMotorPort = 3;
-    public static final int kFrontRightDriveMotorPort = 6;
-    public static final int kBackRightDriveMotorPort = 9;
-    public static final int kBackLeftDriveMotorPort = 11;
+public static final int kFrontRightDriveMotorPort = 1;
+public static final int kFrontRightTurningMotorPort = 2;
+public static final int kBackRightDriveMotorPort = 3;
+public static final int kBackRightTurningMotorPort = 4;
+public static final int kBackLeftTurningMotorPort = 5;
+public static final int kBackLeftDriveMotorPort = 6;
+public static final int kFrontLeftDriveMotorPort = 7;
+public static final int kFrontLeftTurningMotorPort = 8;
 
-    public static final int kFrontLeftTurningMotorPort = 2;
-    public static final int kFrontRightTurningMotorPort = 7;
-    public static final int kBackLeftTurningMotorPort = 12;
-    public static final int kBackRightTurningMotorPort = 10;
     
-    public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
-    public static final int kFrontRightDriveAbsoluteEncoderPort = 5;
-    public static final int kBackRightDriveAbsoluteEncoderPort = 8;
+    public static final int kFrontLeftDriveAbsoluteEncoderPort = 9;
+    public static final int kFrontRightDriveAbsoluteEncoderPort = 10;
+    public static final int kBackRightDriveAbsoluteEncoderPort = 11;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 12;
     
-    public static final double kBRDegrees = 96.591;//9.405
-    public static final double kBLDegrees = 26.367;//294.875
-    public static final double kFLDegrees = 158.818;//68.82
-    public static final double kFRDegrees = -26.718;//242.93
+    public static final double kFLDegrees = 338.90625;
+    public static final double kFRDegrees = 152.2265625;
+    public static final double kBRDegrees = 153.544921875;
+    public static final double kBLDegrees = 46.142578125;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kFrontRightTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;
     public static final boolean kBackRightTurningEncoderReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = false;
-    public static final boolean kFrontRightDriveEncoderReversed = true;
+    public static final boolean kFrontLeftDriveEncoderReversed = true;
+    public static final boolean kFrontRightDriveEncoderReversed = false;
     public static final boolean kBackLeftDriveEncoderReversed = false;
-    public static final boolean kBackRightDriveEncoderReversed = true;
+    public static final boolean kBackRightDriveEncoderReversed = false;
 
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;

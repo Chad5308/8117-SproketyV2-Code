@@ -91,27 +91,27 @@ public RobotContainer() {
     // opController.button(1).onTrue(LL_sub.autoAlignCommand());
 
     //Shooter Controls
-    opController.a().onTrue(shooter_sub.upSpeedCommand());
-    opController.b().onTrue(shooter_sub.lowerSpeedCommand());
-    opController.button(8).onTrue(shooter_sub.stopCommand());  //Lines button
-    opController.x().whileTrue(shooter_sub.retractCommand());
-    opController.x().whileFalse(shooter_sub.pitchStopCommand());
-    opController.y().whileTrue(shooter_sub.extendCommand());
-    opController.y().whileFalse(shooter_sub.pitchStopCommand());
+    // opController.a().onTrue(shooter_sub.upSpeedCommand());
+    // opController.b().onTrue(shooter_sub.lowerSpeedCommand());
+    // opController.button(8).onTrue(shooter_sub.stopCommand());  //Lines button
+    // opController.x().whileTrue(shooter_sub.retractCommand());
+    // opController.x().whileFalse(shooter_sub.pitchStopCommand());
+    // opController.y().whileTrue(shooter_sub.extendCommand());
+    // opController.y().whileFalse(shooter_sub.pitchStopCommand());
 
-    //Index Controls
-    opController.rightBumper().onTrue(shooter_sub.runIndexMotorCommand().until(shooter_sub::isPresent));
-    opController.leftBumper().onTrue(shooter_sub.stopIndexMotorCommand());
+    // //Index Controls
+    // opController.rightBumper().onTrue(shooter_sub.runIndexMotorCommand().until(shooter_sub::isPresent));
+    // opController.leftBumper().onTrue(shooter_sub.stopIndexMotorCommand());
 
-    opController.axisGreaterThan(3, 0.5).onTrue(arm_sub.liftLaterator());
-    opController.axisGreaterThan(3, 0.5).onFalse(arm_sub.stopLaterator());
-    opController.axisGreaterThan(4, 0.5).onTrue(arm_sub.lowerLaterator());
-    opController.axisGreaterThan(4, 0.5).onFalse(arm_sub.stopLaterator());
+    // opController.axisGreaterThan(3, 0.5).onTrue(arm_sub.liftLaterator());
+    // opController.axisGreaterThan(3, 0.5).onFalse(arm_sub.stopLaterator());
+    // opController.axisGreaterThan(4, 0.5).onTrue(arm_sub.lowerLaterator());
+    // opController.axisGreaterThan(4, 0.5).onFalse(arm_sub.stopLaterator());
 
 
-    //auto Index Controls
-    opController.povDown().onTrue(shooter_sub.pickupPieceCommand());
-    opController.povUp().onTrue(shooter_sub.holdPieceCommand());
+    // //auto Index Controls
+    // opController.povDown().onTrue(shooter_sub.pickupPieceCommand());
+    // opController.povUp().onTrue(shooter_sub.holdPieceCommand());
     
     //Auto fire Controls
     // opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());

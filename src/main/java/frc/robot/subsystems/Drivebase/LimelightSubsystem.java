@@ -112,18 +112,19 @@ correctionT = thetaPIDController.calculate(xAng);//radians
 // }
 
 
+//TODO uncomment this
 
-if(autoAlign == true){
-if(!thetaPIDController.atSetpoint()){
-    turningSpeed = thetaPIDController.getSetpoint().velocity + correctionT;
-}
-// if(!XPIDController.atSetpoint() && ZPIDController.atSetpoint()){
-//     xSpeed = XPIDController.getSetpoint().velocity + correctionX;
-//     zSpeed = ZPIDController.getSetpoint().velocity + correctionZ;
-//     turningSpeed = 0;
+// if(autoAlign == true){
+// if(!thetaPIDController.atSetpoint()){
+//     turningSpeed = thetaPIDController.getSetpoint().velocity + correctionT;
 // }
+// // if(!XPIDController.atSetpoint() && ZPIDController.atSetpoint()){
+// //     xSpeed = XPIDController.getSetpoint().velocity + correctionX;
+// //     zSpeed = ZPIDController.getSetpoint().velocity + correctionZ;
+// //     turningSpeed = 0;
+// // }
   
-}
+// }
 
 SmartDashboard.putNumber("Distance X", distanceX);
 SmartDashboard.putNumber("Distance Z", distanceZ);
