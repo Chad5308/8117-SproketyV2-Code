@@ -13,8 +13,10 @@ import frc.robot.subsystems.Drivebase.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -68,6 +70,8 @@ public RobotContainer() {
 
 
     NamedCommands.registerCommand("FaceForward Wheels", s_Swerve.faceForwardCommand());
+    NamedCommands.registerCommand("Deploy", new ParallelCommandGroup());
+    NamedCommands.registerCommand("Shoot", d_Command);
   }
 
   public void configureAutos(){
