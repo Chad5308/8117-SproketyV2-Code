@@ -126,14 +126,14 @@ correctionT = thetaPIDController.calculate(xAng);//radians
   
 // }
 
-SmartDashboard.putNumber("Distance X", distanceX);
-SmartDashboard.putNumber("Distance Z", distanceZ);
-SmartDashboard.putNumber("Turning Speed", turningSpeed);
-SmartDashboard.putNumber("X Speed", zSpeed);
-SmartDashboard.putNumber("Y Speed", xSpeed);
-SmartDashboard.putNumber("TX Value", xAng);
-SmartDashboard.putNumber("TY Value", yAng);
-SmartDashboard.putBoolean("Is command running", autoAlign);
+// SmartDashboard.putNumber("Distance X", distanceX);
+// SmartDashboard.putNumber("Distance Z", distanceZ);
+// SmartDashboard.putNumber("Turning Speed", turningSpeed);
+// SmartDashboard.putNumber("X Speed", zSpeed);
+// SmartDashboard.putNumber("Y Speed", xSpeed);
+// SmartDashboard.putNumber("TX Value", xAng);
+// SmartDashboard.putNumber("TY Value", yAng);
+// SmartDashboard.putBoolean("Is command running", autoAlign);
 
 
 // SmartDashboard.putNumber("BotPose X", botPose_targetSpace[0]);

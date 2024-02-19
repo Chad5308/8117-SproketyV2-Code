@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -93,6 +92,25 @@ public RobotContainer() {
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
     opController.button(7).toggleOnTrue(s_Swerve.resetWheels()); //window button
     // opController.button(1).onTrue(LL_sub.autoAlignCommand());
+
+    // opController.x().onTrue(arm_sub.runIntakeCommand());
+    // opController.b().onTrue(arm_sub.stopIntakeCommand());
+    // opController.y().onTrue(arm_sub.fasterIntakeCommand());
+    // opController.a().onTrue(arm_sub.slowerIntakeCommand());
+
+    // opController.x().whileTrue(shooter_sub.rotateOutCommand());
+    // opController.b().whileTrue(shooter_sub.rotateInCommand());
+    // opController.x().whileFalse(shooter_sub.pitchStopCommand());
+    // opController.b().whileFalse(shooter_sub.pitchStopCommand());
+
+    opController.y().onTrue(shooter_sub.upSpeedCommand());
+    opController.a().onTrue(shooter_sub.lowerSpeedCommand());
+    opController.povDown().onTrue(shooter_sub.stopFWCommand());
+
+    opController.x().onTrue(shooter_sub.upIndexMotor());
+    opController.b().onTrue(shooter_sub.downIndexMotor());
+    opController.povUp().onTrue(shooter_sub.stopIndexMotorCommand());
+
 
     //Shooter Controls
     // opController.a().onTrue(shooter_sub.upSpeedCommand());

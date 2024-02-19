@@ -55,10 +55,10 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final int kBackRightDriveAbsoluteEncoderPort = 11;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 12;
     
-    public static final double kFLDegrees = 7.734375;
-    public static final double kFRDegrees = 217.177734375;
-    public static final double kBRDegrees = 153.193359375;
-    public static final double kBLDegrees = 48.251953125;
+    public static final double kFLDegrees = 11.162;
+    public static final double kFRDegrees = 217.529;
+    public static final double kBRDegrees = 155.4785;
+    public static final double kBLDegrees = 45.791;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kFrontRightTurningEncoderReversed = false;
@@ -86,7 +86,7 @@ public static final int kFrontLeftTurningMotorPort = 8;
   
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-    public static final double kDriveMotorGearRatio = 7 / 1;
+    public static final double kDriveMotorGearRatio = 6.75 / 1;
     public static final double kTurningMotorGearRatio = 12.8 / 1;
     public static final double kDriveEncoderRot2Meter = 1/23.58;
     
@@ -96,9 +96,9 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
 
-    public static final double kPTurning = 0.01; //test a higher value 0.025 is to high
-    public static final double kITurning = 0.00015;
-    public static final double kDTurning = 0.05;
+    public static final double kPTurning = 0.0075; //test a higher value 0.025 is to high
+    public static final double kITurning = 0;
+    public static final double kDTurning = 0.75;
 
     public static final double moduleRadius = 0.4318; //meters -- measured from center of robot to furthest module.
 }
@@ -138,7 +138,6 @@ public static final int kFrontLeftTurningMotorPort = 8;
 
 
 public static final class intakeConstants {
-//TODO Change these cause they are gonna be wrong
   public static final int intLeftEncoder = 13;
   public static final int intRightEncoder = 14;
   public static final int handoffEncoder = 15;
@@ -146,8 +145,8 @@ public static final class intakeConstants {
 
   public static final double ramp_rate = 0.5;
 
-  public static final boolean leftInverted = false;
-  public static final boolean rightInverted = false;
+  public static final boolean leftInverted = true;
+  public static final boolean rightInverted = true;
   public static final boolean handoffInverted = false;
 
   public static final double kP_Intake = 0.05;
@@ -177,11 +176,11 @@ public static final double linearkD = 0;
 
 public static final class ShooterConstants{
   //CAN Bus Numbers
-  public static final int fwLeftMotorNum = 17;
-  public static final int fwRightMotorNum = 18;
+  public static final int fwLeftMotorNum = 16;
+  public static final int fwRightMotorNum = 17;
   public static final int indexerMotor = 19;
-  public static final int pitchEncoder = 20;
-  public static final int indexSensor = 2;
+  public static final int pitchEncoder = 18;
+  public static final int indexSensor = 20;
 
 
   public static final double ramp_rate = 0.1;
@@ -217,8 +216,8 @@ public static final class ShooterConstants{
 }
 
 public static final class LateratorConstants{
-  public static final int leftMotor = 20;
-  public static final int rightMotor = 21;
+  public static final int leftMotor = 21;
+  public static final int rightMotor = 22;
 
   public static final double ramp_rate = 1;
 

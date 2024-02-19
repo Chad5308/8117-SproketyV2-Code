@@ -137,10 +137,10 @@ backRightModule.getPosition()
         SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kFLDegrees));
         SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kFRDegrees));
     //    //RE Degrees Reading
-        // SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
-        // SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
-        // SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
-        // SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
 
     //    SmartDashboard.putNumber("Front Left Drive Position", frontLeftModule.getDrivePosition());
     //    SmartDashboard.putNumber("Front Right Drive Position", frontRightModule.getDrivePosition());

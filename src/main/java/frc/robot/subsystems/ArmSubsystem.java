@@ -140,12 +140,33 @@ public class ArmSubsystem extends SubsystemBase{
     }
     //Commands
 
+public double setSpeed = 0;
+
     public Command runIntakeCommand(){
         return runOnce(() -> {
-            intLeftMotor.set(5);
-            intRightMotor.set(5);
-            handoffMotor.set(5);
+            setSpeed = 0.1;
+            intLeftMotor.set(setSpeed);
+            intRightMotor.set(setSpeed);
+            handoffMotor.set(setSpeed);
     });}
+
+    public Command fasterIntakeCommand(){
+        return runOnce(() -> {
+            setSpeed+=0.1;
+            intLeftMotor.set(setSpeed);
+            intRightMotor.set(setSpeed);
+            handoffMotor.set(setSpeed);
+        });
+    }
+    public Command slowerIntakeCommand(){
+        return runOnce(() -> {
+            setSpeed-=0.1;
+            intLeftMotor.set(setSpeed);
+            intRightMotor.set(setSpeed);
+            handoffMotor.set(setSpeed);
+        });
+    }
+
     public Command stopIntakeCommand(){
         return runOnce(() -> {
             intLeftMotor.set(0);

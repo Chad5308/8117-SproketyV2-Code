@@ -97,23 +97,27 @@ public ShooterSubsystem(){
     pitchEncoder.setZeroOffset(Constants.ShooterConstants.pitchOffset);
 
     shooterIndexer = new DigitalOutput(Constants.ShooterConstants.indexSensor);
+
+    pitchMotor.setOpenLoopRampRate(2);
+    
 }
 
 
 //Shooter Speed methods
-
+public double shootSpeed = 0;
 public void setShooterSpeed(double speed){
     speed = speed <=0 ? 0 : speed;
-    fwLeftPID.setReference(speed, ControlType.kVelocity);
-    fwRightPID.setReference(speed, ControlType.kVelocity);
+    fwLeftMotor.set(speed);
+    fwRightMotor.set(speed);
 }
 
-public double getShooterSpeed(){            return Math.max(fwLeftMotor.get(), fwRightMotor.get());}
-public Command upSpeedCommand(){            return runOnce(() -> { setShooterSpeed(getShooterSpeed()+20); });}
-public Command lowerSpeedCommand(){         return runOnce(() -> { setShooterSpeed(getShooterSpeed()-20); });}
-public Command stopCommand(){               return runOnce(() -> { setShooterSpeed(0); });}
-public Command closeSpeakerSpeedCommand(){  return runOnce(() -> { setShooterSpeed(60);});}
-public Command podiumSpeakerSpeedCommand(){ return runOnce(() -> { setShooterSpeed(60);});}
+public Command upSpeedCommand(){            return runOnce(() -> { shootSpeed+=0.1; fwLeftMotor.set(shootSpeed);
+    fwRightMotor.set(shootSpeed+0.1); });}
+public Command lowerSpeedCommand(){         return runOnce(() -> { shootSpeed-=0.1; fwLeftMotor.set(shootSpeed);
+    fwRightMotor.set(shootSpeed-0.1); });}
+public Command stopFWCommand(){             return runOnce(() -> { setShooterSpeed(0); });}
+public Command closeSpeakerSpeedCommand(){  return runOnce(() -> { setShooterSpeed(0.1);});}
+public Command podiumSpeakerSpeedCommand(){ return runOnce(() -> { setShooterSpeed(0.1);});}
 
 
 //Angular methods
@@ -125,13 +129,18 @@ public Command extendCommand(){     return runOnce(() -> {  setAngle(getAngle()+
 public Command retractCommand(){    return runOnce(() -> {  setAngle(getAngle()-5);    });}
 public Command pitchStopCommand(){  return runOnce(() -> {  pitchPID.setReference(0, ControlType.kVelocity);  });}
 
+public Command rotateOutCommand(){  return runOnce(() -> {  pitchPID.setReference(0.5, ControlType.kVelocity);});}
+public Command rotateInCommand(){  return runOnce(() -> {  pitchPID.setReference(-0.5, ControlType.kVelocity);});}
+
 
 //Indexer methods
 public boolean isPresent(){               return shooterIndexer.get();}
-public void setIndexSpeed(double speed){  indexPID.setReference(speed, ControlType.kVelocity);}
+public double indexSpeed = 0;
 public double getIndexSpeed(){            return indexEncoder.getVelocity();}
-public Command runIndexMotorCommand(){    return runOnce(() -> {    setIndexSpeed(1);   });}
-public Command stopIndexMotorCommand(){   return runOnce(() -> {    setIndexSpeed(0);   });}
+public Command runIndexMotorCommand(){    return runOnce(() -> {    indexerMotor.set(1);   });}
+public Command upIndexMotor(){            return runOnce(() -> {    indexSpeed+=0.1; indexerMotor.set(indexSpeed);});}
+public Command downIndexMotor(){            return runOnce(() -> {    indexSpeed-=0.1; indexerMotor.set(indexSpeed);});}
+public Command stopIndexMotorCommand(){   return runOnce(() -> {    indexerMotor.set(0);   });}
 
 
 
@@ -139,7 +148,7 @@ public Command stopIndexMotorCommand(){   return runOnce(() -> {    setIndexSpee
 public ParallelCommandGroup resetShooterCommand(){return
     stopIndexMotorCommand().alongWith(
     homeCommand()).alongWith(
-    stopCommand()
+    stopFWCommand()
 );}
 public ParallelCommandGroup pickupPieceCommand(){return 
     runIndexMotorCommand().alongWith(
@@ -166,8 +175,7 @@ public SequentialCommandGroup podiumSpeakerCommand(){   return
 
 @Override
 public void periodic() {
-    SmartDashboard.putNumber("Speed of Shooter", getShooterSpeed());
-    SmartDashboard.putNumber("Shooter Position", getAngle());
+    // SmartDashboard.putNumber("Shooter Position", getAngle());
     
 }
 
