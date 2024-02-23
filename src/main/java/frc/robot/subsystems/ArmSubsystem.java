@@ -144,28 +144,12 @@ public double setSpeed = 0;
 
     public Command runIntakeCommand(){
         return runOnce(() -> {
-            setSpeed = 0.1;
+            setSpeed = 1.0;
             intLeftMotor.set(setSpeed);
             intRightMotor.set(setSpeed);
             handoffMotor.set(setSpeed);
     });}
-
-    public Command fasterIntakeCommand(){
-        return runOnce(() -> {
-            setSpeed+=0.1;
-            intLeftMotor.set(setSpeed);
-            intRightMotor.set(setSpeed);
-            handoffMotor.set(setSpeed);
-        });
-    }
-    public Command slowerIntakeCommand(){
-        return runOnce(() -> {
-            setSpeed-=0.1;
-            intLeftMotor.set(setSpeed);
-            intRightMotor.set(setSpeed);
-            handoffMotor.set(setSpeed);
-        });
-    }
+   
 
     public Command stopIntakeCommand(){
         return runOnce(() -> {

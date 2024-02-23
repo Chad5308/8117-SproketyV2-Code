@@ -35,6 +35,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class RobotContainer {
 
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+  private final CommandXboxController testController = new CommandXboxController(0);
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
@@ -93,11 +94,8 @@ public RobotContainer() {
     opController.button(7).toggleOnTrue(s_Swerve.resetWheels()); //window button
     // opController.button(1).onTrue(LL_sub.autoAlignCommand());
 
-    // opController.x().onTrue(arm_sub.runIntakeCommand());
-    // opController.b().onTrue(arm_sub.stopIntakeCommand());
-    // opController.y().onTrue(arm_sub.fasterIntakeCommand());
-    // opController.a().onTrue(arm_sub.slowerIntakeCommand());
-
+    opController.x().onTrue(arm_sub.runIntakeCommand());
+    opController.b().onTrue(arm_sub.stopIntakeCommand());
     // opController.x().whileTrue(shooter_sub.rotateOutCommand());
     // opController.b().whileTrue(shooter_sub.rotateInCommand());
     // opController.x().whileFalse(shooter_sub.pitchStopCommand());
@@ -107,9 +105,6 @@ public RobotContainer() {
     opController.a().onTrue(shooter_sub.lowerSpeedCommand());
     opController.povDown().onTrue(shooter_sub.stopFWCommand());
 
-    opController.x().onTrue(shooter_sub.upIndexMotor());
-    opController.b().onTrue(shooter_sub.downIndexMotor());
-    opController.povUp().onTrue(shooter_sub.stopIndexMotorCommand());
 
 
     //Shooter Controls
@@ -121,9 +116,7 @@ public RobotContainer() {
     // opController.y().whileTrue(shooter_sub.extendCommand());
     // opController.y().whileFalse(shooter_sub.pitchStopCommand());
 
-    // //Index Controls
-    // opController.rightBumper().onTrue(shooter_sub.runIndexMotorCommand().until(shooter_sub::isPresent));
-    // opController.leftBumper().onTrue(shooter_sub.stopIndexMotorCommand());
+    // //Laterator Controlls
 
     // opController.axisGreaterThan(3, 0.5).onTrue(arm_sub.liftLaterator());
     // opController.axisGreaterThan(3, 0.5).onFalse(arm_sub.stopLaterator());

@@ -65,7 +65,7 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final boolean kBackLeftTurningEncoderReversed = false;
     public static final boolean kBackRightTurningEncoderReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = true;
+    public static final boolean kFrontLeftDriveEncoderReversed = false;
     public static final boolean kFrontRightDriveEncoderReversed = false;
     public static final boolean kBackLeftDriveEncoderReversed = true;
     public static final boolean kBackRightDriveEncoderReversed = false;
@@ -178,8 +178,8 @@ public static final class ShooterConstants{
   //CAN Bus Numbers
   public static final int fwLeftMotorNum = 16;
   public static final int fwRightMotorNum = 17;
-  public static final int indexerMotor = 19;
-  public static final int pitchEncoder = 18;
+  public static final int indexerMotor = 18;
+  public static final int pitchEncoder = 19;
   public static final int indexSensor = 20;
 
 
@@ -205,7 +205,7 @@ public static final class ShooterConstants{
   public static final double pitchOffset = 0;
   public static final boolean pitchReversed = false;
   public static final boolean fwLeftInverted = false;
-  public static final boolean fwRightInverted = false;
+  public static final boolean fwRightInverted = true;
 
 
   //Known Angles

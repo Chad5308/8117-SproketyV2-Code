@@ -58,6 +58,9 @@ public ShooterSubsystem(){
     fwRightMotor.restoreFactoryDefaults();
     indexerMotor.restoreFactoryDefaults();
 
+    fwLeftMotor.setInverted(Constants.ShooterConstants.fwLeftInverted);
+    fwRightMotor.setInverted(Constants.ShooterConstants.fwRightInverted);
+
     fwLeftMotor.setIdleMode(IdleMode.kCoast);
     fwRightMotor.setIdleMode(IdleMode.kCoast);
     indexerMotor.setIdleMode(IdleMode.kBrake);
@@ -111,10 +114,8 @@ public void setShooterSpeed(double speed){
     fwRightMotor.set(speed);
 }
 
-public Command upSpeedCommand(){            return runOnce(() -> { shootSpeed+=0.1; fwLeftMotor.set(shootSpeed);
-    fwRightMotor.set(shootSpeed+0.1); });}
-public Command lowerSpeedCommand(){         return runOnce(() -> { shootSpeed-=0.1; fwLeftMotor.set(shootSpeed);
-    fwRightMotor.set(shootSpeed-0.1); });}
+public Command upSpeedCommand(){            return runOnce(() -> { shootSpeed+=0.1; fwLeftMotor.set(shootSpeed); fwRightMotor.set(shootSpeed);});}
+public Command lowerSpeedCommand(){         return runOnce(() -> { shootSpeed-=0.1; fwLeftMotor.set(shootSpeed); fwRightMotor.set(shootSpeed);});}
 public Command stopFWCommand(){             return runOnce(() -> { setShooterSpeed(0); });}
 public Command closeSpeakerSpeedCommand(){  return runOnce(() -> { setShooterSpeed(0.1);});}
 public Command podiumSpeakerSpeedCommand(){ return runOnce(() -> { setShooterSpeed(0.1);});}
@@ -133,42 +134,18 @@ public Command rotateOutCommand(){  return runOnce(() -> {  pitchPID.setReferenc
 public Command rotateInCommand(){  return runOnce(() -> {  pitchPID.setReference(-0.5, ControlType.kVelocity);});}
 
 
-//Indexer methods
-public boolean isPresent(){               return shooterIndexer.get();}
-public double indexSpeed = 0;
-public double getIndexSpeed(){            return indexEncoder.getVelocity();}
-public Command runIndexMotorCommand(){    return runOnce(() -> {    indexerMotor.set(1);   });}
-public Command upIndexMotor(){            return runOnce(() -> {    indexSpeed+=0.1; indexerMotor.set(indexSpeed);});}
-public Command downIndexMotor(){            return runOnce(() -> {    indexSpeed-=0.1; indexerMotor.set(indexSpeed);});}
-public Command stopIndexMotorCommand(){   return runOnce(() -> {    indexerMotor.set(0);   });}
-
-
 
 //Combined methods
-public ParallelCommandGroup resetShooterCommand(){return
-    stopIndexMotorCommand().alongWith(
-    homeCommand()).alongWith(
-    stopFWCommand()
-);}
-public ParallelCommandGroup pickupPieceCommand(){return 
-    runIndexMotorCommand().alongWith(
-    holdPieceCommand()
-);}
-public ParallelCommandGroup holdPieceCommand(){return
-    stopIndexMotorCommand().alongWith(
-    runOnce(() -> { setAngle(25);})
-);}
+
 public SequentialCommandGroup closeSpeakerCommand(){   return 
     runOnce(() -> {  setAngle(Constants.ShooterConstants.closeSpeakerAngle);}).andThen(
     closeSpeakerSpeedCommand()).andThen(
     Commands.waitSeconds(2)).andThen(
-    runIndexMotorCommand()
 );}
 public SequentialCommandGroup podiumSpeakerCommand(){   return
     runOnce(() -> {  setAngle(Constants.ShooterConstants.podiumSpeakerAngle);}).andThen(
     podiumSpeakerSpeedCommand()).andThen(
     Commands.waitSeconds(2)).andThen(
-    runIndexMotorCommand()
 );}
 
 
