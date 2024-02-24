@@ -13,7 +13,9 @@ import frc.robot.subsystems.Drivebase.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -35,7 +37,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class RobotContainer {
 
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
-  private final CommandXboxController testController = new CommandXboxController(0);
+  private final CommandXboxController shootController = new CommandXboxController(0);
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
@@ -70,17 +72,25 @@ public RobotContainer() {
 
 
     NamedCommands.registerCommand("FaceForward Wheels", s_Swerve.faceForwardCommand());
-    NamedCommands.registerCommand("Deploy", new ParallelCommandGroup());
-    NamedCommands.registerCommand("Shoot", d_Command);
+    NamedCommands.registerCommand("Deploy", arm_sub.deployCommand());
+    NamedCommands.registerCommand("Shoot", shooter_sub.closeSpeakerCommand().andThen(Commands.waitSeconds(2)).andThen(shooter_sub.shootCommand().andThen(Commands.waitSeconds(2)).andThen(shooter_sub.stopFWCommand())));
   }
 
   public void configureAutos(){
-    autoChooser.addOption("Test Auto", testAuto());
+    autoChooser.addOption("2 Piece Auto", TwoPieceAuto());
+    autoChooser.addOption("Leave Auto", leaveAuto());
+    autoChooser.addOption("Score + Leave", scoreLeaveAuto());
   }
 
-  public Command testAuto(){
-        return new PathPlannerAuto("Test Auto");
+  public Command TwoPieceAuto(){
+        return new PathPlannerAuto("2 Piece Auto");
     }
+  public Command leaveAuto(){
+    return new PathPlannerAuto("Leave Auto");
+  }
+  public Command scoreLeaveAuto(){
+    return new PathPlannerAuto("Score + Leave Auto");
+  }
   
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
@@ -91,30 +101,25 @@ public RobotContainer() {
     //Drive Controls
     opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
-    opController.button(7).toggleOnTrue(s_Swerve.resetWheels()); //window button
-    // opController.button(1).onTrue(LL_sub.autoAlignCommand());
+    opController.button(7).onTrue(s_Swerve.resetWheels()); //window looking button
+    opController.axisGreaterThan(3, 0.25).whileTrue(arm_sub.deployCommand());
+    opController.axisGreaterThan(3, 0.25).whileFalse(arm_sub.stopIntakeCommand());
 
-    opController.x().onTrue(arm_sub.runIntakeCommand());
-    opController.b().onTrue(arm_sub.stopIntakeCommand());
-    // opController.x().whileTrue(shooter_sub.rotateOutCommand());
-    // opController.b().whileTrue(shooter_sub.rotateInCommand());
-    // opController.x().whileFalse(shooter_sub.pitchStopCommand());
-    // opController.b().whileFalse(shooter_sub.pitchStopCommand());
+    opController.a().onTrue(arm_sub.liftIntakeCommand());
+    opController.b().onTrue(arm_sub.dropIntakeCommand());
+    // opController.povUp().onTrue(LL_sub.autoAlignCommand());
 
-    opController.y().onTrue(shooter_sub.upSpeedCommand());
-    opController.a().onTrue(shooter_sub.lowerSpeedCommand());
-    opController.povDown().onTrue(shooter_sub.stopFWCommand());
+    //shooter Controls
+    shootController.x().whileTrue(shooter_sub.rotateOutCommand());
+    shootController.b().whileTrue(shooter_sub.rotateInCommand());
+    shootController.x().whileFalse(shooter_sub.pitchStopCommand());
+    shootController.b().whileFalse(shooter_sub.pitchStopCommand());
+    shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.shootCommand());
+    shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopFWCommand());
 
+    // opController.y().onTrue(shooter_sub.upSpeedCommand());
+    // opController.a().onTrue(shooter_sub.lowerSpeedCommand());
 
-
-    //Shooter Controls
-    // opController.a().onTrue(shooter_sub.upSpeedCommand());
-    // opController.b().onTrue(shooter_sub.lowerSpeedCommand());
-    // opController.button(8).onTrue(shooter_sub.stopCommand());  //Lines button
-    // opController.x().whileTrue(shooter_sub.retractCommand());
-    // opController.x().whileFalse(shooter_sub.pitchStopCommand());
-    // opController.y().whileTrue(shooter_sub.extendCommand());
-    // opController.y().whileFalse(shooter_sub.pitchStopCommand());
 
     // //Laterator Controlls
 
@@ -122,11 +127,6 @@ public RobotContainer() {
     // opController.axisGreaterThan(3, 0.5).onFalse(arm_sub.stopLaterator());
     // opController.axisGreaterThan(4, 0.5).onTrue(arm_sub.lowerLaterator());
     // opController.axisGreaterThan(4, 0.5).onFalse(arm_sub.stopLaterator());
-
-
-    // //auto Index Controls
-    // opController.povDown().onTrue(shooter_sub.pickupPieceCommand());
-    // opController.povUp().onTrue(shooter_sub.holdPieceCommand());
     
     //Auto fire Controls
     // opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());

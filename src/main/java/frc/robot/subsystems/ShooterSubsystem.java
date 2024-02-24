@@ -1,18 +1,19 @@
 package frc.robot.subsystems;
 
-import javax.naming.PartialResultException;
-
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.AlternateEncoderType;
+import com.revrobotics.CANEncoder;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkAbsoluteEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkPIDController;
 
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -26,58 +27,59 @@ public class ShooterSubsystem extends SubsystemBase{
     
 public final CANSparkMax fwLeftMotor;
 public final CANSparkMax fwRightMotor;
-public final CANSparkMax indexerMotor;
-public final CANSparkMax pitchMotor;
+public final CANSparkMax lPitchMotor;
+public final CANSparkMax rPitchMotor;
 
 public final RelativeEncoder fwLeftEncoder;
 public final RelativeEncoder fwRightEncoder;
-public final RelativeEncoder indexEncoder;
-public final AbsoluteEncoder pitchEncoder;
+public final RelativeEncoder lPitchEncoder;
+public final RelativeEncoder rPitchEncoder;
 
 public final SparkPIDController fwLeftPID;
 public final SparkPIDController fwRightPID;
-public final SparkPIDController indexPID;
-public final SparkPIDController pitchPID;
+public final SparkPIDController lPitchPID;
+public final SparkPIDController rPitchPID;
 
-public final DigitalOutput shooterIndexer;
 
-public boolean pitchEncoderReversed;
+public boolean lPitchEncoderReversed;
 
 
 
 public ShooterSubsystem(){
     fwLeftMotor = new CANSparkMax(Constants.ShooterConstants.fwLeftMotorNum, MotorType.kBrushless);
     fwRightMotor = new CANSparkMax(Constants.ShooterConstants.fwRightMotorNum, MotorType.kBrushless);
-    indexerMotor = new CANSparkMax(Constants.ShooterConstants.indexerMotor, MotorType.kBrushless);
-    pitchMotor = new CANSparkMax(Constants.ShooterConstants.pitchEncoder, MotorType.kBrushless);
-    pitchEncoderReversed = Constants.ShooterConstants.pitchReversed;
+    lPitchMotor = new CANSparkMax(Constants.ShooterConstants.lPitchEncoder, MotorType.kBrushless);
+    rPitchMotor = new CANSparkMax(Constants.ShooterConstants.rPitchEncoder, MotorType.kBrushless);
     
 
 
     fwLeftMotor.restoreFactoryDefaults();
     fwRightMotor.restoreFactoryDefaults();
-    indexerMotor.restoreFactoryDefaults();
 
     fwLeftMotor.setInverted(Constants.ShooterConstants.fwLeftInverted);
     fwRightMotor.setInverted(Constants.ShooterConstants.fwRightInverted);
+    lPitchMotor.setInverted(Constants.ShooterConstants.lPitchReversed);
+    rPitchMotor.setInverted(Constants.ShooterConstants.rPitchReversed);
 
-    fwLeftMotor.setIdleMode(IdleMode.kCoast);
-    fwRightMotor.setIdleMode(IdleMode.kCoast);
-    indexerMotor.setIdleMode(IdleMode.kBrake);
+    fwLeftMotor.setIdleMode(IdleMode.kBrake);
+    fwRightMotor.setIdleMode(IdleMode.kBrake);
+    lPitchMotor.setIdleMode(IdleMode.kBrake);
+    rPitchMotor.setIdleMode(IdleMode.kBrake);
 
     fwLeftMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
     fwRightMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
-    indexerMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
 
     fwLeftEncoder = fwLeftMotor.getEncoder();
     fwRightEncoder = fwRightMotor.getEncoder();
-    indexEncoder = indexerMotor.getEncoder();
-    pitchEncoder = pitchMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
+    lPitchEncoder = lPitchMotor.getAlternateEncoder(SparkMaxAlternateEncoder.Type.kQuadrature, 8192);
+    rPitchEncoder = rPitchMotor.getEncoder();
 
     fwLeftPID = fwLeftMotor.getPIDController();
     fwRightPID = fwRightMotor.getPIDController();
-    indexPID = indexerMotor.getPIDController();
-    pitchPID = pitchMotor.getPIDController();
+    lPitchPID = lPitchMotor.getPIDController();
+    rPitchPID = rPitchMotor.getPIDController();
+    
+
     
 
     fwLeftPID.setP(Constants.ShooterConstants.kP_Shooter);
@@ -88,20 +90,17 @@ public ShooterSubsystem(){
     fwRightPID.setI(Constants.ShooterConstants.kI_Shooter);
     fwRightPID.setD(Constants.ShooterConstants.kD_Shooter);
 
-    indexPID.setP(Constants.ShooterConstants.kP_Index);
-    indexPID.setI(Constants.ShooterConstants.kI_Index);
-    indexPID.setD(Constants.ShooterConstants.kD_Index);
+    lPitchPID.setP(Constants.ShooterConstants.kP_pitch);
+    lPitchPID.setI(Constants.ShooterConstants.kI_pitch);
+    lPitchPID.setD(Constants.ShooterConstants.kD_pitch);
 
-    pitchPID.setP(Constants.ShooterConstants.kP_pitch);
-    pitchPID.setI(Constants.ShooterConstants.kI_pitch);
-    pitchPID.setD(Constants.ShooterConstants.kD_pitch);
+    rPitchPID.setP(Constants.ShooterConstants.kP_pitch);
+    rPitchPID.setI(Constants.ShooterConstants.kI_pitch);
+    rPitchPID.setD(Constants.ShooterConstants.kD_pitch);
 
-    pitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
-    pitchEncoder.setZeroOffset(Constants.ShooterConstants.pitchOffset);
-
-    shooterIndexer = new DigitalOutput(Constants.ShooterConstants.indexSensor);
-
-    pitchMotor.setOpenLoopRampRate(2);
+    lPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
+    lPitchMotor.setOpenLoopRampRate(2);
+    rPitchMotor.setOpenLoopRampRate(2);
     
 }
 
@@ -114,45 +113,54 @@ public void setShooterSpeed(double speed){
     fwRightMotor.set(speed);
 }
 
-public Command upSpeedCommand(){            return runOnce(() -> { shootSpeed+=0.1; fwLeftMotor.set(shootSpeed); fwRightMotor.set(shootSpeed);});}
-public Command lowerSpeedCommand(){         return runOnce(() -> { shootSpeed-=0.1; fwLeftMotor.set(shootSpeed); fwRightMotor.set(shootSpeed);});}
-public Command stopFWCommand(){             return runOnce(() -> { setShooterSpeed(0); });}
-public Command closeSpeakerSpeedCommand(){  return runOnce(() -> { setShooterSpeed(0.1);});}
-public Command podiumSpeakerSpeedCommand(){ return runOnce(() -> { setShooterSpeed(0.1);});}
+public Command upSpeedCommand(){return runOnce(() -> { 
+    shootSpeed+=0.1; 
+    fwLeftMotor.set(shootSpeed); 
+    fwRightMotor.set(shootSpeed);
+});}
+
+public Command lowerSpeedCommand(){return runOnce(() -> { 
+    shootSpeed-=0.1;
+    fwLeftMotor.set(shootSpeed);
+    fwRightMotor.set(shootSpeed);
+});}
+
+public Command stopFWCommand(){return runOnce(() -> { 
+    setShooterSpeed(0); 
+});}
+
+public Command shootCommand(){return runOnce(() -> {
+    setShooterSpeed(1);
+});}
 
 
 //Angular methods
 // "0" degrees is the home position where a game piece would be indexed
-public double getAngle() {          return pitchEncoder.getPosition();}
-public void setAngle(double angle){ pitchPID.setReference(angle, ControlType.kPosition);}
+public double getAngle() {          return lPitchEncoder.getPosition();}
+public void setAngle(double angle){ lPitchPID.setReference(angle, ControlType.kPosition); rPitchPID.setReference(angle, ControlType.kPosition);}
+public void setSpeed(double speed){lPitchMotor.set(speed); rPitchMotor.set(speed);}
 public Command homeCommand(){       return runOnce(() -> {  setAngle(0);    });}
 public Command extendCommand(){     return runOnce(() -> {  setAngle(getAngle()+5);    });}
 public Command retractCommand(){    return runOnce(() -> {  setAngle(getAngle()-5);    });}
-public Command pitchStopCommand(){  return runOnce(() -> {  pitchPID.setReference(0, ControlType.kVelocity);  });}
+public Command pitchStopCommand(){  return runOnce(() -> {  setSpeed(0);});}
 
-public Command rotateOutCommand(){  return runOnce(() -> {  pitchPID.setReference(0.5, ControlType.kVelocity);});}
-public Command rotateInCommand(){  return runOnce(() -> {  pitchPID.setReference(-0.5, ControlType.kVelocity);});}
+public Command rotateOutCommand(){  return runOnce(() -> {  setSpeed(0.5);});}
+public Command rotateInCommand(){  return runOnce(() -> {  setSpeed(-0.5);});}
 
 
 
 //Combined methods
 
-public SequentialCommandGroup closeSpeakerCommand(){   return 
-    runOnce(() -> {  setAngle(Constants.ShooterConstants.closeSpeakerAngle);}).andThen(
-    closeSpeakerSpeedCommand()).andThen(
-    Commands.waitSeconds(2)).andThen(
+public Command closeSpeakerCommand(){   return runOnce(() -> {  
+    setAngle(Constants.ShooterConstants.closeSpeakerAngle);}
 );}
-public SequentialCommandGroup podiumSpeakerCommand(){   return
-    runOnce(() -> {  setAngle(Constants.ShooterConstants.podiumSpeakerAngle);}).andThen(
-    podiumSpeakerSpeedCommand()).andThen(
-    Commands.waitSeconds(2)).andThen(
-);}
+
 
 
 
 @Override
 public void periodic() {
-    // SmartDashboard.putNumber("Shooter Position", getAngle());
+    SmartDashboard.putNumber("Shooter Position", getAngle());
     
 }
 

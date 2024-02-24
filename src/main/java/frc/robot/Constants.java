@@ -55,7 +55,7 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final int kBackRightDriveAbsoluteEncoderPort = 11;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 12;
     
-    public static final double kFLDegrees = 11.162;
+    public static final double kFLDegrees = 277.21;
     public static final double kFRDegrees = 217.529;
     public static final double kBRDegrees = 155.4785;
     public static final double kBLDegrees = 45.791;
@@ -65,7 +65,7 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final boolean kBackLeftTurningEncoderReversed = false;
     public static final boolean kBackRightTurningEncoderReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = false;
+    public static final boolean kFrontLeftDriveEncoderReversed = true;
     public static final boolean kFrontRightDriveEncoderReversed = false;
     public static final boolean kBackLeftDriveEncoderReversed = true;
     public static final boolean kBackRightDriveEncoderReversed = false;
@@ -158,7 +158,7 @@ public static final class intakeConstants {
   public static final double kD_Handoff = 0;
 
   public static final int liftNum = 1;
-  public static final int dropNum = 2;
+  public static final int dropNum = 0;
 
 }
 
@@ -178,8 +178,8 @@ public static final class ShooterConstants{
   //CAN Bus Numbers
   public static final int fwLeftMotorNum = 16;
   public static final int fwRightMotorNum = 17;
-  public static final int indexerMotor = 18;
-  public static final int pitchEncoder = 19;
+  public static final int lPitchEncoder = 18;
+  public static final int rPitchEncoder = 19;
   public static final int indexSensor = 20;
 
 
@@ -203,7 +203,8 @@ public static final class ShooterConstants{
   //Encoder values
   public static final double toDegrees = 360;
   public static final double pitchOffset = 0;
-  public static final boolean pitchReversed = false;
+  public static final boolean lPitchReversed = true;
+  public static final boolean rPitchReversed = false;
   public static final boolean fwLeftInverted = false;
   public static final boolean fwRightInverted = true;
 
