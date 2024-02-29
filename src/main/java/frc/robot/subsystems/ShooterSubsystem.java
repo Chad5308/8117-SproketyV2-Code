@@ -1,6 +1,10 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
 import com.revrobotics.AbsoluteEncoder;
 import com.revrobotics.AlternateEncoderType;
@@ -40,12 +44,33 @@ public final SparkPIDController fwRightPID;
 public final SparkPIDController lPitchPID;
 public final SparkPIDController rPitchPID;
 
+public final TalonFX leftFlyWheel;
+public final TalonFX rightFlyWheel;
+private final VelocityVoltage motorVelocity = new VelocityVoltage(0);
+
+
+
 
 public boolean lPitchEncoderReversed;
 
 
 
 public ShooterSubsystem(){
+leftFlyWheel = new TalonFX(Constants.ShooterConstants.leftFlyWheelNum);
+rightFlyWheel = new TalonFX(Constants.ShooterConstants.rightFlyWheelNum);
+
+leftFlyWheel.setControl(new Follower(leftFlyWheel.getDeviceID(), Constants.ShooterConstants.leftFlyWheelInverted));
+rightFlyWheel.setControl(new Follower(rightFlyWheel.getDeviceID(), Constants.ShooterConstants.rightFlyWheelInverted));
+
+ var slot0Configs = new Slot0Configs();
+    slot0Configs.kV = 0.1214;
+    slot0Configs.kP = 0.0;
+    slot0Configs.kI = 0.0;
+    slot0Configs.kD = 0.0;
+leftFlyWheel.getConfigurator().apply(slot0Configs, 0.05);
+rightFlyWheel.getConfigurator().apply(slot0Configs, 0.05);
+motorVelocity.Slot = 0;
+
     fwLeftMotor = new CANSparkMax(Constants.ShooterConstants.fwLeftMotorNum, MotorType.kBrushless);
     fwRightMotor = new CANSparkMax(Constants.ShooterConstants.fwRightMotorNum, MotorType.kBrushless);
     lPitchMotor = new CANSparkMax(Constants.ShooterConstants.lPitchEncoder, MotorType.kBrushless);
@@ -98,6 +123,7 @@ public ShooterSubsystem(){
     rPitchPID.setI(Constants.ShooterConstants.kI_pitch);
     rPitchPID.setD(Constants.ShooterConstants.kD_pitch);
 
+    rPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
     lPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
     lPitchMotor.setOpenLoopRampRate(2);
     rPitchMotor.setOpenLoopRampRate(2);
@@ -111,6 +137,8 @@ public void setShooterSpeed(double speed){
     speed = speed <=0 ? 0 : speed;
     fwLeftMotor.set(speed);
     fwRightMotor.set(speed);
+    leftFlyWheel.set(speed);
+    rightFlyWheel.set(-speed);
 }
 
 public Command upSpeedCommand(){return runOnce(() -> { 
@@ -136,12 +164,10 @@ public Command shootCommand(){return runOnce(() -> {
 
 //Angular methods
 // "0" degrees is the home position where a game piece would be indexed
-public double getAngle() {          return lPitchEncoder.getPosition();}
+
 public void setAngle(double angle){ lPitchPID.setReference(angle, ControlType.kPosition); rPitchPID.setReference(angle, ControlType.kPosition);}
 public void setSpeed(double speed){lPitchMotor.set(speed); rPitchMotor.set(speed);}
-public Command homeCommand(){       return runOnce(() -> {  setAngle(0);    });}
-public Command extendCommand(){     return runOnce(() -> {  setAngle(getAngle()+5);    });}
-public Command retractCommand(){    return runOnce(() -> {  setAngle(getAngle()-5);    });}
+public Command testCommand(){       return runOnce(() -> {  setAngle(90);   });}
 public Command pitchStopCommand(){  return runOnce(() -> {  setSpeed(0);});}
 
 public Command rotateOutCommand(){  return runOnce(() -> {  setSpeed(0.5);});}
@@ -160,7 +186,8 @@ public Command closeSpeakerCommand(){   return runOnce(() -> {
 
 @Override
 public void periodic() {
-    SmartDashboard.putNumber("Shooter Position", getAngle());
+
+    SmartDashboard.putNumber("Shooter Position", rPitchEncoder.getPosition());
     
 }
 

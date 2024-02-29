@@ -86,7 +86,7 @@ public RobotContainer() {
         return new PathPlannerAuto("2 Piece Auto");
     }
   public Command leaveAuto(){
-    return new PathPlannerAuto("Leave Auto");
+    return new PathPlannerAuto("leave Auto");
   }
   public Command scoreLeaveAuto(){
     return new PathPlannerAuto("Score + Leave Auto");
@@ -116,6 +116,8 @@ public RobotContainer() {
     shootController.b().whileFalse(shooter_sub.pitchStopCommand());
     shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.shootCommand());
     shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopFWCommand());
+
+    shootController.povUp().onTrue(shooter_sub.testCommand());
 
     // opController.y().onTrue(shooter_sub.upSpeedCommand());
     // opController.a().onTrue(shooter_sub.lowerSpeedCommand());

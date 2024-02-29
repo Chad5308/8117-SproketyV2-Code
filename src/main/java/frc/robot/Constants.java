@@ -182,13 +182,16 @@ public static final class ShooterConstants{
   public static final int rPitchEncoder = 19;
   public static final int indexSensor = 20;
 
+  public static final int leftFlyWheelNum = 21;
+  public static final int rightFlyWheelNum = 22;
+
 
   public static final double ramp_rate = 0.1;
 
  
 
   //PID Values
-  public static final double kP_Shooter = 0.5;
+  public static final double kP_Shooter = 0.005;
   public static final double kI_Shooter = 0;
   public static final double kD_Shooter = 0;
 
@@ -196,17 +199,19 @@ public static final class ShooterConstants{
   public static final double kI_Index = 0;
   public static final double kD_Index = 0;
 
-  public static final double kP_pitch = 0.5;
+  public static final double kP_pitch = 0.01;
   public static final double kI_pitch = 0;
   public static final double kD_pitch = 0;
 
   //Encoder values
-  public static final double toDegrees = 360;
+  public static final double toDegrees = 0.01*360;
   public static final double pitchOffset = 0;
   public static final boolean lPitchReversed = true;
   public static final boolean rPitchReversed = false;
   public static final boolean fwLeftInverted = false;
   public static final boolean fwRightInverted = true;
+  public static final boolean leftFlyWheelInverted = false;
+  public static final boolean rightFlyWheelInverted = true;
 
 
   //Known Angles
