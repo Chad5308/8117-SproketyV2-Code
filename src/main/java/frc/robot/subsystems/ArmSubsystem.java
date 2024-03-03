@@ -138,8 +138,14 @@ public double setSpeed = 0;
             setSpeed = 1;
             intLeftMotor.set(setSpeed);
             intRightMotor.set(setSpeed);
-    
     });}
+    public Command reverseIntakecommand(){
+        return runOnce(() -> {
+            setSpeed = -1;
+            intLeftMotor.set(setSpeed);
+            intRightMotor.set(setSpeed);
+        });
+    }
    
     public Command stopIntakeCommand(){
         return runOnce(() -> {

@@ -3,6 +3,11 @@ package frc.robot.subsystems.Drivebase;
 import java.util.Optional;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -11,15 +16,20 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 public class SwerveSubsystem extends SubsystemBase{
     public final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
@@ -27,6 +37,8 @@ public class SwerveSubsystem extends SubsystemBase{
     Optional<Alliance> alliance;
     public boolean fieldOriented;
     public Robot robot;
+    public ShooterSubsystem shoot_sub;
+    public ArmSubsystem arm_sub;
 
     public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
     public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDegrees, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
@@ -51,7 +63,7 @@ public void ResetAllEncoders() {
 backRightModule.getPosition()
     });
     
-    public SwerveSubsystem(Robot robot) {
+    public SwerveSubsystem(Robot robot, ShooterSubsystem shoot_sub, ArmSubsystem arm_sub) {
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -61,7 +73,26 @@ backRightModule.getPosition()
             start();
 
         this.robot = robot;
+        this.arm_sub = arm_sub;
+        this.shoot_sub = shoot_sub;
         alliance = robot.getAlliance();
+
+        AutoBuilder.configureHolonomic(
+      this::getPose, 
+      this::resetOdometry, 
+      this::getRobotRelativeSpeeds, 
+      this::setModuleStates, 
+      new HolonomicPathFollowerConfig(new PIDConstants(Constants.AutoConstants.kPTranslation, Constants.AutoConstants.kITranslation, Constants.AutoConstants.kDTranslation), new PIDConstants(Constants.AutoConstants.kITheta, Constants.AutoConstants.kITheta, Constants.AutoConstants.kDTheta), 
+      Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
+      Constants.ModuleConstants.moduleRadius, 
+      new ReplanningConfig(false, false)), 
+      this::allianceCheck,
+      this);
+
+
+      
+    NamedCommands.registerCommand("FaceForward Wheels", faceForwardCommand());
+    NamedCommands.registerCommand("Deploy", arm_sub.deployCommand());
     }
 
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
@@ -81,7 +112,7 @@ backRightModule.getPosition()
 
     //used for debugging and field centric
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 360);
+        return Math.IEEEremainder(-gyro.getAngle(), 0);
     }
 
     public Pose2d getPose() {
@@ -97,8 +128,18 @@ backRightModule.getPosition()
         return gyro.getRoll();
     }
 
+    public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frontLeftModule.getPosition(), frontRightModule.getPosition(), backLeftModule.getPosition(), backRightModule.getPosition()};
+
     public void resetOdometry(Pose2d pose) {
-        odometer.resetPosition(geRotation2d(), new SwerveModulePosition[] {frontLeftModule.getPosition(), frontRightModule.getPosition(), backLeftModule.getPosition(), backRightModule.getPosition()}, pose);
+        setPositions(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
+        odometer.resetPosition(geRotation2d(), swerveModulePositions, new Pose2d());
+        odometer.resetPosition(geRotation2d(), swerveModulePositions, pose);
+    }
+    public void setPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
+        FL.resetDriveEncoder();
+        FR.resetDriveEncoder();
+        BL.resetDriveEncoder();
+        BR.resetDriveEncoder();
     }
 
     public boolean allianceCheck(){
@@ -106,9 +147,18 @@ backRightModule.getPosition()
         return isRedAlliance;
     }
 
+    public ChassisSpeeds getRobotRelativeSpeeds(){
+
+        SwerveModuleState[] states = new SwerveModuleState[]{frontLeftModule.gState(), frontRightModule.gState(), backLeftModule.gState(), backRightModule.gState()};
+
+        return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(states);
+    }
+
+
     @Override
     public void periodic() {
 
+        
         
 
     odometer.update(geRotation2d(),  new SwerveModulePosition[] {
@@ -126,10 +176,10 @@ backRightModule.getPosition()
 //multiple debugging values are listed here. Names are self explanitory
 
         //Odometer and other gyro values
-       SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-       SmartDashboard.putNumber("Roll value", getRoll());
+    //    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    //    SmartDashboard.putNumber("Roll value", getRoll());
         SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
+        // SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
 
         //AE Degrees Reading
         SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kBLDegrees));

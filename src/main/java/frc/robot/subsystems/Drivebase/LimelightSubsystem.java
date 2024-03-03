@@ -2,6 +2,8 @@ package frc.robot.subsystems.Drivebase;
 
 import java.util.Optional;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -9,6 +11,7 @@ import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -79,6 +82,10 @@ public boolean autoAlign = false;
 
 @Override
 public void periodic(){
+
+// HttpCamera limelightCamera = new HttpCamera("CoprocessorCamera", "http://frcvision.local:8117/stream.mjpg");
+// CameraServer.addCamera(limelightCamera);
+
 if (s_swerve.allianceCheck() == true) {
             localizedPose = networkTables.getEntry("botpose_wpired").getDoubleArray(new double[6]);
 } else {

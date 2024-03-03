@@ -86,6 +86,9 @@ public void resetDrive() {
   driveMotorEncoder.setPosition(0);
   steerMotorEncoder.setPosition(0);
 }
+public void resetDriveEncoder() {
+  driveMotorEncoder.setPosition(0);
+}
 //stop method that stops the motors when the stick/s are within the deadzone < 0.01
 public void stop() {
   driveMotor.set(0);

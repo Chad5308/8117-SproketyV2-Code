@@ -125,16 +125,17 @@ motorVelocity.Slot = 0;
 
     rPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
     lPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
-    lPitchMotor.setOpenLoopRampRate(2);
-    rPitchMotor.setOpenLoopRampRate(2);
-    
+    lPitchMotor.setOpenLoopRampRate(10);
+    rPitchMotor.setOpenLoopRampRate(10);
+rPitchPID.setSmartMotionMaxVelocity(10, 0);
+lPitchPID.setSmartMotionMaxVelocity(10, 0);
 }
 
 
 //Shooter Speed methods
 public double shootSpeed = 0;
 public void setShooterSpeed(double speed){
-    speed = speed <=0 ? 0 : speed;
+    // speed = speed <=0 ? 0 : speed;
     fwLeftMotor.set(speed);
     fwRightMotor.set(speed);
     leftFlyWheel.set(speed);
@@ -152,14 +153,41 @@ public Command lowerSpeedCommand(){return runOnce(() -> {
     fwLeftMotor.set(shootSpeed);
     fwRightMotor.set(shootSpeed);
 });}
-
 public Command stopFWCommand(){return runOnce(() -> { 
     setShooterSpeed(0); 
 });}
-
-public Command shootCommand(){return runOnce(() -> {
-    setShooterSpeed(1);
+public Command rampUpCommand(){return runOnce(() -> {
+    leftFlyWheel.set(0.7);
+    rightFlyWheel.set(-0.85);
 });}
+public Command fireCommand(){return runOnce(()-> {
+    fwLeftMotor.set(0.5);
+    fwRightMotor.set(0.85);
+    leftFlyWheel.set(0.5);
+    rightFlyWheel.set(-0.85);
+});}
+public Command indexShooterCommand(){
+    return runOnce(()-> {
+    fwLeftMotor.set(0.1);
+    fwRightMotor.set(0.1);
+    leftFlyWheel.set(0);
+    rightFlyWheel.set(0);
+    });
+}
+public Command reverseIndexShooterCommand(){
+    return runOnce(()-> {
+    fwLeftMotor.set(-0.1);
+    fwRightMotor.set(-0.1);
+    leftFlyWheel.set(0);
+    rightFlyWheel.set(0);
+    });
+}
+
+public Command sourceIntakeCommand(){
+    return runOnce(() -> {
+        setShooterSpeed(-0.5);
+    });
+}
 
 
 //Angular methods
@@ -170,8 +198,9 @@ public void setSpeed(double speed){lPitchMotor.set(speed); rPitchMotor.set(speed
 public Command testCommand(){       return runOnce(() -> {  setAngle(90);   });}
 public Command pitchStopCommand(){  return runOnce(() -> {  setSpeed(0);});}
 
-public Command rotateOutCommand(){  return runOnce(() -> {  setSpeed(0.5);});}
-public Command rotateInCommand(){  return runOnce(() -> {  setSpeed(-0.5);});}
+
+public Command rotateOutCommand(){  return runOnce(() -> {  setSpeed(1);});}
+public Command rotateInCommand(){  return runOnce(() -> {  setSpeed(-1);});}
 
 
 

@@ -157,8 +157,8 @@ public static final class intakeConstants {
   public static final double kI_Handoff = 0;
   public static final double kD_Handoff = 0;
 
-  public static final int liftNum = 1;
-  public static final int dropNum = 0;
+  public static final int liftNum = 0;
+  public static final int dropNum = 1;
 
 }
 
