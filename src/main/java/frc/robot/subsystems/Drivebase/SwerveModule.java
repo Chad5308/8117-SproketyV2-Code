@@ -127,7 +127,7 @@ public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
 }
 public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
+        return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
 }
 
 //This is our setDesiredState alg. Takes the current state and the desired state shown by the controller and points the wheels to that 
@@ -137,6 +137,7 @@ public void setDesiredState(SwerveModuleState state) {
   state = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(gState().angle.getDegrees()));
   driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   turningPidController.setReference(state.angle.getDegrees(), com.revrobotics.CANSparkBase.ControlType.kPosition);
+  
 }
 
 public void wheelFaceForward(double AEOffset) {

@@ -116,11 +116,11 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final double kMaxAccelerationMetersPerSecondSquared = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond;
     public static final double kMaxAngularAccelerationUnitsPerSecond = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
 
-    public static final double kPTranslation = 0.5;
-    public static final double kITranslation = 0;
+    public static final double kPTranslation = 0.08;
+    public static final double kITranslation = 0.005;
     public static final double kDTranslation = 0;
 
-    public static final double kPTheta = 1;
+    public static final double kPTheta = 0.05;
     public static final double kITheta = 0;
     public static final double kDTheta = 0;
 

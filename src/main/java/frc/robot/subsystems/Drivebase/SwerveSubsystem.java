@@ -16,18 +16,15 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.proto.Kinematics;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 
@@ -66,7 +63,7 @@ backRightModule.getPosition()
     public SwerveSubsystem(Robot robot, ShooterSubsystem shoot_sub, ArmSubsystem arm_sub) {
         new Thread(() -> {
             try {
-                Thread.sleep(1000);
+                Thread.sleep(500);
                 // zeroHeading();
                 zeroHeadingButton();
             } catch (Exception e) {}}).
@@ -96,10 +93,6 @@ backRightModule.getPosition()
     }
 
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
-    public void zeroHeading() {
-        gyro.reset();
-        gyro.setAngleAdjustment(180);
-    }
 
     public void zeroHeadingButton() {
         gyro.reset();
@@ -148,9 +141,7 @@ backRightModule.getPosition()
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds(){
-
         SwerveModuleState[] states = new SwerveModuleState[]{frontLeftModule.gState(), frontRightModule.gState(), backLeftModule.gState(), backRightModule.gState()};
-
         return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(states);
     }
 
@@ -176,7 +167,7 @@ backRightModule.getPosition()
 //multiple debugging values are listed here. Names are self explanitory
 
         //Odometer and other gyro values
-    //    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+       SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
     //    SmartDashboard.putNumber("Roll value", getRoll());
         SmartDashboard.putNumber("Robot Heading", getHeading());
         // SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());

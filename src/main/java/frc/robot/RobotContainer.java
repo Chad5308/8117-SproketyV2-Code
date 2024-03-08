@@ -13,17 +13,9 @@ import frc.robot.subsystems.Drivebase.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 
 
@@ -52,19 +44,7 @@ public class RobotContainer {
 public RobotContainer() {
   s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, LL_sub, opController));
   configureBindings();
-  
-  // AutoBuilder.configureHolonomic(
-  //     s_Swerve::getPose, 
-  //     s_Swerve::resetOdometry, 
-  //     d_Command::getSpeeds, 
-  //     s_Swerve::setModuleStates, 
-  //     new HolonomicPathFollowerConfig(new PIDConstants(Constants.AutoConstants.kPTranslation, Constants.AutoConstants.kITranslation, Constants.AutoConstants.kDTranslation), new PIDConstants(Constants.AutoConstants.kITheta, Constants.AutoConstants.kITheta, Constants.AutoConstants.kDTheta), 
-  //     Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
-  //     Constants.ModuleConstants.moduleRadius, 
-  //     new ReplanningConfig(false, false)), 
-  //     s_Swerve::allianceCheck,
-  //     s_Swerve);
-      
+
 
       
     autoChooser = AutoBuilder.buildAutoChooser();
