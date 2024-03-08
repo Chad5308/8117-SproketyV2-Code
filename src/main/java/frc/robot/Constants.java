@@ -78,6 +78,8 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final double kPhysicalMaxSpeedMetersPerSecond = 4.572;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = kPhysicalMaxSpeedMetersPerSecond * Math.PI;
 
+
+  //test
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.35;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
