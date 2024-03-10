@@ -14,13 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
 
 
 
@@ -34,49 +29,45 @@ import com.pathplanner.lib.util.ReplanningConfig;
 public class RobotContainer {
 
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+  private final CommandXboxController shootController = new CommandXboxController(0);
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
-  public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot);
   private SendableChooser<Command> autoChooser;
-  public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
-  public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
   public ArmSubsystem arm_sub = new ArmSubsystem();
+  public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, arm_sub);
+  public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
+  public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
 
 
 
 public RobotContainer() {
   s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, LL_sub, opController));
   configureBindings();
-  
-  AutoBuilder.configureHolonomic(
-      s_Swerve::getPose, 
-      s_Swerve::resetOdometry, 
-      d_Command::getSpeeds, 
-      s_Swerve::setModuleStates, 
-      new HolonomicPathFollowerConfig(new PIDConstants(Constants.AutoConstants.kPTranslation, Constants.AutoConstants.kITranslation, Constants.AutoConstants.kDTranslation), new PIDConstants(Constants.AutoConstants.kITheta, Constants.AutoConstants.kITheta, Constants.AutoConstants.kDTheta), 
-      Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
-      Constants.ModuleConstants.moduleRadius, 
-      new ReplanningConfig(true, true)), 
-      s_Swerve::allianceCheck,
-      s_Swerve);
-      
+
 
       
     autoChooser = AutoBuilder.buildAutoChooser();
     SmartDashboard.putData("Auto Chooser", autoChooser);    
 
 
-    NamedCommands.registerCommand("FaceForward Wheels", s_Swerve.faceForwardCommand());
   }
 
   public void configureAutos(){
-    autoChooser.addOption("Test Auto", testAuto());
+    autoChooser.addOption("2 Piece Auto", TwoPieceAuto());
+    autoChooser.addOption("Leave Auto", leaveAuto());
+    autoChooser.addOption("Score + Leave", scoreLeaveAuto());
   }
 
-  public Command testAuto(){
-        return new PathPlannerAuto("Test Auto");
+  public Command TwoPieceAuto(){
+        return new PathPlannerAuto("2 Piece Auto");
     }
+  public Command leaveAuto(){
+    return new PathPlannerAuto("leave Auto");
+  }
+  public Command scoreLeaveAuto(){
+    return new PathPlannerAuto("Score + Leave Auto");
+  }
   
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
@@ -87,28 +78,51 @@ public RobotContainer() {
     //Drive Controls
     opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
-    opController.button(7).toggleOnTrue(s_Swerve.resetWheels()); //window button
-    // opController.button(1).onTrue(LL_sub.autoAlignCommand());
+    opController.button(7).onTrue(s_Swerve.resetWheels()); //window looking button
+    opController.axisGreaterThan(3, 0.25).whileTrue(arm_sub.runIntakeCommand());
+    opController.axisGreaterThan(3, 0.25).whileFalse(arm_sub.stopIntakeCommand());
+    opController.axisGreaterThan(2, 0.25).whileTrue(arm_sub.dropIntakeCommand());
+    opController.axisGreaterThan(2, 0.25).whileFalse(arm_sub.liftIntakeCommand());
 
-    //Shooter Controls
-    opController.a().whileTrue(shooter_sub.upSpeedCommand());
-    opController.b().whileTrue(shooter_sub.lowerSpeedCommand());
-    opController.button(8).onTrue(shooter_sub.stopCommand());  //Lines button
-    opController.x().whileTrue(shooter_sub.retractCommand());
-    opController.x().whileFalse(shooter_sub.pitchStopCommand());
-    opController.y().whileTrue(shooter_sub.extendCommand());
-    opController.y().whileFalse(shooter_sub.pitchStopCommand());
+    opController.a().onTrue(arm_sub.liftIntakeCommand());
+    opController.b().onTrue(arm_sub.dropIntakeCommand());
+    // opController.povUp().onTrue(LL_sub.autoAlignCommand());
 
-    //Index Controls
-    opController.rightBumper().onTrue(shooter_sub.runIndexMotorCommand().until(shooter_sub::isPresent));
-    opController.leftBumper().onTrue(shooter_sub.stopIndexMotorCommand());
+    //shooter Controls
+    shootController.x().whileTrue(shooter_sub.rotateOutCommand());
+    shootController.b().whileTrue(shooter_sub.rotateInCommand());
+    shootController.x().whileFalse(shooter_sub.pitchStopCommand());
+    shootController.b().whileFalse(shooter_sub.pitchStopCommand());
+    shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.rampUpCommand());
+    shootController.rightBumper().whileTrue(shooter_sub.fireCommand());
+    shootController.rightBumper().whileFalse(shooter_sub.stopFWCommand());
+    shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopFWCommand());
 
-    //auto Index Controls
-    opController.povDown().onTrue(shooter_sub.pickupPieceCommand());
-    opController.povUp().onTrue(shooter_sub.holdPieceCommand());
+    // shootController.povUp().onTrue(shooter_sub.testCommand());
+    shootController.axisGreaterThan(2, 0.25).whileTrue(shooter_sub.indexShooterCommand());
+    shootController.axisGreaterThan(2, 0.25).whileFalse(shooter_sub.stopFWCommand());
+    shootController.povUp().whileTrue(arm_sub.runIntakeCommand());
+    shootController.povUp().whileFalse(arm_sub.stopIntakeCommand());
+    shootController.povDown().whileTrue(arm_sub.reverseIntakecommand());
+    shootController.povDown().whileFalse(arm_sub.stopIntakeCommand());
+    shootController.povLeft().whileTrue(shooter_sub.sourceIntakeCommand());
+    shootController.povLeft().whileFalse(shooter_sub.stopFWCommand());
+    shootController.povRight().whileTrue(shooter_sub.reverseIndexShooterCommand());
+    shootController.povRight().whileFalse(shooter_sub.stopFWCommand());
+
+    // opController.y().onTrue(shooter_sub.upSpeedCommand());
+    // opController.a().onTrue(shooter_sub.lowerSpeedCommand());
+
+
+    // //Laterator Controlls
+
+    // opController.axisGreaterThan(3, 0.5).onTrue(arm_sub.liftLaterator());
+    // opController.axisGreaterThan(3, 0.5).onFalse(arm_sub.stopLaterator());
+    // opController.axisGreaterThan(4, 0.5).onTrue(arm_sub.lowerLaterator());
+    // opController.axisGreaterThan(4, 0.5).onFalse(arm_sub.stopLaterator());
     
     //Auto fire Controls
-    opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());
+    // opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());
 
 
   }

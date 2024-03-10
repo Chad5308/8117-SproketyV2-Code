@@ -40,35 +40,35 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
 //start front front left to front right to back right and all drives then all steers then all absolutes
 
-    public static final int kFrontLeftDriveMotorPort = 3;
-    public static final int kFrontRightDriveMotorPort = 6;
-    public static final int kBackRightDriveMotorPort = 9;
-    public static final int kBackLeftDriveMotorPort = 11;
+public static final int kFrontRightDriveMotorPort = 1;
+public static final int kFrontRightTurningMotorPort = 2;
+public static final int kBackRightDriveMotorPort = 3;
+public static final int kBackRightTurningMotorPort = 4;
+public static final int kBackLeftTurningMotorPort = 5;
+public static final int kBackLeftDriveMotorPort = 6;
+public static final int kFrontLeftDriveMotorPort = 7;
+public static final int kFrontLeftTurningMotorPort = 8;
 
-    public static final int kFrontLeftTurningMotorPort = 2;
-    public static final int kFrontRightTurningMotorPort = 7;
-    public static final int kBackLeftTurningMotorPort = 12;
-    public static final int kBackRightTurningMotorPort = 10;
     
-    public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
-    public static final int kFrontRightDriveAbsoluteEncoderPort = 5;
-    public static final int kBackRightDriveAbsoluteEncoderPort = 8;
+    public static final int kFrontLeftDriveAbsoluteEncoderPort = 9;
+    public static final int kFrontRightDriveAbsoluteEncoderPort = 10;
+    public static final int kBackRightDriveAbsoluteEncoderPort = 11;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 12;
     
-    public static final double kBRDegrees = 96.591;//9.405
-    public static final double kBLDegrees = 26.367;//294.875
-    public static final double kFLDegrees = 158.818;//68.82
-    public static final double kFRDegrees = -26.718;//242.93
+    public static final double kFLDegrees = 277.21;
+    public static final double kFRDegrees = 217.529;
+    public static final double kBRDegrees = 155.4785;
+    public static final double kBLDegrees = 45.791;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kFrontRightTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;
     public static final boolean kBackRightTurningEncoderReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = false;
-    public static final boolean kFrontRightDriveEncoderReversed = true;
-    public static final boolean kBackLeftDriveEncoderReversed = false;
-    public static final boolean kBackRightDriveEncoderReversed = true;
+    public static final boolean kFrontLeftDriveEncoderReversed = true;
+    public static final boolean kFrontRightDriveEncoderReversed = false;
+    public static final boolean kBackLeftDriveEncoderReversed = true;
+    public static final boolean kBackRightDriveEncoderReversed = false;
 
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
@@ -78,6 +78,8 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kPhysicalMaxSpeedMetersPerSecond = 4.572;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = kPhysicalMaxSpeedMetersPerSecond * Math.PI;
 
+
+  //test
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.35;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
@@ -86,7 +88,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
   
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
-    public static final double kDriveMotorGearRatio = 7 / 1;
+    public static final double kDriveMotorGearRatio = 6.75 / 1;
     public static final double kTurningMotorGearRatio = 12.8 / 1;
     public static final double kDriveEncoderRot2Meter = 1/23.58;
     
@@ -96,9 +98,9 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
 
-    public static final double kPTurning = 0.01; //test a higher value 0.025 is to high
-    public static final double kITurning = 0.00015;
-    public static final double kDTurning = 0.05;
+    public static final double kPTurning = 0.0075; //test a higher value 0.025 is to high
+    public static final double kITurning = 0;
+    public static final double kDTurning = 0.75;
 
     public static final double moduleRadius = 0.4318; //meters -- measured from center of robot to furthest module.
 }
@@ -114,11 +116,11 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kMaxAccelerationMetersPerSecondSquared = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond;
     public static final double kMaxAngularAccelerationUnitsPerSecond = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
 
-    public static final double kPTranslation = 0.5;
-    public static final double kITranslation = 0;
+    public static final double kPTranslation = 0.08;
+    public static final double kITranslation = 0.005;
     public static final double kDTranslation = 0;
 
-    public static final double kPTheta = 1;
+    public static final double kPTheta = 0.05;
     public static final double kITheta = 0;
     public static final double kDTheta = 0;
 
@@ -138,7 +140,6 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
 
 public static final class intakeConstants {
-//TODO Change these cause they are gonna be wrong
   public static final int intLeftEncoder = 13;
   public static final int intRightEncoder = 14;
   public static final int handoffEncoder = 15;
@@ -146,8 +147,8 @@ public static final class intakeConstants {
 
   public static final double ramp_rate = 0.5;
 
-  public static final boolean leftInverted = false;
-  public static final boolean rightInverted = false;
+  public static final boolean leftInverted = true;
+  public static final boolean rightInverted = true;
   public static final boolean handoffInverted = false;
 
   public static final double kP_Intake = 0.05;
@@ -158,8 +159,8 @@ public static final class intakeConstants {
   public static final double kI_Handoff = 0;
   public static final double kD_Handoff = 0;
 
-  public static final int liftNum = 1;
-  public static final int dropNum = 2;
+  public static final int liftNum = 0;
+  public static final int dropNum = 1;
 
 }
 
@@ -177,11 +178,14 @@ public static final double linearkD = 0;
 
 public static final class ShooterConstants{
   //CAN Bus Numbers
-  public static final int fwLeftMotorNum = 17;
-  public static final int fwRightMotorNum = 18;
-  public static final int indexerMotor = 19;
-  public static final int pitchEncoder = 20;
-  public static final int indexSensor = 2;
+  public static final int fwLeftMotorNum = 16;
+  public static final int fwRightMotorNum = 17;
+  public static final int lPitchEncoder = 18;
+  public static final int rPitchEncoder = 19;
+  public static final int indexSensor = 20;
+
+  public static final int leftFlyWheelNum = 21;
+  public static final int rightFlyWheelNum = 22;
 
 
   public static final double ramp_rate = 0.1;
@@ -189,7 +193,7 @@ public static final class ShooterConstants{
  
 
   //PID Values
-  public static final double kP_Shooter = 0.5;
+  public static final double kP_Shooter = 0.005;
   public static final double kI_Shooter = 0;
   public static final double kD_Shooter = 0;
 
@@ -197,27 +201,31 @@ public static final class ShooterConstants{
   public static final double kI_Index = 0;
   public static final double kD_Index = 0;
 
-  public static final double kP_pitch = 0.5;
+  public static final double kP_pitch = 0.01;
   public static final double kI_pitch = 0;
   public static final double kD_pitch = 0;
 
   //Encoder values
-  public static final double toDegrees = 360;
+  public static final double toDegrees = 0.01*360;
   public static final double pitchOffset = 0;
-  public static final boolean pitchReversed = false;
+  public static final boolean lPitchReversed = true;
+  public static final boolean rPitchReversed = false;
   public static final boolean fwLeftInverted = false;
-  public static final boolean fwRightInverted = false;
+  public static final boolean fwRightInverted = true;
+  public static final boolean leftFlyWheelInverted = false;
+  public static final boolean rightFlyWheelInverted = true;
 
 
   //Known Angles
   public static final double sourceAngle = 185.0;
   public static final double closeSpeakerAngle = 20.0;
+  public static final double podiumSpeakerAngle = 42.0;
   public static final double ampAngle = 120.0;
 }
 
 public static final class LateratorConstants{
-  public static final int leftMotor = 20;
-  public static final int rightMotor = 21;
+  public static final int leftMotor = 21;
+  public static final int rightMotor = 22;
 
   public static final double ramp_rate = 1;
 

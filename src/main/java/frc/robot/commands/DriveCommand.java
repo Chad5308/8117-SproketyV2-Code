@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,6 +10,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Drivebase.LimelightSubsystem;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
+
 
 public class DriveCommand extends Command{
     
@@ -23,6 +25,8 @@ public class DriveCommand extends Command{
      public double ySpeed, xSpeed, turningSpeed;
      public double ll_zSpeed, ll_xSpeed, ll_turningSpeed;
     public boolean limelightTracking = false;
+    public CameraServer camera;
+    
 
 
 
@@ -35,7 +39,7 @@ public class DriveCommand extends Command{
                 addRequirements(swerveSubsystem, LL_Sub);
                 this.opController = opController;
 
-            
+            CameraServer.startAutomaticCapture();
 
     }
 

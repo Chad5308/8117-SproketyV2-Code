@@ -86,6 +86,9 @@ public void resetDrive() {
   driveMotorEncoder.setPosition(0);
   steerMotorEncoder.setPosition(0);
 }
+public void resetDriveEncoder() {
+  driveMotorEncoder.setPosition(0);
+}
 //stop method that stops the motors when the stick/s are within the deadzone < 0.01
 public void stop() {
   driveMotor.set(0);
@@ -97,7 +100,7 @@ public void stop() {
   public double getAbsoluteEncoderDeg(double AEOffset) {
     double angle = absoluteEncoder.getPosition().getValueAsDouble();
     angle *= 360;
-    return angle  * (absoluteEncoderReversed ? -1 : 1) - AEOffset;
+    return (angle  * (absoluteEncoderReversed ? -1 : 1) - AEOffset) % 720;
   }
   
   //Motor calls
@@ -108,7 +111,7 @@ public void stop() {
     return driveMotorEncoder.getVelocity();
   }
   public double getSteerPosition() {
-     return Math.abs(steerMotorEncoder.getPosition() % 360);
+     return Math.abs(steerMotorEncoder.getPosition() % 720);
   }
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
@@ -124,17 +127,17 @@ public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
 }
 public SwerveModulePosition getPosition() {
-    return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
+        return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
 }
 
 //This is our setDesiredState alg. Takes the current state and the desired state shown by the controller and points the wheels to that 
 //location
 public void setDesiredState(SwerveModuleState state) {
   if (Math.abs(state.speedMetersPerSecond) < 0.01) {stop();return;}
-  // state = optimizer2(state, gState().angle.getDegrees());
   state = SwerveModuleState.optimize(state, Rotation2d.fromDegrees(gState().angle.getDegrees()));
   driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   turningPidController.setReference(state.angle.getDegrees(), com.revrobotics.CANSparkBase.ControlType.kPosition);
+  
 }
 
 public void wheelFaceForward(double AEOffset) {
@@ -143,24 +146,5 @@ public void wheelFaceForward(double AEOffset) {
     turningPidController.setReference(0, com.revrobotics.CANSparkBase.ControlType.kPosition);
   }catch (Exception e) {}}
 
-
-
-
-
-//TODO see if the actual one works fine and then I wont need this code
-
-
-// public SwerveModuleState optimizer2(SwerveModuleState desiredState, double currentAngle) {
-//   var delta = desiredState.angle.minus(Rotation2d.fromDegrees(currentAngle));
-
-//   if (Math.abs(delta.getDegrees()) > 90) {
-//     return new SwerveModuleState(
-//       -desiredState.speedMetersPerSecond,
-//       (Rotation2d.fromDegrees(180).minus(desiredState.angle)).times(-1)
-//     );
-//   }
-  
-//   return new SwerveModuleState(desiredState.speedMetersPerSecond, desiredState.angle);
-//   }
 
 }
