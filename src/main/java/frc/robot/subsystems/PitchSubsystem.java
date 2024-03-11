@@ -17,8 +17,10 @@ public final RelativeEncoder lPitchEncoder;
 public final RelativeEncoder rPitchEncoder;
 public final SparkPIDController lPitchPID;
 public final SparkPIDController rPitchPID;
+public final AbsoluteEncoder pitchEncoder;
 
-public double desiredPosition;
+public double desiredPosition; //degrees
+public double positionTolerance = 1; //degrees
 
 
 
@@ -29,6 +31,7 @@ public double desiredPosition;
         rPitchMotor = new CANSparkMax(Constants.ShooterConstants.rPitchEncoder, MotorType.kBrushless);
         lPitchEncoder = lPitchMotor.getEncoder();
         rPitchEncoder = rPitchMotor.getEncoder();
+        pitchEncoder = lPitchMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         lPitchPID = lPitchMotor.getPIDController();
         rPitchPID = rPitchMotor.getPIDController();
         configure();
@@ -52,13 +55,20 @@ public double desiredPosition;
         lPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
         lPitchMotor.setOpenLoopRampRate(10);
         rPitchMotor.setOpenLoopRampRate(10);
+        pitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
+        pitchEncoder.setZeroOffset(Constants.ShooterConstants.pitchOffset);
         // rPitchPID.setSmartMotionMaxVelocity(10, 0);
         // lPitchPID.setSmartMotionMaxVelocity(10, 0);
     }
 
 
+    public double getPosition(){
+        return pitchEncoder.getPosition();
+    }
 
-
+    public boolean atPosition(){
+        return (Math.abs(getPosition() - desiredPosition)) <= positionTolerance;
+    }
 
 
 
@@ -66,7 +76,8 @@ public double desiredPosition;
 @Override
 public void periodic() {
     SmartDashboard.putNumber("Shooter Position", rPitchEncoder.getPosition());
-    SmartDashboard.putNumber("Desired POsition", 0);
+    SmartDashboard.putNumber("Desired POsition", desiredPosition);
+    SmartDashboard.putBoolean("At Position", atPosition());
 }
 
 

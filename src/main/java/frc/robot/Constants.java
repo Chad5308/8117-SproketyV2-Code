@@ -167,7 +167,6 @@ public final class Constants {
     public static final int bottomMotorNum = 17;
     public static final int lPitchEncoder = 18;
     public static final int rPitchEncoder = 19;
-    public static final int indexSensor = 20;
 
     public static final double ramp_rate = 0.1;
 
@@ -192,7 +191,7 @@ public final class Constants {
     public static final double kD_pitch = 0;
 
     //Encoder values
-    public static final double toDegrees = 0.01*360;
+    public static final double toDegrees = 360;
     public static final double pitchOffset = 0;
     public static final boolean lPitchReversed = false;
     public static final boolean rPitchReversed = false;
