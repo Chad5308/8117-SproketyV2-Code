@@ -23,38 +23,31 @@ import edu.wpi.first.wpilibj2.command.Command;
 public final class Constants {
   public static final class DriveConstants {
 
-
-
     public static final double kTrackWidth = Units.inchesToMeters(23);
-    // Distance between right and left wheels
-    public static final double kWheelBase = Units.inchesToMeters(24);
-    // Distance between front and back wheels
+      // Distance between right and left wheels
+    public static final double kWheelBase = Units.inchesToMeters(23);
+      // Distance between front and back wheels
+    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+      new Translation2d(kWheelBase / 2, -kTrackWidth / 2), //front left
+        new Translation2d(kWheelBase / 2, kTrackWidth / 2), //front right
+        new Translation2d(-kWheelBase / 2, -kTrackWidth / 2), //back left
+        new Translation2d(-kWheelBase / 2, kTrackWidth / 2)); //back right
+    //start front front left to front right to back right and all drives then all steers then all absolutes
+    public static final int kFrontRightDriveMotorPort = 1;
+    public static final int kFrontRightTurningMotorPort = 2;
+    public static final int kBackRightDriveMotorPort = 3;
+    public static final int kBackRightTurningMotorPort = 4;
+    public static final int kBackLeftTurningMotorPort = 5;
+    public static final int kBackLeftDriveMotorPort = 6;
+    public static final int kFrontLeftDriveMotorPort = 7;
+    public static final int kFrontLeftTurningMotorPort = 8;
 
-
-public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-     
-    new Translation2d(kWheelBase / 2, -kTrackWidth / 2), //front left
-      new Translation2d(kWheelBase / 2, kTrackWidth / 2), //front right
-      new Translation2d(-kWheelBase / 2, -kTrackWidth / 2), //back left
-      new Translation2d(-kWheelBase / 2, kTrackWidth / 2)); //back right
-
-//start front front left to front right to back right and all drives then all steers then all absolutes
-
-public static final int kFrontRightDriveMotorPort = 1;
-public static final int kFrontRightTurningMotorPort = 2;
-public static final int kBackRightDriveMotorPort = 3;
-public static final int kBackRightTurningMotorPort = 4;
-public static final int kBackLeftTurningMotorPort = 5;
-public static final int kBackLeftDriveMotorPort = 6;
-public static final int kFrontLeftDriveMotorPort = 7;
-public static final int kFrontLeftTurningMotorPort = 8;
-
-    
+      
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 9;
     public static final int kFrontRightDriveAbsoluteEncoderPort = 10;
     public static final int kBackRightDriveAbsoluteEncoderPort = 11;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 12;
-    
+
     public static final double kFLDegrees = 277.21;
     public static final double kFRDegrees = 217.529;
     public static final double kBRDegrees = 155.4785;
@@ -78,13 +71,11 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final double kPhysicalMaxSpeedMetersPerSecond = 4.572;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = kPhysicalMaxSpeedMetersPerSecond * Math.PI;
 
-
-  //test
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.35;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
-}
+  }
   
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
@@ -92,24 +83,24 @@ public static final int kFrontLeftTurningMotorPort = 8;
     public static final double kTurningMotorGearRatio = 12.8 / 1;
     public static final double kDriveEncoderRot2Meter = 1/23.58;
     
-    
-    //get this a little closer. maybe 28.23
     public static final double kTurningConversionFactor2Deg =  28.25;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
 
-    public static final double kPTurning = 0.0075; //test a higher value 0.025 is to high
+    public static final double kPTurning = 0.0075;
     public static final double kITurning = 0;
     public static final double kDTurning = 0.75;
 
     public static final double moduleRadius = 0.4318; //meters -- measured from center of robot to furthest module.
-}
-
-//Max speed
-    public static final class OIConstants {
-      public static final int kOPControllerPort = 1;
-      public static final double kDeadband = 0.09;
   }
+
+
+  public static final class OIConstants {
+    public static final int kOPControllerPort = 1;
+    public static final double kDeadband = 0.09;
+  }
+
+
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
     public static final double kMaxAngularSpeedRadiansPerSecond =  DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
@@ -139,102 +130,82 @@ public static final int kFrontLeftTurningMotorPort = 8;
   }
 
 
-public static final class intakeConstants {
-  public static final int intLeftEncoder = 13;
-  public static final int intRightEncoder = 14;
-  public static final int handoffEncoder = 15;
-  public static final int indexingSensor = 1;
+  public static final class intakeConstants {
+    public static final int intLeftEncoder = 13;
+    public static final int intRightEncoder = 14;
+    public static final int indexingSensor = 1;
 
-  public static final double ramp_rate = 0.5;
+    public static final double ramp_rate = 0.5;
 
-  public static final boolean leftInverted = true;
-  public static final boolean rightInverted = true;
-  public static final boolean handoffInverted = false;
+    public static final boolean leftInverted = true;
+    public static final boolean rightInverted = true;
 
-  public static final double kP_Intake = 0.05;
-  public static final double kI_Intake = 0;
-  public static final double kD_Intake = 0;
+    public static final double kP_Intake = 0.05;
+    public static final double kI_Intake = 0;
+    public static final double kD_Intake = 0;
 
-  public static final double kP_Handoff = 0.05;
-  public static final double kI_Handoff = 0;
-  public static final double kD_Handoff = 0;
+    public static final int liftNum = 0;
+    public static final int dropNum = 1;
 
-  public static final int liftNum = 0;
-  public static final int dropNum = 1;
+  }
 
-}
+  public static final class limelightConstants{
+    public static final double thetakP = 3.0;
+    public static final double thetakI = 0;
+    public static final double thetakD = 0;
 
-public static final class limelightConstants{
-public static final double thetakP = 3.0;
-public static final double thetakI = 0;
-public static final double thetakD = 0;
+    public static final double linearkP = 0.4;
+    public static final double linearkI = 0;
+    public static final double linearkD = 0;
 
-public static final double linearkP = 0.4;
-public static final double linearkI = 0;
-public static final double linearkD = 0;
-
-}
+  }
 
 
-public static final class ShooterConstants{
-  //CAN Bus Numbers
-  public static final int fwLeftMotorNum = 16;
-  public static final int fwRightMotorNum = 17;
-  public static final int lPitchEncoder = 18;
-  public static final int rPitchEncoder = 19;
-  public static final int indexSensor = 20;
+  public static final class ShooterConstants{
+    //CAN Bus Numbers
+    public static final int topMotorNum = 16;
+    public static final int bottomMotorNum = 17;
+    public static final int lPitchEncoder = 18;
+    public static final int rPitchEncoder = 19;
+    public static final int indexSensor = 20;
 
-  public static final int leftFlyWheelNum = 21;
-  public static final int rightFlyWheelNum = 22;
+    public static final double ramp_rate = 0.1;
+
+  
+    //PID Values
+    public static final double kS_TopShooter = 0.4;
+    public static final double kV_TopShooter = 0.12;
+    public static final double kA_TopShooter = 0.1;
+    public static final double kP_TopShooter = 0.6;
+    public static final double kI_TopShooter = 0;
+    public static final double kD_TopShooter = 0.01;
+    
+    public static final double kS_BottomShooter = 0.4;
+    public static final double kV_BottomShooter = 0.12;
+    public static final double kA_BottomShooter = 0.1;
+    public static final double kP_BottomShooter = 0.6;
+    public static final double kI_BottomShooter = 0;
+    public static final double kD_BottomShooter = 0.01;
+
+    public static final double kP_pitch = 0.01;
+    public static final double kI_pitch = 0;
+    public static final double kD_pitch = 0;
+
+    //Encoder values
+    public static final double toDegrees = 0.01*360;
+    public static final double pitchOffset = 0;
+    public static final boolean lPitchReversed = false;
+    public static final boolean rPitchReversed = false;
+    public static final boolean topMotorReversed = false;
+    public static final boolean bottomMotorReversed = false;
 
 
-  public static final double ramp_rate = 0.1;
+    //Known Angles
+    public static final double sourceAngle = 0;
+    public static final double closeSpeakerAngle = 0;
+    public static final double podiumSpeakerAngle = 0;
+    public static final double ampAngle = 0;
+  }
 
- 
-
-  //PID Values
-  public static final double kP_Shooter = 0.005;
-  public static final double kI_Shooter = 0;
-  public static final double kD_Shooter = 0;
-
-  public static final double kP_Index = 0.5;
-  public static final double kI_Index = 0;
-  public static final double kD_Index = 0;
-
-  public static final double kP_pitch = 0.01;
-  public static final double kI_pitch = 0;
-  public static final double kD_pitch = 0;
-
-  //Encoder values
-  public static final double toDegrees = 0.01*360;
-  public static final double pitchOffset = 0;
-  public static final boolean lPitchReversed = true;
-  public static final boolean rPitchReversed = false;
-  public static final boolean fwLeftInverted = false;
-  public static final boolean fwRightInverted = true;
-  public static final boolean leftFlyWheelInverted = false;
-  public static final boolean rightFlyWheelInverted = true;
-
-
-  //Known Angles
-  public static final double sourceAngle = 185.0;
-  public static final double closeSpeakerAngle = 20.0;
-  public static final double podiumSpeakerAngle = 42.0;
-  public static final double ampAngle = 120.0;
-}
-
-public static final class LateratorConstants{
-  public static final int leftMotor = 21;
-  public static final int rightMotor = 22;
-
-  public static final double ramp_rate = 1;
-
-  public static final boolean leftInverted = false;
-  public static final boolean rightInverted = false;
-
-  public static final double kP_Laterator = 0.5;
-  public static final double kI_Laterator = 0;
-  public static final double kD_Laterator = 0;
-}
 
 }

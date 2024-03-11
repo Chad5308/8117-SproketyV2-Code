@@ -6,7 +6,7 @@ package frc.robot;
 
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.DriveCommand;
-import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.Drivebase.LimelightSubsystem;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
@@ -34,7 +34,7 @@ public class RobotContainer {
   public static Robot robot = new Robot();
   private SendableChooser<Command> autoChooser;
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
-  public ArmSubsystem arm_sub = new ArmSubsystem();
+  public IntakeSubsystem arm_sub = new IntakeSubsystem();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, arm_sub);
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
@@ -89,17 +89,16 @@ public RobotContainer() {
     // opController.povUp().onTrue(LL_sub.autoAlignCommand());
 
     //shooter Controls
-    shootController.x().whileTrue(shooter_sub.rotateOutCommand());
-    shootController.b().whileTrue(shooter_sub.rotateInCommand());
-    shootController.x().whileFalse(shooter_sub.pitchStopCommand());
-    shootController.b().whileFalse(shooter_sub.pitchStopCommand());
+    // shootController.x().whileTrue(shooter_sub.rotateOutCommand());
+    // shootController.b().whileTrue(shooter_sub.rotateInCommand());
+    // shootController.x().whileFalse(shooter_sub.pitchStopCommand());
+    // shootController.b().whileFalse(shooter_sub.pitchStopCommand());
     shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.rampUpCommand());
     shootController.rightBumper().whileTrue(shooter_sub.fireCommand());
     shootController.rightBumper().whileFalse(shooter_sub.stopFWCommand());
     shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopFWCommand());
 
     // shootController.povUp().onTrue(shooter_sub.testCommand());
-    shootController.axisGreaterThan(2, 0.25).whileTrue(shooter_sub.indexShooterCommand());
     shootController.axisGreaterThan(2, 0.25).whileFalse(shooter_sub.stopFWCommand());
     shootController.povUp().whileTrue(arm_sub.runIntakeCommand());
     shootController.povUp().whileFalse(arm_sub.stopIntakeCommand());
@@ -107,20 +106,8 @@ public RobotContainer() {
     shootController.povDown().whileFalse(arm_sub.stopIntakeCommand());
     shootController.povLeft().whileTrue(shooter_sub.sourceIntakeCommand());
     shootController.povLeft().whileFalse(shooter_sub.stopFWCommand());
-    shootController.povRight().whileTrue(shooter_sub.reverseIndexShooterCommand());
     shootController.povRight().whileFalse(shooter_sub.stopFWCommand());
 
-    // opController.y().onTrue(shooter_sub.upSpeedCommand());
-    // opController.a().onTrue(shooter_sub.lowerSpeedCommand());
-
-
-    // //Laterator Controlls
-
-    // opController.axisGreaterThan(3, 0.5).onTrue(arm_sub.liftLaterator());
-    // opController.axisGreaterThan(3, 0.5).onFalse(arm_sub.stopLaterator());
-    // opController.axisGreaterThan(4, 0.5).onTrue(arm_sub.lowerLaterator());
-    // opController.axisGreaterThan(4, 0.5).onFalse(arm_sub.stopLaterator());
-    
     //Auto fire Controls
     // opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());
 
