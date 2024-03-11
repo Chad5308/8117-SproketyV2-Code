@@ -13,6 +13,7 @@ import frc.robot.subsystems.Drivebase.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -76,9 +77,10 @@ public RobotContainer() {
   
   private void configureBindings() {
     //Drive Controls
-    opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
+    opController.povRight().toggleOnTrue(Commands.runOnce(() -> s_Swerve.zeroHeading()));
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
     opController.button(7).onTrue(s_Swerve.resetWheels()); //window looking button
+
     opController.axisGreaterThan(3, 0.25).whileTrue(arm_sub.runIntakeCommand());
     opController.axisGreaterThan(3, 0.25).whileFalse(arm_sub.stopIntakeCommand());
     opController.axisGreaterThan(2, 0.25).whileTrue(arm_sub.dropIntakeCommand());
@@ -89,24 +91,7 @@ public RobotContainer() {
     // opController.povUp().onTrue(LL_sub.autoAlignCommand());
 
     //shooter Controls
-    // shootController.x().whileTrue(shooter_sub.rotateOutCommand());
-    // shootController.b().whileTrue(shooter_sub.rotateInCommand());
-    // shootController.x().whileFalse(shooter_sub.pitchStopCommand());
-    // shootController.b().whileFalse(shooter_sub.pitchStopCommand());
-    shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.rampUpCommand());
-    shootController.rightBumper().whileTrue(shooter_sub.fireCommand());
-    shootController.rightBumper().whileFalse(shooter_sub.stopFWCommand());
-    shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopFWCommand());
 
-    // shootController.povUp().onTrue(shooter_sub.testCommand());
-    shootController.axisGreaterThan(2, 0.25).whileFalse(shooter_sub.stopFWCommand());
-    shootController.povUp().whileTrue(arm_sub.runIntakeCommand());
-    shootController.povUp().whileFalse(arm_sub.stopIntakeCommand());
-    shootController.povDown().whileTrue(arm_sub.reverseIntakecommand());
-    shootController.povDown().whileFalse(arm_sub.stopIntakeCommand());
-    shootController.povLeft().whileTrue(shooter_sub.sourceIntakeCommand());
-    shootController.povLeft().whileFalse(shooter_sub.stopFWCommand());
-    shootController.povRight().whileFalse(shooter_sub.stopFWCommand());
 
     //Auto fire Controls
     // opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());

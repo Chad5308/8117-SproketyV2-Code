@@ -3,13 +3,7 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
-
-import com.revrobotics.*;
-import com.revrobotics.CANSparkBase.IdleMode;
-import com.revrobotics.CANSparkLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -87,17 +81,17 @@ public void setShootingNeutralOutput() {
     bottomMotor.setControl(new NeutralOut());
 }
 
-public double getLeftShooterVelocity() {
+public double getTopShooterVelocity() {
     return topMotor.getVelocity().getValueAsDouble();
 }
-public double getRightShooterVelocity() {
+public double getBottomShooterVelocity() {
     return bottomMotor.getVelocity().getValueAsDouble();
 }
 public boolean isTopShooterUpToSpeed() {
-    return (Math.abs(getLeftShooterVelocity() - desiredTopVelocity)) <= shooterUpToSpeedTolerance;
+    return (Math.abs(getTopShooterVelocity() - desiredTopVelocity)) <= shooterUpToSpeedTolerance;
 }
 public boolean isBotomShooterUpToSpeed() {
-    return (Math.abs(getRightShooterVelocity() - desiredBottomVelocity)) <= shooterUpToSpeedTolerance;
+    return (Math.abs(getBottomShooterVelocity() - desiredBottomVelocity)) <= shooterUpToSpeedTolerance;
 }
 public boolean areBothShootersUpToSpeed() {
     return isTopShooterUpToSpeed()
@@ -114,39 +108,15 @@ public void setDesiredVelocities(double desiredLeftVelocity, double desiredRight
     setBottomDesiredVelocity(desiredRightVelocity);
 }
 
-//Shooter Speed methods
-
-// public Command upSpeedCommand(){return runOnce(() -> { 
-   
-// });}
-// public Command lowerSpeedCommand(){return runOnce(() -> { 
-   
-// });}
-public Command stopFWCommand(){return runOnce(() -> { 
-   
-});}
-public Command rampUpCommand(){return runOnce(() -> {
-    
-});}
-public Command fireCommand(){return runOnce(()-> {
-   
-});}
-public Command indexCommand(){return runOnce(()-> {
-    
-});}
-public Command sourceIntakeCommand(){return runOnce(() -> {
-
-});}
-
-
-
-
-
-
-
 @Override
 public void periodic() {
+    SmartDashboard.putNumber("Shooter/Top/Velocity RPS", getTopShooterVelocity());
+    SmartDashboard.putNumber("Shooter/Top/Desired Velocity RPS", desiredTopVelocity);
+    SmartDashboard.putBoolean("Shooter/Top/Up to Speed", isTopShooterUpToSpeed());
 
+    SmartDashboard.putNumber("Shooter/Bottom/Velocity RPS", getBottomShooterVelocity());
+    SmartDashboard.putNumber("Shooter/Bottom/Desired Velocity RPS", desiredBottomVelocity);
+    SmartDashboard.putBoolean("Shooter/Bottom/Up to Speed", isBotomShooterUpToSpeed());
     
 }
 

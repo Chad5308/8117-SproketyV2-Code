@@ -107,14 +107,7 @@
       "command": {
         "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Deploy"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     },
@@ -134,14 +127,7 @@
       "command": {
         "type": "parallel",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "Deploy"
-              }
-            }
-          ]
+          "commands": []
         }
       }
     },

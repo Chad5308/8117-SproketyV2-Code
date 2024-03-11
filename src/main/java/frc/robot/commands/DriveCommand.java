@@ -26,6 +26,8 @@ public class DriveCommand extends Command{
      public double ll_zSpeed, ll_xSpeed, ll_turningSpeed;
     public boolean limelightTracking = false;
     public CameraServer camera;
+    public ChassisSpeeds chassisSpeeds;
+
     
 
 
@@ -88,7 +90,6 @@ public class DriveCommand extends Command{
         turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
 
-        ChassisSpeeds chassisSpeeds;
         if (limelightTracking){
             chassisSpeeds = new ChassisSpeeds(-ll_zSpeed, -ll_xSpeed, ll_turningSpeed);
         } else if(fieldOriented){
@@ -97,13 +98,9 @@ public class DriveCommand extends Command{
             chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
         }
 
-
         swerveSubsystem.setModuleStates(chassisSpeeds);
+
     }
-
-
-   
-
 
 
     @Override
