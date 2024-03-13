@@ -36,11 +36,11 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
                 swerveSubsystem::getPose, 
                 swerveSubsystem::resetOdometry, 
                 swerveSubsystem::getRobotRelativeSpeeds, 
-                swerveSubsystem::setModuleStates, 
+                swerveSubsystem::driveRobotRelative, 
                 new HolonomicPathFollowerConfig(new PIDConstants(translationConstants.getP(), translationConstants.getI(), translationConstants.getD()), new PIDConstants(rotationConstants.getP(), rotationConstants.getI(), rotationConstants.getD()), 
                 Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
                 Constants.ModuleConstants.moduleRadius, 
-                new ReplanningConfig(true, false)), 
+                new ReplanningConfig()), 
                 swerveSubsystem::allianceCheck,
                 swerveSubsystem
                 );

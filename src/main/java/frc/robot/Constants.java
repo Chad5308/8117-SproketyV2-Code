@@ -108,11 +108,11 @@ public final class Constants {
     public static final double kMaxAccelerationMetersPerSecondSquared = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond;
     public static final double kMaxAngularAccelerationUnitsPerSecond = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
 
-    public static  double kPTranslation = 1.15;
-    public static  double kITranslation = 0.0;
+    public static  double kPTranslation = 5;
+    public static  double kITranslation = 0;
     public static  double kDTranslation = 0;
 
-    public static final double kPTheta = 2.16;
+    public static final double kPTheta = 5;
     public static final double kITheta = 0;
     public static final double kDTheta = 0;
 

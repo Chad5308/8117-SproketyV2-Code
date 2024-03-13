@@ -53,12 +53,7 @@ public class DriveCommand extends Command{
      LL_Sub.setLinearPID();
     }
 
-    //For pathplanner setup
-    public ChassisSpeeds AutoSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
-    public ChassisSpeeds getSpeeds(){
-        return AutoSpeeds;
-    }
-   
+ 
 
 
     @Override

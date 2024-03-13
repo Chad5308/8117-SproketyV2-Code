@@ -120,6 +120,18 @@ public class SwerveSubsystem extends SubsystemBase{
         backRightModule.setDesiredState(moduleStates[2]);
         backLeftModule.setDesiredState(moduleStates[3]);
     }
+    public void driveRobotRelative(ChassisSpeeds speeds){
+        SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
+        SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+        // frontLeftModule.setDesiredState(moduleStates[0]);//fr
+        // backLeftModule.setDesiredState(moduleStates[1]);//fl
+        // frontRightModule.setDesiredState(moduleStates[2]);//br
+        // backRightModule.setDesiredState(moduleStates[3]);//bl
+        frontRightModule.setDesiredState(moduleStates[0]);
+        frontLeftModule.setDesiredState(moduleStates[1]);
+        backRightModule.setDesiredState(moduleStates[2]);
+        backLeftModule.setDesiredState(moduleStates[3]);
+    }
     
     //face forward method. Called once the bot is enabled
     public void faceAllFoward() {

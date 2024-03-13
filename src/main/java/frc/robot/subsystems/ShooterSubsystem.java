@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
@@ -108,8 +109,40 @@ public void setDesiredVelocities(double desiredLeftVelocity, double desiredRight
     setBottomDesiredVelocity(desiredRightVelocity);
 }
 
+
+
+public Command speedUpCommand(){
+    return runOnce(() -> {
+            desiredBottomVelocity = 60;
+            desiredTopVelocity = 60;
+    });
+}
+
+public Command slowShooter(){
+    return runOnce(() -> {
+        desiredBottomVelocity -= 5;
+        desiredTopVelocity -=5;
+    });
+}
+
+public Command stopShooter(){
+    return runOnce(() -> {
+        desiredBottomVelocity = 0;
+        desiredTopVelocity = 0;
+    });
+}
+
+public Command fastShooter(){
+    return runOnce(() -> {
+        desiredBottomVelocity += 5;
+        desiredTopVelocity +=5;
+    });
+}
+
 @Override
 public void periodic() {
+    getUpToSpeed();
+
     SmartDashboard.putNumber("Shooter/Top/Velocity RPS", getTopShooterVelocity());
     SmartDashboard.putNumber("Shooter/Top/Desired Velocity RPS", desiredTopVelocity);
     SmartDashboard.putBoolean("Shooter/Top/Up to Speed", isTopShooterUpToSpeed());

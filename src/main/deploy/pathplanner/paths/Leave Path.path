@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.20149016046962048,
-        "y": 0.3161925867361
+        "x": 0.5293935837515026,
+        "y": 1.5224087509515962
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.201490160469621,
-        "y": 0.3161925867361
+        "x": 1.5293935837515025,
+        "y": 1.5224087509515962
       },
       "isLocked": false,
       "linkedName": "Speaker Starting Config"
@@ -55,9 +55,6 @@
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": {
-    "rotation": 0,
-    "velocity": 0
-  },
+  "previewStartingState": null,
   "useDefaultConstraints": false
 }

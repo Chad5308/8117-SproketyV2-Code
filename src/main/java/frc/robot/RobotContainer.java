@@ -40,7 +40,7 @@ public class RobotContainer {
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
   public IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   public PitchSubsystem pitchSubsystem = new PitchSubsystem();
-  public ShootingCommand shootingCommand = new ShootingCommand();
+  public ShootingCommand shootingCommand = new ShootingCommand(shooter_sub);
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, intakeSubsystem);
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
@@ -99,6 +99,10 @@ public RobotContainer() {
     // opController.povUp().onTrue(LL_sub.autoAlignCommand());
 
     //shooter Controls
+    shootController.a().onTrue(shooter_sub.slowShooter());
+    shootController.y().onTrue(shooter_sub.fastShooter());
+    shootController.x().onTrue(shooter_sub.stopShooter());
+    shootController.b().onTrue(shooter_sub.speedUpCommand());
 
 
     //Auto fire Controls
