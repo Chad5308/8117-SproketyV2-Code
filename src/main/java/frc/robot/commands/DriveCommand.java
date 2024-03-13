@@ -89,7 +89,7 @@ public class DriveCommand extends Command{
         ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
-
+        ChassisSpeeds chassisSpeeds;
         if (limelightTracking){
             chassisSpeeds = new ChassisSpeeds(-ll_zSpeed, -ll_xSpeed, ll_turningSpeed);
         } else if(fieldOriented){

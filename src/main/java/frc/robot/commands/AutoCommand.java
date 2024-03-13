@@ -6,6 +6,7 @@ import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
@@ -16,6 +17,8 @@ public ShootingCommand shootingCommand;
 public TransferCommand transferCommand;
 public DriveCommand driveCommand;
 public SwerveSubsystem swerveSubsystem;
+public PIDController translationConstants = new PIDController(Constants.AutoConstants.kPTranslation, Constants.AutoConstants.kITranslation, Constants.AutoConstants.kDTranslation);
+public PIDController rotationConstants = new PIDController(Constants.AutoConstants.kPTheta, Constants.AutoConstants.kITheta, Constants.AutoConstants.kDTheta);
 
 
 
@@ -26,17 +29,18 @@ public SwerveSubsystem swerveSubsystem;
         this.transferCommand = transferCommand;
         this.driveCommand = driveCommand;
         this.swerveSubsystem = swerveSubsystem;
-
+        translationConstants.setTolerance(0.1);//meters
+        rotationConstants.setTolerance(10); //maybe degrees?
 
         AutoBuilder.configureHolonomic(
                 swerveSubsystem::getPose, 
                 swerveSubsystem::resetOdometry, 
                 swerveSubsystem::getRobotRelativeSpeeds, 
                 swerveSubsystem::setModuleStates, 
-                new HolonomicPathFollowerConfig(new PIDConstants(Constants.AutoConstants.kPTranslation, Constants.AutoConstants.kITranslation, Constants.AutoConstants.kDTranslation), new PIDConstants(Constants.AutoConstants.kITheta, Constants.AutoConstants.kITheta, Constants.AutoConstants.kDTheta), 
+                new HolonomicPathFollowerConfig(new PIDConstants(translationConstants.getP(), translationConstants.getI(), translationConstants.getD()), new PIDConstants(rotationConstants.getP(), rotationConstants.getI(), rotationConstants.getD()), 
                 Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
                 Constants.ModuleConstants.moduleRadius, 
-                new ReplanningConfig(false, false)), 
+                new ReplanningConfig(true, false)), 
                 swerveSubsystem::allianceCheck,
                 swerveSubsystem
                 );
@@ -44,7 +48,7 @@ public SwerveSubsystem swerveSubsystem;
                 
                 NamedCommands.registerCommand("FaceForward Wheels", Commands.runOnce(() -> swerveSubsystem.faceAllFoward()));
     }
-    
+
     
     
     

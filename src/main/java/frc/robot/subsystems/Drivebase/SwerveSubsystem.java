@@ -24,7 +24,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 
 public class SwerveSubsystem extends SubsystemBase{
     public final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
-    public boolean fieldOriented;
+    public boolean fieldOriented = false;
     public Robot robot;
     public ShooterSubsystem shoot_sub;
     public IntakeSubsystem arm_sub;
@@ -42,12 +42,12 @@ public class SwerveSubsystem extends SubsystemBase{
             try {
                 Thread.sleep(500);
                 zeroHeading();
-            } catch (Exception e) {}}).
-            start();
+            } catch (Exception e) {}}).start();
             
             this.robot = robot;
             this.arm_sub = arm_sub;
             this.shoot_sub = shoot_sub;
+            alliance = robot.getAlliance();
             }
 
 
@@ -65,7 +65,7 @@ public class SwerveSubsystem extends SubsystemBase{
         gyro.setAngleAdjustment(0);
     }
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 0);
+        return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
@@ -82,16 +82,16 @@ public class SwerveSubsystem extends SubsystemBase{
 
     public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()};
 
-    public void resetOdometry(Pose2d pose) {
-        resetPositions(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
-        odometer.resetPosition(geRotation2d(), swerveModulePositions, new Pose2d());
-        odometer.resetPosition(geRotation2d(), swerveModulePositions, pose);
-    }
     public void resetPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
         FL.resetDriveEncoder();
         FR.resetDriveEncoder();
         BL.resetDriveEncoder();
         BR.resetDriveEncoder();
+    }
+    public void resetOdometry(Pose2d pose) {
+        resetPositions(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
+        odometer.resetPosition(geRotation2d(), swerveModulePositions, new Pose2d());
+        odometer.resetPosition(geRotation2d(), swerveModulePositions, pose);
     }
 
     public ChassisSpeeds getRobotRelativeSpeeds(){
@@ -115,10 +115,10 @@ public class SwerveSubsystem extends SubsystemBase{
     public void setModuleStates(ChassisSpeeds speeds){
         SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeftModule.setDesiredState(moduleStates[1]);
         frontRightModule.setDesiredState(moduleStates[0]);
-        backLeftModule.setDesiredState(moduleStates[3]);
+        frontLeftModule.setDesiredState(moduleStates[1]);
         backRightModule.setDesiredState(moduleStates[2]);
+        backLeftModule.setDesiredState(moduleStates[3]);
     }
     
     //face forward method. Called once the bot is enabled

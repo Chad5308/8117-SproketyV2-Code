@@ -5,8 +5,12 @@
 package frc.robot;
 
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.AutoCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.ShootingCommand;
+import frc.robot.commands.TransferCommand;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.PitchSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.Drivebase.LimelightSubsystem;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
@@ -33,12 +37,16 @@ public class RobotContainer {
   private final CommandXboxController shootController = new CommandXboxController(0);
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
-  private SendableChooser<Command> autoChooser;
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
-  public IntakeSubsystem arm_sub = new IntakeSubsystem();
-  public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, arm_sub);
+  public IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
+  public PitchSubsystem pitchSubsystem = new PitchSubsystem();
+  public ShootingCommand shootingCommand = new ShootingCommand();
+  public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, intakeSubsystem);
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
+  public TransferCommand transferCommand = new TransferCommand(shooter_sub, intakeSubsystem, pitchSubsystem);
+  public AutoCommand autoCommand = new AutoCommand(shootingCommand, transferCommand, d_Command, s_Swerve);
+  private SendableChooser<Command> autoChooser;
 
 
 
@@ -81,13 +89,13 @@ public RobotContainer() {
     opController.povLeft().toggleOnTrue(s_Swerve.fieldOrientedToggle());
     opController.button(7).onTrue(s_Swerve.resetWheels()); //window looking button
 
-    opController.axisGreaterThan(3, 0.25).whileTrue(arm_sub.runIntakeCommand());
-    opController.axisGreaterThan(3, 0.25).whileFalse(arm_sub.stopIntakeCommand());
-    opController.axisGreaterThan(2, 0.25).whileTrue(arm_sub.dropIntakeCommand());
-    opController.axisGreaterThan(2, 0.25).whileFalse(arm_sub.liftIntakeCommand());
+    opController.axisGreaterThan(3, 0.25).whileTrue(intakeSubsystem.runIntakeCommand());
+    opController.axisGreaterThan(3, 0.25).whileFalse(intakeSubsystem.stopIntakeCommand());
+    opController.axisGreaterThan(2, 0.25).whileTrue(intakeSubsystem.dropIntakeCommand());
+    opController.axisGreaterThan(2, 0.25).whileFalse(intakeSubsystem.liftIntakeCommand());
 
-    opController.a().onTrue(arm_sub.liftIntakeCommand());
-    opController.b().onTrue(arm_sub.dropIntakeCommand());
+    opController.a().onTrue(intakeSubsystem.liftIntakeCommand());
+    opController.b().onTrue(intakeSubsystem.dropIntakeCommand());
     // opController.povUp().onTrue(LL_sub.autoAlignCommand());
 
     //shooter Controls

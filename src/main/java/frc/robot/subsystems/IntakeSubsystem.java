@@ -41,7 +41,7 @@ public class IntakeSubsystem extends SubsystemBase{
     public final DoubleSolenoid intakeLift = new DoubleSolenoid(0, PneumaticsModuleType.CTREPCM, Constants.intakeConstants.liftNum, Constants.intakeConstants.dropNum);
     public final Compressor intakeCompressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
 
-
+    public boolean isRetracted = true;
     //intakeIndexer
     public final DigitalInput intakeIndexer;
 
@@ -84,6 +84,7 @@ public class IntakeSubsystem extends SubsystemBase{
         zeroAll();
         intakeLift.set(Value.kForward);
     }
+    
     public void zeroAll(){
         intLeftEncoder.setPosition(0);
         intRightEncoder.setPosition(0);
@@ -114,10 +115,12 @@ public class IntakeSubsystem extends SubsystemBase{
     public Command liftIntakeCommand(){
         return runOnce(() -> {
             intakeLift.set(Value.kForward);
+            isRetracted = true;
     });}
     public Command dropIntakeCommand(){
         return runOnce(() -> {
             intakeLift.set(Value.kReverse);
+            isRetracted = false;
     });}
 
     public SequentialCommandGroup deployCommand(){

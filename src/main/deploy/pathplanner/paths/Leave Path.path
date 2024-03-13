@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.0,
-        "y": 2.0339370967935246
+        "x": 0.20149016046962048,
+        "y": 0.3161925867361
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 2.0339370967935246
+        "x": 1.201490160469621,
+        "y": 0.3161925867361
       },
       "isLocked": false,
       "linkedName": "Speaker Starting Config"
     },
     {
       "anchor": {
-        "x": 2.0,
-        "y": 2.0339370967935246
+        "x": 1.969826478882628,
+        "y": 0.6675176831095445
       },
       "prevControl": {
-        "x": 0.8533353044287999,
-        "y": 2.0339370967935246
+        "x": 0.823161783311428,
+        "y": 0.6675176831095445
       },
       "nextControl": null,
       "isLocked": false,
@@ -43,8 +43,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 0.1,
-    "maxAcceleration": 0.005,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 0.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

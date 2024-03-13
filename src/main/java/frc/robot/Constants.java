@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /**
@@ -69,10 +70,10 @@ public final class Constants {
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 4.572;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = kPhysicalMaxSpeedMetersPerSecond * Math.PI;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond =4.296;
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.35;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.15;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3.5;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 2.5;
   }
@@ -91,7 +92,7 @@ public final class Constants {
     public static final double kITurning = 0;
     public static final double kDTurning = 0.75;
 
-    public static final double moduleRadius = 0.4318; //meters -- measured from center of robot to furthest module.
+    public static final double moduleRadius = Units.inchesToMeters(17); //measured from center of robot to furthest module.
   }
 
 
@@ -107,11 +108,11 @@ public final class Constants {
     public static final double kMaxAccelerationMetersPerSecondSquared = DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond;
     public static final double kMaxAngularAccelerationUnitsPerSecond = DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond;
 
-    public static final double kPTranslation = 0.08;
-    public static final double kITranslation = 0.005;
-    public static final double kDTranslation = 0;
+    public static  double kPTranslation = 1.15;
+    public static  double kITranslation = 0.0;
+    public static  double kDTranslation = 0;
 
-    public static final double kPTheta = 0.05;
+    public static final double kPTheta = 2.16;
     public static final double kITheta = 0;
     public static final double kDTheta = 0;
 
