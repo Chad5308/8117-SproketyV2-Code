@@ -30,12 +30,19 @@ public class SwerveSubsystem extends SubsystemBase{
     public IntakeSubsystem arm_sub;
     public boolean isRedAlliance;
     Optional<Alliance> alliance;
-
+    
     public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDegrees, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
     public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
     public static SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDegrees, Constants.DriveConstants.kBackRightTurningEncoderReversed);
     public static SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDegrees, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
-   
+    
+    public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()};
+    public void resetPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
+        FL.resetDriveEncoder();
+        FR.resetDriveEncoder();
+        BL.resetDriveEncoder();
+        BR.resetDriveEncoder();
+    }
     
     public SwerveSubsystem(Robot robot, ShooterSubsystem shoot_sub, IntakeSubsystem arm_sub) {
         new Thread(() -> {
@@ -73,36 +80,21 @@ public class SwerveSubsystem extends SubsystemBase{
 
     //Odometer code
     public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
-    geRotation2d(), new SwerveModulePosition[] {
-    frontLeftModule.getPosition(),
-    frontRightModule.getPosition(),
-    backLeftModule.getPosition(),
-    backRightModule.getPosition()
-    });
+    geRotation2d(), swerveModulePositions);
 
-    public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()};
-
-    public void resetPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
-        FL.resetDriveEncoder();
-        FR.resetDriveEncoder();
-        BL.resetDriveEncoder();
-        BR.resetDriveEncoder();
-    }
     public void resetOdometry(Pose2d pose) {
         resetPositions(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
         odometer.resetPosition(geRotation2d(), swerveModulePositions, new Pose2d());
         odometer.resetPosition(geRotation2d(), swerveModulePositions, pose);
     }
-
-    public ChassisSpeeds getRobotRelativeSpeeds(){
-        SwerveModuleState[] states = new SwerveModuleState[]{frontRightModule.gState(), frontLeftModule.gState(), backRightModule.gState(), backLeftModule.gState()};
-        return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(states);
-    }
     public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
-    
 
+    public ChassisSpeeds getRobotRelativeSpeeds(){
+        return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(frontRightModule.gState(), frontLeftModule.gState(), backRightModule.gState(), backLeftModule.gState());
+    }
+    
 
     //stops all modules. Called when the command isn't being ran. So when an input isn't recieved
     public void stopModules() {
@@ -121,6 +113,7 @@ public class SwerveSubsystem extends SubsystemBase{
         backLeftModule.setDesiredState(moduleStates[3]);
     }
     public void driveRobotRelative(ChassisSpeeds speeds){
+        // ChassisSpeeds.fromRobotRelativeSpeeds(speeds, geRotation2d());
         SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(speeds);
         SwerveDriveKinematics.desaturateWheelSpeeds(moduleStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
         // frontLeftModule.setDesiredState(moduleStates[0]);//fr
@@ -160,18 +153,14 @@ public class SwerveSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-            odometer.update(geRotation2d(),  new SwerveModulePosition[] {
-                    frontLeftModule.getPosition(),
-                    frontRightModule.getPosition(),
-                    backLeftModule.getPosition(),
-                   backRightModule.getPosition()
-            });
+            odometer.update(geRotation2d(), swerveModulePositions);
         
         
         //multiple debugging values are listed here. Names are self explanitory
         
                 //Odometer and other gyro values
                SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+               SmartDashboard.putString("Odometer Read-Out", odometer.toString());
                SmartDashboard.putNumber("Robot Heading", getHeading());
         
                 //AE Degrees Reading

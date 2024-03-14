@@ -29,18 +29,15 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
         this.transferCommand = transferCommand;
         this.driveCommand = driveCommand;
         this.swerveSubsystem = swerveSubsystem;
-        translationConstants.setTolerance(0.1);//meters
-        rotationConstants.setTolerance(10); //maybe degrees?
+        // translationConstants.setTolerance(0.1);//meters
+        // rotationConstants.setTolerance(10); //maybe degrees?
 
         AutoBuilder.configureHolonomic(
                 swerveSubsystem::getPose, 
                 swerveSubsystem::resetOdometry, 
                 swerveSubsystem::getRobotRelativeSpeeds, 
                 swerveSubsystem::driveRobotRelative, 
-                new HolonomicPathFollowerConfig(new PIDConstants(translationConstants.getP(), translationConstants.getI(), translationConstants.getD()), new PIDConstants(rotationConstants.getP(), rotationConstants.getI(), rotationConstants.getD()), 
-                Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
-                Constants.ModuleConstants.moduleRadius, 
-                new ReplanningConfig()), 
+                autoConfig, 
                 swerveSubsystem::allianceCheck,
                 swerveSubsystem
                 );
@@ -48,6 +45,14 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
                 
                 NamedCommands.registerCommand("FaceForward Wheels", Commands.runOnce(() -> swerveSubsystem.faceAllFoward()));
     }
+
+    public HolonomicPathFollowerConfig autoConfig = new HolonomicPathFollowerConfig(
+        new PIDConstants(translationConstants.getP(), translationConstants.getI(), translationConstants.getD()),
+        new PIDConstants(rotationConstants.getP(), rotationConstants.getI(), rotationConstants.getD()), 
+        Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond, 
+        Constants.ModuleConstants.moduleRadius, 
+        new ReplanningConfig());
+    
 
     
     
