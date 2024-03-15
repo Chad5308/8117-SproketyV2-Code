@@ -3,6 +3,12 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
+import com.revrobotics.CANSparkBase.IdleMode;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -17,6 +23,9 @@ public final TalonFX bottomMotor;
 public VelocityVoltage velocityRequest;
  MotionMagicVelocityVoltage motionMagicRequest;
  TalonFXConfiguration topConfig, bottomConfig;
+public final CANSparkMax breachMotor;
+public final RelativeEncoder breachEncoder;
+public final SparkPIDController breachPID;
 
 //Unit in Rotations per second
 double desiredTopVelocity = 0;
@@ -28,6 +37,9 @@ double shooterUpToSpeedTolerance = 0.7;
 public ShooterSubsystem(){
     topMotor = new TalonFX(Constants.ShooterConstants.topMotorNum, "rio");
     bottomMotor = new TalonFX(Constants.ShooterConstants.bottomMotorNum, "rio");
+    breachMotor = new CANSparkMax(Constants.ShooterConstants.breachMotorNum, MotorType.kBrushless);
+    breachEncoder = breachMotor.getEncoder();
+    breachPID = breachMotor.getPIDController();
 
     topConfig = new TalonFXConfiguration();
     bottomConfig = new TalonFXConfiguration();
@@ -39,6 +51,7 @@ public ShooterSubsystem(){
 }
 
 public void configure(){
+    //Flywheel config
     topConfig.Slot0.kS = Constants.ShooterConstants.kS_TopShooter;
     topConfig.Slot0.kV = Constants.ShooterConstants.kV_TopShooter;
     topConfig.Slot0.kA = Constants.ShooterConstants.kA_TopShooter;
@@ -65,6 +78,15 @@ public void configure(){
     topMotor.setInverted(Constants.ShooterConstants.topMotorReversed);
     bottomMotor.setInverted(Constants.ShooterConstants.bottomMotorReversed);
 
+    //Breach Motor Config
+    breachMotor.restoreFactoryDefaults();
+    breachPID.setP(Constants.ShooterConstants.kP_breach);
+    breachPID.setI(Constants.ShooterConstants.kI_breach);
+    breachPID.setD(Constants.ShooterConstants.kD_breach);
+    breachMotor.setInverted(Constants.ShooterConstants.breachReversed);
+    breachMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
+    breachMotor.setIdleMode(IdleMode.kCoast);
+
 }
 
 
@@ -74,6 +96,8 @@ public void getUpToSpeed() {
     } else {
       topMotor.setControl(motionMagicRequest.withVelocity(desiredTopVelocity));
       bottomMotor.setControl(motionMagicRequest.withVelocity(desiredBottomVelocity));
+    // topMotor.set(desiredTopVelocity);
+    // bottomMotor.set(desiredBottomVelocity);
     }
   }
 
@@ -98,15 +122,19 @@ public boolean areBothShootersUpToSpeed() {
     return isTopShooterUpToSpeed()
         && isBotomShooterUpToSpeed();
 }
-public void setTopDesiredVelocity(double desiredVelocity) {
-    desiredTopVelocity = desiredVelocity;
-}
-public void setBottomDesiredVelocity(double desiredVelocity) {
-    desiredBottomVelocity = desiredVelocity;
-}
-public void setDesiredVelocities(double desiredLeftVelocity, double desiredRightVelocity) {
-    setTopDesiredVelocity(desiredLeftVelocity);
-    setBottomDesiredVelocity(desiredRightVelocity);
+// public void setTopDesiredVelocity(double desiredVelocity) {
+//     desiredTopVelocity = desiredVelocity;
+//     getUpToSpeed();
+// }
+// public void setBottomDesiredVelocity(double desiredVelocity) {
+//     desiredBottomVelocity = desiredVelocity;
+//     // getUpToSpeed();
+// }
+public void setDesiredVelocities(double desiredTopVelocity, double desiredBottomVelocity) {
+    // setTopDesiredVelocity(desiredTopVelocity);
+    // setBottomDesiredVelocity(desiredBottomVelocity);
+    this.desiredTopVelocity = desiredTopVelocity;
+    this.desiredBottomVelocity = desiredBottomVelocity;
 }
 
 
@@ -136,6 +164,22 @@ public Command fastShooter(){
     return runOnce(() -> {
         desiredBottomVelocity += 5;
         desiredTopVelocity +=5;
+    });
+}
+
+public Command indexSpeedBreach(){
+    return runOnce(() -> {
+        breachMotor.set(0.25);
+    });
+}
+public Command shootSpeedBreach(){
+    return runOnce(() -> {
+        breachMotor.set(0.75);
+    });
+}
+public Command stopBreach(){
+    return runOnce(() -> {
+        breachMotor.set(0);
     });
 }
 

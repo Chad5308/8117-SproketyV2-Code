@@ -34,7 +34,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 public class RobotContainer {
 
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
-  private final CommandXboxController shootController = new CommandXboxController(0);
+  private final CommandXboxController shootController = new CommandXboxController(Constants.OIConstants.kShooterControllerPort);
   // private CommandJoystick driveStick = new CommandJoystick(0);
   public static Robot robot = new Robot();
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
@@ -103,6 +103,10 @@ public RobotContainer() {
     shootController.y().onTrue(shooter_sub.fastShooter());
     shootController.x().onTrue(shooter_sub.stopShooter());
     shootController.b().onTrue(shooter_sub.speedUpCommand());
+    shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.shootSpeedBreach());
+    shootController.axisGreaterThan(2, 0.25).whileTrue(shooter_sub.indexSpeedBreach());
+    shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopBreach());
+    shootController.axisGreaterThan(2, 0.25).whileFalse(shooter_sub.stopBreach());
 
 
     //Auto fire Controls

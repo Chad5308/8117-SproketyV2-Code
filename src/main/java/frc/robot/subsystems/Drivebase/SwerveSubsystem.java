@@ -36,14 +36,13 @@ public class SwerveSubsystem extends SubsystemBase{
     public static SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDegrees, Constants.DriveConstants.kBackRightTurningEncoderReversed);
     public static SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDegrees, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
     
-    public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()};
-    public void resetPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
-        FL.resetDriveEncoder();
-        FR.resetDriveEncoder();
-        BL.resetDriveEncoder();
-        BR.resetDriveEncoder();
-    }
-    
+
+    public SwerveModulePosition flModPos = new SwerveModulePosition(frontLeftModule.getPositionMeters(), frontLeftModule.gState().angle);
+    public SwerveModulePosition frModPos = new SwerveModulePosition(frontRightModule.getPositionMeters(), frontRightModule.gState().angle);
+    public SwerveModulePosition blModPos = new SwerveModulePosition(backLeftModule.getPositionMeters(), backLeftModule.gState().angle);
+    public SwerveModulePosition brModPos = new SwerveModulePosition(backRightModule.getPositionMeters(), backRightModule.gState().angle);
+    public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frModPos, flModPos, brModPos, blModPos};
+
     public SwerveSubsystem(Robot robot, ShooterSubsystem shoot_sub, IntakeSubsystem arm_sub) {
         new Thread(() -> {
             try {
@@ -55,8 +54,14 @@ public class SwerveSubsystem extends SubsystemBase{
             this.arm_sub = arm_sub;
             this.shoot_sub = shoot_sub;
             alliance = robot.getAlliance();
-            }
-
+        }
+        
+        public void resetPositions(SwerveModule FL, SwerveModule FR, SwerveModule BL, SwerveModule BR){
+            FL.resetDriveEncoder();
+            FR.resetDriveEncoder();
+            BL.resetDriveEncoder();
+            BR.resetDriveEncoder();
+        }
 
     public boolean allianceCheck(){
         if (alliance.isPresent() && (alliance.get() == Alliance.Red)) {isRedAlliance = true;}else{isRedAlliance = false;}
@@ -90,7 +95,7 @@ public class SwerveSubsystem extends SubsystemBase{
     public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
-
+//TODO this is wrong needs to be SwerveModuleState type
     public ChassisSpeeds getRobotRelativeSpeeds(){
         return Constants.DriveConstants.kDriveKinematics.toChassisSpeeds(frontRightModule.gState(), frontLeftModule.gState(), backRightModule.gState(), backLeftModule.gState());
     }
@@ -160,8 +165,10 @@ public class SwerveSubsystem extends SubsystemBase{
         
                 //Odometer and other gyro values
                SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+               SmartDashboard.putString("test", getPose().getRotation().toString());
                SmartDashboard.putString("Odometer Read-Out", odometer.toString());
                SmartDashboard.putNumber("Robot Heading", getHeading());
+               SmartDashboard.putString("Rotation 2d", geRotation2d().toString());
         
                 //AE Degrees Reading
             //     SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kBLDegrees));
