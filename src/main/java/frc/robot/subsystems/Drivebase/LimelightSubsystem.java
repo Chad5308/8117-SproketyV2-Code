@@ -1,6 +1,8 @@
 package frc.robot.subsystems.Drivebase;
 
 import java.util.Optional;
+
+import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,6 +30,7 @@ public double[] botPose_targetSpace;
 public ProfiledPIDController thetaPIDController;
 public ProfiledPIDController ZPIDController;
 public ProfiledPIDController XPIDController;
+public AprilTag speakerTag = new AprilTag(, null);
 public boolean autoAlign = false;
 
 

@@ -134,10 +134,7 @@ public class IntakeSubsystem extends SubsystemBase{
     @Override
     public void periodic(){
 
-
-        if(intakeIndexer.get()){
-            // retractCommand();          
-        }
+      
         
     }
 

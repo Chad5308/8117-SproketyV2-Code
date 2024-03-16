@@ -142,7 +142,7 @@ public final class Constants {
     public static final boolean leftInverted = true;
     public static final boolean rightInverted = true;
 
-    public static final double kP_Intake = 0.05;
+    public static final double kP_Intake = 0.5;
     public static final double kI_Intake = 0;
     public static final double kD_Intake = 0;
 
@@ -213,6 +213,11 @@ public final class Constants {
     public static final double closeSpeakerAngle = 0;
     public static final double podiumSpeakerAngle = 0;
     public static final double ampAngle = 0;
+  }
+
+
+  public static final class AprilTagIds{
+    public static final int
   }
 
 
