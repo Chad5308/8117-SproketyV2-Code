@@ -30,7 +30,7 @@ public double[] botPose_targetSpace;
 public ProfiledPIDController thetaPIDController;
 public ProfiledPIDController ZPIDController;
 public ProfiledPIDController XPIDController;
-public AprilTag speakerTag = new AprilTag(, null);
+// public AprilTag blueSpeakerTag = A
 public boolean autoAlign = false;
 
 

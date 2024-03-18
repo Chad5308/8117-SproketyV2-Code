@@ -217,8 +217,35 @@ public final class Constants {
 
 
   public static final class AprilTagIds{
-    public static final int
+    public static final int blueSourceRight = 1;
+    public static final int blueSourceLeft = 2;
+    public static final int redSpeakerRight = 3;
+    public static final int redSpeakerLeft = 4;
+    public static final int redAmp = 5;
+    public static final int blueAmp = 6;
+    public static final int blueSpeakerRight = 7;
+    public static final int blueSpeakerLeft = 8;
+    public static final int redSourceRight = 9;
+    public static final int redSourceLeft = 10;
+    public static final int redStageSource = 11;
+    public static final int redStageAmp = 12;
+    public static final int redStageCenter = 13;
+    public static final int blueStageCenter = 14;
+    public static final int blueStageAmp = 15;
+    public static final int blueStageSource = 16;
   }
+
+  /*
+   * Blue Source (right to left) – ID 1, 2
+• Red Speaker (right to left) – ID 3, 4
+• Red Amp – ID 5
+• Blue Amp – ID 6
+• Blue Speaker (right to left) – ID 7, 8
+• Red Source (right to left) – ID 9,10
+• Red Stage (counter-clockwise starting at Stage Left) – ID 11, 12, 13
+• Blue Stage (counter-clockwise starting at Center Stage) – ID 14, 15, 16
+   * 
+   */
 
 
 }
