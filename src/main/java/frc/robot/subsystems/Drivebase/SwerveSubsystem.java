@@ -30,6 +30,7 @@ public class SwerveSubsystem extends SubsystemBase{
     public IntakeSubsystem arm_sub;
     public boolean isRedAlliance;
     Optional<Alliance> alliance;
+    public boolean hasReset = false;
     
     public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDegrees, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
     public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
@@ -42,9 +43,8 @@ public class SwerveSubsystem extends SubsystemBase{
     // public SwerveModulePosition blModPos = new SwerveModulePosition(backLeftModule.getPositionMeters(), backLeftModule.gState().angle);
     // public SwerveModulePosition brModPos = new SwerveModulePosition(backRightModule.getPositionMeters(), backRightModule.gState().angle);
     // public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frModPos, flModPos, brModPos, blModPos};
+    // public SwerveModulePosition[] swerveModulePositions = getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition());
 
-    public SwerveModulePosition flModPos, frModPos, blModPos, brModPos;
-    public SwerveModulePosition[] swerveModulePositions = new SwerveModulePosition[]{frModPos, flModPos, brModPos, blModPos};
 
     public SwerveSubsystem(Robot robot, ShooterSubsystem shoot_sub, IntakeSubsystem arm_sub) {
         new Thread(() -> {
@@ -88,26 +88,14 @@ public class SwerveSubsystem extends SubsystemBase{
 
     //Odometer code
     public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
-    geRotation2d(), swerveModulePositions);
-
-    // public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
-    // geRotation2d(), new SwerveModulePosition[]{
-    //     frModPos, flModPos, brModPos, blModPos
-    // });
-
-    // public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
-    // geRotation2d(), new SwerveModulePosition[]{
-    //     frontRightModule.getPosition(),
-    //     frontLeftModule.getPosition(),
-    //     backRightModule.getPosition(),
-    //     backLeftModule.getPosition()
-    // });
+    geRotation2d(), getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()));
 
 
     public void resetOdometry(Pose2d pose) {
         resetPositions(frontLeftModule, frontRightModule, backLeftModule, backRightModule);
-        odometer.resetPosition(geRotation2d(), swerveModulePositions, new Pose2d());
-        odometer.resetPosition(geRotation2d(), swerveModulePositions, pose);
+        // odometer.resetPosition(geRotation2d(), getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()), new Pose2d());
+        odometer.resetPosition(geRotation2d(), getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition()), pose);
+    hasReset = true;
     }
     public Pose2d getPose() {
         return odometer.getPoseMeters();
@@ -168,25 +156,33 @@ public class SwerveSubsystem extends SubsystemBase{
         return runOnce(() -> {fieldOriented = !fieldOriented;});
     }
     
-        
-        
+    public SwerveModulePosition[] getPositions(SwerveModulePosition fr, SwerveModulePosition fl, SwerveModulePosition br, SwerveModulePosition bl){
+        return new SwerveModulePosition[]{
+            fr, fl, br, bl
+        };
+    }
 
 
     @Override
     public void periodic() {
-            odometer.update(geRotation2d(), swerveModulePositions);
+            odometer.update(geRotation2d(), getPositions(
+                frontRightModule.getPosition(),
+                frontLeftModule.getPosition(),
+                backRightModule.getPosition(),
+                backLeftModule.getPosition())
+            );
+
+
         
         
         //multiple debugging values are listed here. Names are self explanitory
         
                 //Odometer and other gyro values
                SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-               SmartDashboard.putString("test", getPose().getRotation().toString());
-               SmartDashboard.putString("Odometer Read-Out", odometer.toString());
                SmartDashboard.putNumber("Robot Heading", getHeading());
-               SmartDashboard.putString("Rotation 2d", geRotation2d().toString());
-        
-                //AE Degrees Reading
+               SmartDashboard.putNumber("test", getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition())[1].distanceMeters);       
+              
+               //AE Degrees Reading
             //     SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kBLDegrees));
             //     SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kBRDegrees));
             //     SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kFLDegrees));
@@ -203,9 +199,9 @@ public class SwerveSubsystem extends SubsystemBase{
             //    SmartDashboard.putNumber("Back Right Drive Position", backRightModule.getDrivePosition());
             
 
-             flModPos = new SwerveModulePosition(frontLeftModule.getPositionMeters(), frontLeftModule.gState().angle);
-             frModPos = new SwerveModulePosition(frontRightModule.getPositionMeters(), frontRightModule.gState().angle);
-             blModPos = new SwerveModulePosition(backLeftModule.getPositionMeters(), backLeftModule.gState().angle);
-             brModPos = new SwerveModulePosition(backRightModule.getPositionMeters(), backRightModule.gState().angle);
+            //  flModPos = new SwerveModulePosition(frontLeftModule.getPositionMeters(), frontLeftModule.gState().angle);
+            //  frModPos = new SwerveModulePosition(frontRightModule.getPositionMeters(), frontRightModule.gState().angle);
+            //  blModPos = new SwerveModulePosition(backLeftModule.getPositionMeters(), backLeftModule.gState().angle);
+            //  brModPos = new SwerveModulePosition(backRightModule.getPositionMeters(), backRightModule.gState().angle);
         }
 }

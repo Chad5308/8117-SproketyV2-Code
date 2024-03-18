@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5293935837515026,
-        "y": 1.5224087509515962
+        "x": 1.4,
+        "y": 5.550936522700434
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5293935837515025,
-        "y": 1.5224087509515962
+        "x": 2.399999999999999,
+        "y": 5.550936522700434
       },
       "isLocked": false,
       "linkedName": "Speaker Starting Config"
     },
     {
       "anchor": {
-        "x": 1.969826478882628,
-        "y": 0.6675176831095445
+        "x": 3.35,
+        "y": 5.550936522700434
       },
       "prevControl": {
-        "x": 0.823161783311428,
-        "y": 0.6675176831095445
+        "x": 2.9,
+        "y": 5.550936522700434
+      },
+      "nextControl": {
+        "x": 3.8000000000000003,
+        "y": 5.550936522700434
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.4,
+        "y": 5.550936522700434
+      },
+      "prevControl": {
+        "x": 0.630075809477206,
+        "y": 5.550936522700434
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,11 +49,30 @@
   "eventMarkers": [
     {
       "name": "run intake",
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.25,
       "command": {
-        "type": "parallel",
+        "type": "sequential",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "run intake"
+              }
+            },
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 5.0
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "stop intake"
+              }
+            }
+          ]
         }
       }
     }
@@ -50,11 +85,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0,
+    "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
-  "previewStartingState": null,
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }
