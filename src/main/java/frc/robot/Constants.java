@@ -167,9 +167,9 @@ public final class Constants {
     //CAN Bus Numbers
     public static final int topMotorNum = 15;
     public static final int bottomMotorNum = 16;
-    public static final int breachMotorNum = 19;
+    public static final int breachMotorNum = 17;
     public static final int lPitchEncoder = 18;
-    public static final int rPitchEncoder = 20;
+    public static final int rPitchEncoder = 19;
 
 
     public static final double ramp_rate = 0.1;
@@ -201,7 +201,7 @@ public final class Constants {
     //Encoder values
     public static final double toDegrees = 360;
     public static final double pitchOffset = 0;
-    public static final boolean lPitchReversed = false;
+    public static final boolean lPitchReversed = true;
     public static final boolean rPitchReversed = false;
     public static final boolean topMotorReversed = true;
     public static final boolean bottomMotorReversed = true;

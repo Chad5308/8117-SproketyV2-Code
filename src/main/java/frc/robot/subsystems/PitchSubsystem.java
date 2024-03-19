@@ -79,6 +79,11 @@ public double positionTolerance = 1; //degrees
         rPitchMotor.set(-0.5);
     }
 
+    public void stopRotation(){
+        lPitchMotor.set(0);
+        rPitchMotor.set(0);
+    }
+
     public void setPosition(double degree){
         lPitchPID.setReference(degree, com.revrobotics.CANSparkBase.ControlType.kPosition);
         rPitchPID.setReference(degree, com.revrobotics.CANSparkBase.ControlType.kPosition);        

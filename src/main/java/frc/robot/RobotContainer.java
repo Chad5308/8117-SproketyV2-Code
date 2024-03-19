@@ -108,6 +108,13 @@ public RobotContainer() {
     shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopBreach());
     shootController.axisGreaterThan(2, 0.25).whileFalse(shooter_sub.stopBreach());
 
+    shootController.povUp().whileTrue(Commands.run(()->{pitchSubsystem.rotatePositive();}));
+    shootController.povDown().whileTrue(Commands.run(()->{pitchSubsystem.rotateNegative();}));
+    shootController.povUp().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
+    shootController.povDown().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
+
+
+
 
 
     //Auto fire Controls
