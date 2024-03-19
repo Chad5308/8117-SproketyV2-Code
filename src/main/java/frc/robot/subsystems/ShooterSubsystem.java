@@ -9,6 +9,7 @@ import com.revrobotics.SparkPIDController;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -26,6 +27,7 @@ public VelocityVoltage velocityRequest;
 public final CANSparkMax breachMotor;
 public final RelativeEncoder breachEncoder;
 public final SparkPIDController breachPID;
+public DigitalInput shooterSensor;
 
 //Unit in Rotations per second
 double desiredTopVelocity = 0;
@@ -47,6 +49,7 @@ public ShooterSubsystem(){
     velocityRequest = new VelocityVoltage(0).withSlot(0);
     motionMagicRequest = new MotionMagicVelocityVoltage(0);
         
+    shooterSensor = new DigitalInput(3);
     configure();
 }
 
@@ -122,22 +125,11 @@ public boolean areBothShootersUpToSpeed() {
     return isTopShooterUpToSpeed()
         && isBotomShooterUpToSpeed();
 }
-// public void setTopDesiredVelocity(double desiredVelocity) {
-//     desiredTopVelocity = desiredVelocity;
-//     getUpToSpeed();
-// }
-// public void setBottomDesiredVelocity(double desiredVelocity) {
-//     desiredBottomVelocity = desiredVelocity;
-//     // getUpToSpeed();
-// }
+
 public void setDesiredVelocities(double desiredTopVelocity, double desiredBottomVelocity) {
-    // setTopDesiredVelocity(desiredTopVelocity);
-    // setBottomDesiredVelocity(desiredBottomVelocity);
     this.desiredTopVelocity = desiredTopVelocity;
     this.desiredBottomVelocity = desiredBottomVelocity;
 }
-
-
 
 public Command speedUpCommand(){
     return runOnce(() -> {
@@ -183,6 +175,10 @@ public Command stopBreach(){
     });
 }
 
+public boolean isGamePiece(){
+    return shooterSensor.get();
+}
+
 @Override
 public void periodic() {
     getUpToSpeed();
@@ -194,6 +190,9 @@ public void periodic() {
     SmartDashboard.putNumber("Shooter/Bottom/Velocity RPS", getBottomShooterVelocity());
     SmartDashboard.putNumber("Shooter/Bottom/Desired Velocity RPS", desiredBottomVelocity);
     SmartDashboard.putBoolean("Shooter/Bottom/Up to Speed", isBotomShooterUpToSpeed());
+
+
+    SmartDashboard.putBoolean("Shooter sensor", shooterSensor.get());
     
 }
 

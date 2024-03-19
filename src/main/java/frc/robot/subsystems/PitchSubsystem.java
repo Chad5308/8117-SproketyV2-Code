@@ -5,6 +5,8 @@ import com.revrobotics.*;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,7 +19,8 @@ public final RelativeEncoder lPitchEncoder;
 public final RelativeEncoder rPitchEncoder;
 public final SparkPIDController lPitchPID;
 public final SparkPIDController rPitchPID;
-public final AbsoluteEncoder pitchEncoder;
+public final DigitalInput encoderInput = new DigitalInput(2);
+public final DutyCycleEncoder pitchEncoder = new DutyCycleEncoder(encoderInput);
 
 public double desiredPosition; //degrees
 public double positionTolerance = 1; //degrees
@@ -31,7 +34,6 @@ public double positionTolerance = 1; //degrees
         rPitchMotor = new CANSparkMax(Constants.ShooterConstants.rPitchEncoder, MotorType.kBrushless);
         lPitchEncoder = lPitchMotor.getEncoder();
         rPitchEncoder = rPitchMotor.getEncoder();
-        pitchEncoder = lPitchMotor.getAbsoluteEncoder(SparkAbsoluteEncoder.Type.kDutyCycle);
         lPitchPID = lPitchMotor.getPIDController();
         rPitchPID = rPitchMotor.getPIDController();
         configure();
@@ -55,19 +57,36 @@ public double positionTolerance = 1; //degrees
         lPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
         lPitchMotor.setOpenLoopRampRate(10);
         rPitchMotor.setOpenLoopRampRate(10);
-        pitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
-        pitchEncoder.setZeroOffset(Constants.ShooterConstants.pitchOffset);
+        pitchEncoder.setPositionOffset(Constants.ShooterConstants.pitchOffset);
+        pitchEncoder.setDistancePerRotation(Constants.ShooterConstants.toDegrees);
         // rPitchPID.setSmartMotionMaxVelocity(10, 0);
         // lPitchPID.setSmartMotionMaxVelocity(10, 0);
     }
 
 
     public double getPosition(){
-        return pitchEncoder.getPosition();
+        return pitchEncoder.getAbsolutePosition();
     }
 
-    public boolean atPosition(){
-        return (Math.abs(getPosition() - desiredPosition)) <= positionTolerance;
+
+    public void rotatePositive(){
+        lPitchMotor.set(0.5);
+        rPitchMotor.set(0.5);
+    }
+
+    public void rotateNegative(){
+        lPitchMotor.set(-0.5);
+        rPitchMotor.set(-0.5);
+    }
+
+    public void setPosition(double degree){
+        lPitchPID.setReference(degree, com.revrobotics.CANSparkBase.ControlType.kPosition);
+        rPitchPID.setReference(degree, com.revrobotics.CANSparkBase.ControlType.kPosition);        
+    }
+
+    public void homePosition() {
+        lPitchPID.setReference(0, com.revrobotics.CANSparkBase.ControlType.kPosition);
+        rPitchPID.setReference(0, com.revrobotics.CANSparkBase.ControlType.kPosition);
     }
 
 
@@ -75,9 +94,9 @@ public double positionTolerance = 1; //degrees
 
 @Override
 public void periodic() {
-    SmartDashboard.putNumber("Shooter Position", rPitchEncoder.getPosition());
-    SmartDashboard.putNumber("Desired POsition", desiredPosition);
-    SmartDashboard.putBoolean("At Position", atPosition());
+    SmartDashboard.putNumber("Shooter Position", getPosition());
+    lPitchEncoder.setPosition(pitchEncoder.getAbsolutePosition());
+    rPitchEncoder.setPosition(pitchEncoder.getAbsolutePosition());
 }
 
 

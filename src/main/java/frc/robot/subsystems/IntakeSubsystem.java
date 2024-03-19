@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -44,6 +45,7 @@ public class IntakeSubsystem extends SubsystemBase{
     public boolean isRetracted = true;
     //intakeIndexer
     public final DigitalInput intakeIndexer;
+    public boolean transferReady;
 
     public IntakeSubsystem(){
        
@@ -90,25 +92,28 @@ public class IntakeSubsystem extends SubsystemBase{
         intRightEncoder.setPosition(0);
     }
     //Commands
+    
+    public void setSpeed(double speed){
+        intLeftMotor.set(speed);
+        intRightMotor.set(speed);        
+    }
 
-    public double setSpeed = 0;
+    public double getSpeed(){
+       return (intLeftMotor.get() + intRightMotor.get())/2;
+    }
+
     public Command runIntakeCommand(){
         return runOnce(() -> {
-            setSpeed = 1;
-            intLeftMotor.set(setSpeed);
-            intRightMotor.set(setSpeed);
+            setSpeed(1);
     });}
     public Command reverseIntakecommand(){
         return runOnce(() -> {
-            setSpeed = -1;
-            intLeftMotor.set(setSpeed);
-            intRightMotor.set(setSpeed);
+            setSpeed(-1);
         });
     }
     public Command stopIntakeCommand(){
         return runOnce(() -> {
-            intLeftMotor.set(0);
-            intRightMotor.set(0);
+            setSpeed(0);
     });}
 
     //Pneumatics
@@ -133,6 +138,8 @@ public class IntakeSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
+        SmartDashboard.putBoolean("Intake Sensor", intakeIndexer.get());
+        transferReady = (!isRetracted && getSpeed() > 0 && intakeIndexer.get() == true);
 
       
         

@@ -1,11 +1,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.intakeConstants;
+import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PitchSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
-import edu.wpi.first.wpilibj.Ultrasonic;
 
 public class TransferCommand extends Command{
     
@@ -30,8 +30,12 @@ public class TransferCommand extends Command{
 
     @Override
     public void execute(){
-        if(!intakeSubsystem.isRetracted){
-        //    if()
-        }
+        // if(intakeSubsystem.transferReady){
+        //     new SequentialCommandGroup(intakeSubsystem.liftIntakeCommand().andThen(
+        //         Commands.runOnce(() -> {pitchSubsystem.homePosition();})).andThen(
+        //             shooter_sub.indexSpeedBreach().until(shooter_sub::isGamePiece)).andThen(
+        //                 shooter_sub.stopBreach()).andThen(
+        //                     intakeSubsystem.stopIntakeCommand()));
+        // }
     }
 }
