@@ -168,8 +168,8 @@ public final class Constants {
     public static final int topMotorNum = 15;
     public static final int bottomMotorNum = 16;
     public static final int breachMotorNum = 17;
-    public static final int lPitchEncoder = 18;
-    public static final int rPitchEncoder = 19;
+    public static final int lPitchEncoderNum = 18;
+    public static final int rPitchEncoderNum = 19;
 
 
     public static final double ramp_rate = 0.1;
@@ -190,7 +190,7 @@ public final class Constants {
     public static final double kI_BottomShooter = 0;
     public static final double kD_BottomShooter = 0.01;
 
-    public static final double kP_pitch = 0.01;
+    public static final double kP_pitch = 0.005;
     public static final double kI_pitch = 0;
     public static final double kD_pitch = 0;
 
@@ -199,7 +199,7 @@ public final class Constants {
     public static final double kD_breach = 0;
 
     //Encoder values
-    public static final double toDegrees = 360;
+    public static final double toDegrees = 1;
     public static final double pitchOffset = 0;
     public static final boolean lPitchReversed = true;
     public static final boolean rPitchReversed = false;

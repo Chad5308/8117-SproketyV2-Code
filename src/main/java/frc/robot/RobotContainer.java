@@ -113,6 +113,14 @@ public RobotContainer() {
     shootController.povUp().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
     shootController.povDown().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
 
+    if(intakeSubsystem.runIntakeCommand().isScheduled()){
+        Commands.runOnce(() -> {
+          pitchSubsystem.autoSet();
+        });
+    }
+
+    shootController.povLeft().onTrue(Commands.runOnce(() -> {pitchSubsystem.autoSet();}));
+
 
 
 

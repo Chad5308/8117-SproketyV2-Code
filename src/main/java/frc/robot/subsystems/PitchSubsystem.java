@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 
 import com.revrobotics.*;
+import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
@@ -19,7 +20,7 @@ public final RelativeEncoder lPitchEncoder;
 public final RelativeEncoder rPitchEncoder;
 public final SparkPIDController lPitchPID;
 public final SparkPIDController rPitchPID;
-public final DigitalInput encoderInput = new DigitalInput(2);
+public final DigitalInput encoderInput = new DigitalInput(6);
 public final DutyCycleEncoder pitchEncoder = new DutyCycleEncoder(encoderInput);
 
 public double desiredPosition; //degrees
@@ -30,8 +31,8 @@ public double positionTolerance = 1; //degrees
 
 
     public PitchSubsystem(){
-        lPitchMotor = new CANSparkMax(Constants.ShooterConstants.lPitchEncoder, MotorType.kBrushless);
-        rPitchMotor = new CANSparkMax(Constants.ShooterConstants.rPitchEncoder, MotorType.kBrushless);
+        lPitchMotor = new CANSparkMax(Constants.ShooterConstants.lPitchEncoderNum, MotorType.kBrushless);
+        rPitchMotor = new CANSparkMax(Constants.ShooterConstants.rPitchEncoderNum, MotorType.kBrushless);
         lPitchEncoder = lPitchMotor.getEncoder();
         rPitchEncoder = rPitchMotor.getEncoder();
         lPitchPID = lPitchMotor.getPIDController();
@@ -53,14 +54,17 @@ public double positionTolerance = 1; //degrees
         rPitchPID.setI(Constants.ShooterConstants.kI_pitch);
         rPitchPID.setD(Constants.ShooterConstants.kD_pitch);
 
-        rPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
-        lPitchEncoder.setPositionConversionFactor(Constants.ShooterConstants.toDegrees);
+        rPitchEncoder.setPositionConversionFactor(14.539);
+        lPitchEncoder.setPositionConversionFactor(14.539);
         lPitchMotor.setOpenLoopRampRate(10);
         rPitchMotor.setOpenLoopRampRate(10);
-        pitchEncoder.setPositionOffset(Constants.ShooterConstants.pitchOffset);
-        pitchEncoder.setDistancePerRotation(Constants.ShooterConstants.toDegrees);
+        // pitchEncoder.setPositionOffset(Constants.ShooterConstants.pitchOffset);
+        // pitchEncoder.setDistancePerRotation(Constants.ShooterConstants.toDegrees);
         // rPitchPID.setSmartMotionMaxVelocity(10, 0);
         // lPitchPID.setSmartMotionMaxVelocity(10, 0);
+        
+        lPitchEncoder.setPosition(0);
+        rPitchEncoder.setPosition(0);
     }
 
 
@@ -75,8 +79,8 @@ public double positionTolerance = 1; //degrees
     }
 
     public void rotateNegative(){
-        lPitchMotor.set(-0.5);
-        rPitchMotor.set(-0.5);
+        lPitchMotor.set(-0.15);
+        rPitchMotor.set(-0.15);
     }
 
     public void stopRotation(){
@@ -94,14 +98,24 @@ public double positionTolerance = 1; //degrees
         rPitchPID.setReference(0, com.revrobotics.CANSparkBase.ControlType.kPosition);
     }
 
+    public void setBreach(){
+        setPosition(-10.65);
+    }
+
+    public void autoSet(){
+    // lPitchEncoder.setPosition(getPosition());
+    // rPitchEncoder.setPosition(getPosition());
+    lPitchPID.setReference(0, ControlType.kPosition);
+    rPitchPID.setReference(0, ControlType.kPosition);
+    }
+
 
 
 
 @Override
 public void periodic() {
     SmartDashboard.putNumber("Shooter Position", getPosition());
-    lPitchEncoder.setPosition(pitchEncoder.getAbsolutePosition());
-    rPitchEncoder.setPosition(pitchEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("Shooter test", lPitchEncoder.getPosition());
 }
 
 

@@ -133,8 +133,8 @@ public void setDesiredVelocities(double desiredTopVelocity, double desiredBottom
 
 public Command speedUpCommand(){
     return runOnce(() -> {
-            desiredBottomVelocity = 60;
-            desiredTopVelocity = 60;
+            desiredBottomVelocity = 75;
+            desiredTopVelocity = 75;
     });
 }
 
