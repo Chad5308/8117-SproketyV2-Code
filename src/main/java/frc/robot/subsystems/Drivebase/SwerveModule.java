@@ -95,8 +95,6 @@ public void stop() {
   steerMotor.set(0);
 }
 
-  //configure our Absolute Encoder for the MK4 drive system
-  CANcoderConfiguration config = new CANcoderConfiguration();
   public double getAbsoluteEncoderDeg(double AEOffset) {
     double angle = absoluteEncoder.getPosition().getValueAsDouble();
     angle *= 360;

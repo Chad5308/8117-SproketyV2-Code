@@ -161,7 +161,7 @@ public Command fastShooter(){
 
 public Command indexSpeedBreach(){
     return runOnce(() -> {
-        breachMotor.set(0.25);
+        breachMotor.set(-0.25);
     });
 }
 public Command shootSpeedBreach(){

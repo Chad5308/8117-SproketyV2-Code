@@ -190,8 +190,8 @@ public final class Constants {
     public static final double kI_BottomShooter = 0;
     public static final double kD_BottomShooter = 0.01;
 
-    public static final double kP_pitch = 0.005;
-    public static final double kI_pitch = 0;
+    public static final double kP_pitch = 0.00825;
+    public static final double kI_pitch = 0.00000;
     public static final double kD_pitch = 0;
 
     public static final double kP_breach = 0.01;
@@ -199,19 +199,17 @@ public final class Constants {
     public static final double kD_breach = 0;
 
     //Encoder values
-    public static final double toDegrees = 1;
-    public static final double pitchOffset = 0;
-    public static final boolean lPitchReversed = true;
     public static final boolean rPitchReversed = false;
     public static final boolean topMotorReversed = true;
     public static final boolean bottomMotorReversed = true;
     public static final boolean breachReversed = true;
+    public static final boolean pitchEncoderReversed = true;
 
 
     //Known Angles
     public static final double sourceAngle = 0;
-    public static final double closeSpeakerAngle = 0;
-    public static final double podiumSpeakerAngle = 0;
+    public static final double closeSpeakerAngle = 37;
+    public static final double podiumSpeakerAngle = 60;
     public static final double ampAngle = 0;
   }
 
