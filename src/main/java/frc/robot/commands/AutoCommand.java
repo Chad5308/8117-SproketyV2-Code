@@ -48,8 +48,9 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
                 
                 
                 NamedCommands.registerCommand("FaceForward Wheels", Commands.runOnce(() -> swerveSubsystem.faceAllFoward()));
-                NamedCommands.registerCommand("run Intake", intakeSubsystem.runIntakeCommand());
-                NamedCommands.registerCommand("stop intake", intakeSubsystem.stopIntakeCommand());
+                NamedCommands.registerCommand("Intake", intakeSubsystem.runIntakeCommand());
+                NamedCommands.registerCommand("ShootPath6", Commands.runOnce(() -> shootingCommand.path6Shoot()));
+                NamedCommands.registerCommand("ShootBreach", Commands.runOnce(() -> shootingCommand.closeSpeaker()));
     }
 
     public HolonomicPathFollowerConfig autoConfig = new HolonomicPathFollowerConfig(

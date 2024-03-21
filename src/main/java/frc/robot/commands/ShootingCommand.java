@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants;
 import frc.robot.subsystems.PitchSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -29,6 +30,13 @@ public class ShootingCommand extends Command{
     public void closeSpeaker(){
         shooterSubsystem.setDesiredVelocities(75, 75);
         pitchSubsystem.setPosition(Constants.ShooterConstants.closeSpeakerAngle);
+        Commands.waitUntil(shooterSubsystem::areBothShootersUpToSpeed).andThen(shooterSubsystem.shootSpeedBreach());
+    }
+
+    public void path6Shoot(){
+        shooterSubsystem.setDesiredVelocities(75, 75);
+        pitchSubsystem.setPosition(Constants.ShooterConstants.path6Angle);
+        Commands.waitUntil(shooterSubsystem::areBothShootersUpToSpeed).andThen(shooterSubsystem.shootSpeedBreach());
     }
 
 

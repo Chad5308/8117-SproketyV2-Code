@@ -210,6 +210,7 @@ public final class Constants {
     public static final double sourceAngle = 0;
     public static final double closeSpeakerAngle = 37;
     public static final double podiumSpeakerAngle = 60;
+    public static final double path6Angle = 65;
     public static final double ampAngle = 0;
   }
 

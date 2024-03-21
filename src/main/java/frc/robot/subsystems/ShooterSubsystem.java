@@ -33,7 +33,7 @@ public DigitalInput shooterSensor;
 double desiredTopVelocity = 0;
 double desiredBottomVelocity = 0;
 
-double shooterUpToSpeedTolerance = 0.7;
+double shooterUpToSpeedTolerance = 1.5;
 
 
 public ShooterSubsystem(){
