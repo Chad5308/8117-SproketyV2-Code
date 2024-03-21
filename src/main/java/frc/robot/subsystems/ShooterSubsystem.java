@@ -133,8 +133,8 @@ public void setDesiredVelocities(double desiredTopVelocity, double desiredBottom
 
 public Command speedUpCommand(){
     return runOnce(() -> {
-            desiredBottomVelocity = 60;
-            desiredTopVelocity = 60;
+            desiredBottomVelocity = 75;
+            desiredTopVelocity = 75;
     });
 }
 
@@ -161,7 +161,7 @@ public Command fastShooter(){
 
 public Command indexSpeedBreach(){
     return runOnce(() -> {
-        breachMotor.set(0.25);
+        breachMotor.set(-0.25);
     });
 }
 public Command shootSpeedBreach(){

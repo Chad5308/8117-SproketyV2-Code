@@ -40,7 +40,7 @@ public class RobotContainer {
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
   public IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   public PitchSubsystem pitchSubsystem = new PitchSubsystem();
-  public ShootingCommand shootingCommand = new ShootingCommand(shooter_sub);
+  public ShootingCommand shootingCommand = new ShootingCommand(shooter_sub, pitchSubsystem);
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, intakeSubsystem);
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
@@ -53,6 +53,9 @@ public class RobotContainer {
 public RobotContainer() {
   s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, LL_sub, opController));
   configureBindings();
+
+  shooter_sub.setDefaultCommand(shootingCommand);
+  pitchSubsystem.setDefaultCommand(shootingCommand);
 
 
       
@@ -99,14 +102,30 @@ public RobotContainer() {
     // opController.povUp().onTrue(LL_sub.autoAlignCommand());
 
     //shooter Controls
-    shootController.a().onTrue(shooter_sub.slowShooter());
-    shootController.y().onTrue(shooter_sub.fastShooter());
+    // shootController.a().onTrue(shooter_sub.slowShooter());
+    // shootController.y().onTrue(shooter_sub.fastShooter());
     shootController.x().onTrue(shooter_sub.stopShooter());
-    shootController.b().onTrue(shooter_sub.speedUpCommand());
+    shootController.a().onTrue(Commands.runOnce(() -> {shootingCommand.closeSpeaker();}));
+    // shootController.b().onTrue(shooter_sub.speedUpCommand());
     shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.shootSpeedBreach());
     shootController.axisGreaterThan(2, 0.25).whileTrue(shooter_sub.indexSpeedBreach());
     shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopBreach());
     shootController.axisGreaterThan(2, 0.25).whileFalse(shooter_sub.stopBreach());
+
+    shootController.povUp().whileTrue(Commands.run(()->{pitchSubsystem.rotatePositive();}));
+    shootController.povDown().whileTrue(Commands.run(()->{pitchSubsystem.rotateNegative();}));
+    shootController.povUp().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
+    shootController.povDown().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
+
+    if(intakeSubsystem.runIntakeCommand().isScheduled()){
+        Commands.runOnce(() -> {
+          // pitchSubsystem.autoSet();
+        });
+    }
+
+    shootController.povLeft().onTrue(Commands.runOnce(() -> {pitchSubsystem.autoSet();}));
+
+
 
 
 
