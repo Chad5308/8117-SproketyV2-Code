@@ -66,19 +66,15 @@ public RobotContainer() {
   }
 
   public void configureAutos(){
-    autoChooser.addOption("2 Piece Auto", TwoPieceAuto());
-    autoChooser.addOption("Leave Auto", leaveAuto());
-    autoChooser.addOption("Score + Leave", scoreLeaveAuto());
+    autoChooser.addOption("Close Speaker Stay", shootBreachStay());
+    autoChooser.addOption("1", One());
   }
 
-  public Command TwoPieceAuto(){
-        return new PathPlannerAuto("2 Piece Auto");
-    }
-  public Command leaveAuto(){
-    return new PathPlannerAuto("leave Auto");
+  public Command shootBreachStay(){
+    return Commands.runOnce(() -> {shootingCommand.closeSpeaker();});
   }
-  public Command scoreLeaveAuto(){
-    return new PathPlannerAuto("Score + Leave Auto");
+  public Command One(){
+    return new PathPlannerAuto("1");
   }
   
   public Command getAutonomousCommand() {
@@ -106,6 +102,7 @@ public RobotContainer() {
     // shootController.y().onTrue(shooter_sub.fastShooter());
     shootController.x().onTrue(shooter_sub.stopShooter());
     shootController.a().onTrue(Commands.runOnce(() -> {shootingCommand.closeSpeaker();}));
+    shootController.b().onTrue(Commands.runOnce(() -> {shootingCommand.podiumShot();}));
     // shootController.b().onTrue(shooter_sub.speedUpCommand());
     shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.shootSpeedBreach());
     shootController.axisGreaterThan(2, 0.25).whileTrue(shooter_sub.indexSpeedBreach());

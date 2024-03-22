@@ -49,14 +49,13 @@ public double positionTolerance = 1; //degrees
         rPitchMotor.setOpenLoopRampRate(10);
         rPitchPID.setSmartMotionMaxVelocity(10, 0);
         rPitchEncoder.setPosition(0);
+        pitchEncoder.setPositionOffset(0.312);
     }
 
     
     public double getPosition(){
     double angle = pitchEncoder.getAbsolutePosition() - pitchEncoder.getPositionOffset();
-    angle *= 360;
-    angle -= 111.38;
-    return (angle  * (Constants.ShooterConstants.pitchEncoderReversed ? -1 : 1));
+    return angle;
     }
 
 
@@ -80,19 +79,10 @@ public double positionTolerance = 1; //degrees
         rPitchPID.setReference(0, com.revrobotics.CANSparkBase.ControlType.kPosition);
     }
 
-    public void setBreach(){
-        setPosition(-10.65);
-    }
-
     public void autoSet(){
     rPitchEncoder.setPosition(getPosition());
     rPitchPID.setReference(0, ControlType.kPosition);
     }
-
-    
-
-
-
 
 @Override
 public void periodic() {

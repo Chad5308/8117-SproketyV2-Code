@@ -199,11 +199,10 @@ public final class Constants {
     public static final double kD_breach = 0;
 
     //Encoder values
-    public static final boolean rPitchReversed = false;
+    public static final boolean rPitchReversed = true;
     public static final boolean topMotorReversed = true;
     public static final boolean bottomMotorReversed = true;
     public static final boolean breachReversed = true;
-    public static final boolean pitchEncoderReversed = true;
 
 
     //Known Angles

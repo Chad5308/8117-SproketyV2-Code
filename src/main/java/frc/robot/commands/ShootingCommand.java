@@ -18,7 +18,7 @@ public class ShootingCommand extends Command{
 
     @Override
     public void initialize(){
-        pitchSubsystem.autoSet();
+        // pitchSubsystem.autoSet();
     }
 
 
@@ -36,6 +36,12 @@ public class ShootingCommand extends Command{
     public void path6Shoot(){
         shooterSubsystem.setDesiredVelocities(75, 75);
         pitchSubsystem.setPosition(Constants.ShooterConstants.path6Angle);
+        Commands.waitUntil(shooterSubsystem::areBothShootersUpToSpeed).andThen(shooterSubsystem.shootSpeedBreach());
+    }
+
+    public void podiumShot(){
+        shooterSubsystem.setDesiredVelocities(75, 75);
+        pitchSubsystem.setPosition(Constants.ShooterConstants.podiumSpeakerAngle);
         Commands.waitUntil(shooterSubsystem::areBothShootersUpToSpeed).andThen(shooterSubsystem.shootSpeedBreach());
     }
 

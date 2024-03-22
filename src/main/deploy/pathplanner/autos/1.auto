@@ -26,13 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "PathOut+Intake6"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ShootPath6"
+            "pathName": "2"
           }
         }
       ]
