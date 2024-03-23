@@ -101,9 +101,9 @@ public RobotContainer() {
     // shootController.a().onTrue(shooter_sub.slowShooter());
     // shootController.y().onTrue(shooter_sub.fastShooter());
     shootController.x().onTrue(shooter_sub.stopShooter());
-    shootController.a().onTrue(Commands.runOnce(() -> {shootingCommand.closeSpeaker();}));
-    shootController.b().onTrue(Commands.runOnce(() -> {shootingCommand.podiumShot();}));
-    // shootController.b().onTrue(shooter_sub.speedUpCommand());
+    //shootController.a().onTrue(Commands.runOnce(() -> {shootingCommand.closeSpeaker();}));
+    //shootController.b().onTrue(Commands.runOnce(() -> {shootingCommand.podiumShot();}));
+    shootController.b().onTrue(shooter_sub.speedUpCommand());
     shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.shootSpeedBreach());
     shootController.axisGreaterThan(2, 0.25).whileTrue(shooter_sub.indexSpeedBreach());
     shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopBreach());
@@ -113,14 +113,14 @@ public RobotContainer() {
     shootController.povDown().whileTrue(Commands.run(()->{pitchSubsystem.rotateNegative();}));
     shootController.povUp().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
     shootController.povDown().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
-
+/* 
     if(intakeSubsystem.runIntakeCommand().isScheduled()){
         Commands.runOnce(() -> {
           // pitchSubsystem.autoSet();
         });
     }
-
-    shootController.povLeft().onTrue(Commands.runOnce(() -> {pitchSubsystem.autoSet();}));
+*/
+   // shootController.povLeft().onTrue(Commands.runOnce(() -> {pitchSubsystem.autoSet();}));
 
 
 
