@@ -33,7 +33,7 @@ public DigitalInput shooterSensor;
 double desiredTopVelocity = 0;
 double desiredBottomVelocity = 0;
 
-double shooterUpToSpeedTolerance = 1.5;
+double shooterUpToSpeedTolerance = 5;
 
 
 public ShooterSubsystem(){
@@ -89,7 +89,6 @@ public void configure(){
     breachMotor.setInverted(Constants.ShooterConstants.breachReversed);
     breachMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
     breachMotor.setIdleMode(IdleMode.kCoast);
-
 }
 
 
@@ -158,26 +157,16 @@ public Command fastShooter(){
         desiredTopVelocity +=5;
     });
 }
-
-public Command indexSpeedBreach(){
-    return runOnce(() -> {
-        breachMotor.set(-0.25);
-    });
-}
-public Command shootSpeedBreach(){
-    return runOnce(() -> {
-        breachMotor.set(0.75);
-    });
-}
-public Command stopBreach(){
-    return runOnce(() -> {
-        breachMotor.set(0);
-    });
+public void setBreachSpeed(double speed){
+    breachMotor.set(speed);
 }
 
-public boolean isGamePiece(){
-    return shooterSensor.get();
-}
+
+
+
+// public boolean isGamePiece(){
+//     return shooterSensor.get();
+// }
 
 @Override
 public void periodic() {
@@ -192,7 +181,7 @@ public void periodic() {
     SmartDashboard.putBoolean("Shooter/Bottom/Up to Speed", isBotomShooterUpToSpeed());
 
 
-    SmartDashboard.putBoolean("Shooter sensor", shooterSensor.get());
+    // SmartDashboard.putBoolean("Shooter sensor", shooterSensor.get());
     
 }
 

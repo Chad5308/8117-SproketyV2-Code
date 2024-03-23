@@ -3,6 +3,8 @@ package frc.robot.subsystems.Drivebase;
 import java.util.Optional;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.HttpCamera;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -10,6 +12,7 @@ import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -30,6 +33,7 @@ public double[] botPose_targetSpace;
 public ProfiledPIDController thetaPIDController;
 public ProfiledPIDController ZPIDController;
 public ProfiledPIDController XPIDController;
+// HttpCamera limelightCamera;
 // public AprilTag blueSpeakerTag = A
 public boolean autoAlign = false;
 
@@ -52,6 +56,11 @@ public boolean autoAlign = false;
         thetaPIDController = new ProfiledPIDController(Constants.limelightConstants.thetakP, Constants.limelightConstants.thetakI, Constants.limelightConstants.thetakD, Constants.AutoConstants.kThetaControllerConstraints);
         ZPIDController = new ProfiledPIDController(Constants.limelightConstants.linearkP, Constants.limelightConstants.linearkI, Constants.limelightConstants.linearkD, Constants.AutoConstants.kLinearConstraints);
         XPIDController = new ProfiledPIDController(Constants.limelightConstants.linearkP, Constants.limelightConstants.linearkI, Constants.limelightConstants.linearkD, Constants.AutoConstants.kLinearConstraints);
+    
+    
+        // limelightCamera = new HttpCamera("Limelight", );
+        // CameraServer.getServer().addCamera(limelightCamera);
+        // Shuffleboard.getTab("Tab").add(limelightCamera);
     }
 
     public Optional<Pose2d> getPoseFromAprilTags() {

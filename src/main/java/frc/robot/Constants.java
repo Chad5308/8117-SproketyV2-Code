@@ -135,7 +135,7 @@ public final class Constants {
   public static final class intakeConstants {
     public static final int intLeftEncoder = 13;
     public static final int intRightEncoder = 14;
-    public static final int indexingSensor = 1;
+    public static final int indexingSensor = 0;
 
     public static final double ramp_rate = 0.5;
 
@@ -190,9 +190,10 @@ public final class Constants {
     public static final double kI_BottomShooter = 0;
     public static final double kD_BottomShooter = 0.01;
 
-    public static final double kP_pitch = 0.00825;
-    public static final double kI_pitch = 0.00000;
-    public static final double kD_pitch = 0;
+    public static final double kP_pitch = 0.0055;
+    public static final double kI_pitch = 0;
+    public static final double kD_pitch = 0.00005;
+    
 
     public static final double kP_breach = 0.01;
     public static final double kI_breach = 0;
@@ -206,11 +207,10 @@ public final class Constants {
 
 
     //Known Angles
-    public static final double sourceAngle = 0;
-    public static final double closeSpeakerAngle = 37;
-    public static final double podiumSpeakerAngle = 60;
-    public static final double path6Angle = 65;
-    public static final double ampAngle = 0;
+    public static final double sourceAngle = -125;
+    public static final double closeSpeakerAngle = -25;
+    public static final double podiumSpeakerAngle = -32;
+    public static final double path6Angle = -65;
   }
 
 

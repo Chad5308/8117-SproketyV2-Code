@@ -15,11 +15,11 @@ import frc.robot.Constants;
 
 public class PitchSubsystem extends SubsystemBase{
     //Pitch Motors
-public final CANSparkMax rPitchMotor;
-public final RelativeEncoder rPitchEncoder;
-public final SparkPIDController rPitchPID;
+private final CANSparkMax rPitchMotor;
+private final RelativeEncoder rPitchEncoder;
+private final SparkPIDController rPitchPID;
 public final DigitalInput encoderInput = new DigitalInput(6);
-public final DutyCycleEncoder pitchEncoder;
+private final DutyCycleEncoder pitchEncoder;
 
 public double desiredPosition; //degrees
 public double positionTolerance = 1; //degrees
@@ -45,43 +45,39 @@ public double positionTolerance = 1; //degrees
         rPitchPID.setI(Constants.ShooterConstants.kI_pitch);
         rPitchPID.setD(Constants.ShooterConstants.kD_pitch);
 
-        rPitchEncoder.setPositionConversionFactor(0.01 * 360);
-        rPitchMotor.setOpenLoopRampRate(10);
-        rPitchPID.setSmartMotionMaxVelocity(10, 0);
+        rPitchEncoder.setPositionConversionFactor(0.03333 * 360);
+        rPitchMotor.setOpenLoopRampRate(5);
+        rPitchPID.setSmartMotionMaxVelocity(5, 0);
         rPitchEncoder.setPosition(0);
-        pitchEncoder.setPositionOffset(0.312);
+        pitchEncoder.setPositionOffset(0.4693);//0.4669
     }
 
     
     public double getPosition(){
     double angle = pitchEncoder.getAbsolutePosition() - pitchEncoder.getPositionOffset();
-    return angle;
+    return angle*360;
     }
 
 
     public void rotatePositive(){
-        rPitchMotor.set(1);
+        setPosition(rPitchEncoder.getPosition() + 10);
     }
 
     public void rotateNegative(){
-        rPitchMotor.set(-1);
-    }
-
-    public void stopRotation(){
-        rPitchMotor.set(0);
+        setPosition(rPitchEncoder.getPosition() - 10);
     }
 
     public void setPosition(double degree){
         rPitchPID.setReference(degree, com.revrobotics.CANSparkBase.ControlType.kPosition);        
     }
 
-    public void homePosition() {
-        rPitchPID.setReference(0, com.revrobotics.CANSparkBase.ControlType.kPosition);
-    }
-
     public void autoSet(){
     rPitchEncoder.setPosition(getPosition());
     rPitchPID.setReference(0, ControlType.kPosition);
+    }
+
+    public void gravity(){
+        rPitchPID.setP((0.002 * Math.sin(Math.toRadians(rPitchEncoder.getPosition()))) + Constants.ShooterConstants.kP_pitch);
     }
 
 @Override

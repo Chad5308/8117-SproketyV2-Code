@@ -45,11 +45,11 @@ public class RobotContainer {
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
   public TransferCommand transferCommand = new TransferCommand(shooter_sub, intakeSubsystem, pitchSubsystem);
-  public AutoCommand autoCommand = new AutoCommand(shootingCommand, transferCommand, d_Command, s_Swerve, intakeSubsystem);
+  public AutoCommand autoCommand = new AutoCommand(shootingCommand, transferCommand, d_Command, s_Swerve, intakeSubsystem, shooter_sub, pitchSubsystem);
   private SendableChooser<Command> autoChooser;
 
 
-
+ 
 public RobotContainer() {
   s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, LL_sub, opController));
   configureBindings();
@@ -67,14 +67,22 @@ public RobotContainer() {
 
   public void configureAutos(){
     autoChooser.addOption("Close Speaker Stay", shootBreachStay());
-    autoChooser.addOption("1", One());
+    autoChooser.addOption("1", one());
+    autoChooser.addOption("2", two());
+    autoChooser.addOption("SourceShootLeave", SourceShootLeave());
+    autoChooser.addOption("AmpScoreLeave", AmpScoreLeave());
   }
 
   public Command shootBreachStay(){
-    return Commands.runOnce(() -> {shootingCommand.closeSpeaker();});
-  }
-  public Command One(){
-    return new PathPlannerAuto("1");
+    return Commands.runOnce(() -> {shootingCommand.closeSpeaker();});}
+  public Command one(){
+    return new PathPlannerAuto("1");}
+  public Command two(){
+    return new PathPlannerAuto("2");}
+  public Command SourceShootLeave(){
+    return new PathPlannerAuto("SourceShootLeave");}
+  public Command AmpScoreLeave(){
+    return new PathPlannerAuto("AmpScoreLeave");
   }
   
   public Command getAutonomousCommand() {
@@ -93,42 +101,34 @@ public RobotContainer() {
     opController.axisGreaterThan(2, 0.25).whileTrue(intakeSubsystem.dropIntakeCommand());
     opController.axisGreaterThan(2, 0.25).whileFalse(intakeSubsystem.liftIntakeCommand());
 
-    opController.a().onTrue(intakeSubsystem.liftIntakeCommand());
-    opController.b().onTrue(intakeSubsystem.dropIntakeCommand());
-    // opController.povUp().onTrue(LL_sub.autoAlignCommand());
-
     //shooter Controls
     // shootController.a().onTrue(shooter_sub.slowShooter());
     // shootController.y().onTrue(shooter_sub.fastShooter());
-    shootController.x().onTrue(shooter_sub.stopShooter());
-    //shootController.a().onTrue(Commands.runOnce(() -> {shootingCommand.closeSpeaker();}));
-    //shootController.b().onTrue(Commands.runOnce(() -> {shootingCommand.podiumShot();}));
-    shootController.b().onTrue(shooter_sub.speedUpCommand());
-    shootController.axisGreaterThan(3, 0.25).whileTrue(shooter_sub.shootSpeedBreach());
-    shootController.axisGreaterThan(2, 0.25).whileTrue(shooter_sub.indexSpeedBreach());
-    shootController.axisGreaterThan(3, 0.25).whileFalse(shooter_sub.stopBreach());
-    shootController.axisGreaterThan(2, 0.25).whileFalse(shooter_sub.stopBreach());
-
+    shootController.axisGreaterThan(3, 0.25).whileTrue(Commands.runOnce(() -> {shootingCommand.shootSpeedBreach();}));
+    shootController.axisGreaterThan(2, 0.25).whileTrue(Commands.runOnce(() -> {shootingCommand.reverseBreach();}));
+    shootController.axisGreaterThan(3, 0.25).whileFalse(Commands.runOnce(()-> {shootingCommand.stopBreach();}));
+    shootController.axisGreaterThan(3, 0.25).whileFalse(Commands.runOnce(()-> {shootingCommand.stopBreach();}));
+    
+    
+    shootController.povLeft().onTrue(shooter_sub.speedUpCommand());
+    shootController.povRight().onTrue(shooter_sub.stopShooter());
     shootController.povUp().whileTrue(Commands.run(()->{pitchSubsystem.rotatePositive();}));
     shootController.povDown().whileTrue(Commands.run(()->{pitchSubsystem.rotateNegative();}));
-    shootController.povUp().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
-    shootController.povDown().whileFalse(Commands.run(()->{pitchSubsystem.stopRotation();}));
-/* 
-    if(intakeSubsystem.runIntakeCommand().isScheduled()){
-        Commands.runOnce(() -> {
-          // pitchSubsystem.autoSet();
-        });
-    }
-*/
-   // shootController.povLeft().onTrue(Commands.runOnce(() -> {pitchSubsystem.autoSet();}));
 
-
-
-
-
+    
+    
+    //test for PID
+    // shootController.y().onTrue(Commands.runOnce(() -> {pitchSubsystem.setPosition(Constants.ShooterConstants.closeSpeakerAngle);}));
+    
+    
+    
+    
+    
     //Auto fire Controls
-    // opController.axisGreaterThan(3, 0.5).onTrue(shooter_sub.closeSpeakerCommand());
-
+    shootController.a().onTrue(Commands.runOnce(() -> {shootingCommand.closeSpeaker();}));
+    shootController.b().onTrue(Commands.runOnce(()-> {pitchSubsystem.setPosition(Constants.ShooterConstants.sourceAngle);}));
+    shootController.y().onTrue(Commands.runOnce(() -> {shootingCommand.podiumShot();}));
+    
 
   }
 }

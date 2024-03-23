@@ -2,25 +2,19 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.0,
-      "y": 1.75
+      "x": 0.65,
+      "y": 4.45
     },
-    "rotation": 0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "FaceForward Wheels"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "New New Path"
+            "pathName": "1"
           }
         }
       ]

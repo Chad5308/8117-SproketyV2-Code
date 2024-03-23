@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.AnalogPotentiometer;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 
@@ -44,7 +45,7 @@ public class IntakeSubsystem extends SubsystemBase{
 
     public boolean isRetracted = true;
     //intakeIndexer
-    public final DigitalInput intakeIndexer;
+    DigitalInput intakeLimitSwitch;
     public boolean transferReady;
 
     public IntakeSubsystem(){
@@ -81,8 +82,7 @@ public class IntakeSubsystem extends SubsystemBase{
         intRightPID.setI(Constants.intakeConstants.kI_Intake);
         intRightPID.setD(Constants.intakeConstants.kD_Intake);
 
-        intakeIndexer = new DigitalInput(Constants.intakeConstants.indexingSensor);
-
+        intakeLimitSwitch = new DigitalInput(0);
         zeroAll();
         intakeLift.set(Value.kForward);
     }
@@ -138,8 +138,9 @@ public class IntakeSubsystem extends SubsystemBase{
 
     @Override
     public void periodic(){
-        SmartDashboard.putBoolean("Intake Sensor", intakeIndexer.get());
-        transferReady = (!isRetracted && getSpeed() > 0 && intakeIndexer.get() == true);
+        // SmartDashboard.putBoolean("Intake Switch", intakeLimitSwitch.get());
+        // transferReady = (!isRetracted && getSpeed() > 0 && intakeLimitSwitch.get() == true);
+        // SmartDashboard.putBoolean("Transfer Boolean", transferReady);
 
       
         

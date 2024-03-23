@@ -25,7 +25,6 @@ public class DriveCommand extends Command{
      public double ySpeed, xSpeed, turningSpeed;
      public double ll_zSpeed, ll_xSpeed, ll_turningSpeed;
     public boolean limelightTracking = false;
-    public CameraServer camera;
     public ChassisSpeeds chassisSpeeds;
 
     
@@ -41,7 +40,6 @@ public class DriveCommand extends Command{
                 addRequirements(swerveSubsystem, LL_Sub);
                 this.opController = opController;
 
-            CameraServer.startAutomaticCapture();
 
     }
 
