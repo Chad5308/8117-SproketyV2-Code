@@ -13,6 +13,7 @@ import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -28,11 +29,13 @@ public double cameraHeight = 1.2065;
 public double xAng, yAng, hasTargets, targetNum, zSpeed, xSpeed, turningSpeed;
 public double correctionX, correctionZ, correctionT;
 public double distanceX, distanceZ;
+public double yAngToDegrees;
 public double[] localizedPose;
 public double[] botPose_targetSpace;
 public ProfiledPIDController thetaPIDController;
 public ProfiledPIDController ZPIDController;
 public ProfiledPIDController XPIDController;
+
 // HttpCamera limelightCamera;
 // public AprilTag blueSpeakerTag = A
 public boolean autoAlign = false;
@@ -45,7 +48,7 @@ public boolean autoAlign = false;
     public LimelightSubsystem(SwerveSubsystem s_swerve){
         this.s_swerve = s_swerve;
 
-//NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
+// NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
 
 
 
@@ -85,6 +88,16 @@ public boolean autoAlign = false;
             autoAlign = !autoAlign;
         });
     }
+
+    public double autoAngle(){
+        double temp = 0; //47inches away battor
+        double distanceAway = 0;
+        distanceAway = (53 + 7/8 - 9.5) / Math.tan(yAng);
+        temp = -1*(90-((Math.toDegrees(Math.atan((78-20)/(distanceAway-4))))));
+        
+        return temp;
+    }
+
     
 
 @Override
@@ -93,26 +106,28 @@ public void periodic(){
 // HttpCamera limelightCamera = new HttpCamera("CoprocessorCamera", "http://frcvision.local:8117/stream.mjpg");
 // CameraServer.addCamera(limelightCamera);
 
-if (s_swerve.allianceCheck() == true) {
-            localizedPose = networkTables.getEntry("botpose_wpired").getDoubleArray(new double[6]);
-} else {
-        localizedPose = networkTables.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
-    }
+// if (s_swerve.allianceCheck() == true) {
+//             localizedPose = networkTables.getEntry("botpose_wpired").getDoubleArray(new double[6]);
+// } else {
+//         localizedPose = networkTables.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+//     }
 
 botPose_targetSpace = networkTables.getEntry("botpose_targetspace").getDoubleArray(new double[6]);
-    
+localizedPose = networkTables.getEntry("botpose_wpiblue").getDoubleArray(new double[6]);
+
 
     
         
     
 xAng = Math.toRadians(networkTables.getEntry("tx").getDouble(0));
-yAng = Math.toRadians(networkTables.getEntry("ty").getDouble(0));
+yAng = Math.toRadians(networkTables.getEntry("ty").getDouble(0)) + Math.toRadians(Constants.limelightConstants.angleOffset);
+yAngToDegrees = Math.toDegrees(yAng);
 hasTargets = networkTables.getEntry("tv").getDouble(0);
 targetNum = networkTables.getEntry("tid").getDouble(0);
 // distanceX = ((targetHeight-cameraHeight) / (Math.tan(yAng)));//inches
 // distanceZ = distanceX * Math.tan(xAng);//inches
-distanceX = botPose_targetSpace[0];
-distanceZ = Math.abs(botPose_targetSpace[2]);
+// distanceX = botPose_targetSpace[0];
+// distanceZ = Math.abs(botPose_targetSpace[2]);
 
  
 correctionX = XPIDController.calculate(distanceX);//meters
@@ -147,6 +162,7 @@ correctionT = thetaPIDController.calculate(xAng);//radians
 // SmartDashboard.putNumber("Y Speed", xSpeed);
 // SmartDashboard.putNumber("TX Value", xAng);
 // SmartDashboard.putNumber("TY Value", yAng);
+// SmartDashboard.putNumber("TY degrees", Math.toDegrees(yAng));
 // SmartDashboard.putBoolean("Is command running", autoAlign);
 
 
@@ -155,6 +171,7 @@ correctionT = thetaPIDController.calculate(xAng);//radians
 // SmartDashboard.putNumber("BotPose Z", botPose_targetSpace[2]);
 
 
+SmartDashboard.putNumber("Auto Angle", autoAngle());
 
 }
 

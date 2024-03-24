@@ -40,9 +40,9 @@ public class RobotContainer {
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
   public IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   public PitchSubsystem pitchSubsystem = new PitchSubsystem();
-  public ShootingCommand shootingCommand = new ShootingCommand(shooter_sub, pitchSubsystem);
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, intakeSubsystem);
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
+  public ShootingCommand shootingCommand = new ShootingCommand(shooter_sub, pitchSubsystem, LL_sub);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
   public TransferCommand transferCommand = new TransferCommand(shooter_sub, intakeSubsystem, pitchSubsystem);
   public AutoCommand autoCommand = new AutoCommand(shootingCommand, transferCommand, d_Command, s_Swerve, intakeSubsystem, shooter_sub, pitchSubsystem);
@@ -56,6 +56,7 @@ public RobotContainer() {
 
   shooter_sub.setDefaultCommand(shootingCommand);
   pitchSubsystem.setDefaultCommand(shootingCommand);
+
 
 
       
@@ -128,7 +129,12 @@ public RobotContainer() {
     shootController.a().onTrue(Commands.runOnce(() -> {shootingCommand.closeSpeaker();}));
     shootController.b().onTrue(Commands.runOnce(()-> {pitchSubsystem.setPosition(Constants.ShooterConstants.sourceAngle);}));
     shootController.y().onTrue(Commands.runOnce(() -> {shootingCommand.podiumShot();}));
+
+    shootController.rightBumper().onTrue(Commands.runOnce(() -> {shootingCommand.isFlipped = !shootingCommand.isFlipped;}));
+    // shootController.leftBumper().onTrue(Commands.runOnce(() -> {shootingCommand.autoAlign = !shootingCommand.autoAlign;}));
     
+    // shootController.rightBumper().whileTrue(Commands.runOnce(()->{shootingCommand.autoAim();}));
+
 
   }
 }

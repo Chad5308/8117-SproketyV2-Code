@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.fasterxml.jackson.core.sym.Name;
+import com.fasterxml.jackson.databind.util.Named;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -54,13 +55,16 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
                 
                 
                 NamedCommands.registerCommand("FaceForward Wheels", Commands.runOnce(() -> swerveSubsystem.faceAllFoward()));
-                NamedCommands.registerCommand("Intake", intakeSubsystem.runIntakeCommand());
-                NamedCommands.registerCommand("ShootPath6", Commands.runOnce(() -> shootingCommand.path6Shoot()));
+                NamedCommands.registerCommand("Intake", intakeSubsystem.runIntakeCommand().andThen(intakeSubsystem.dropIntakeCommand()));
                 NamedCommands.registerCommand("revSpeaker", Commands.runOnce(() -> shootingCommand.closeSpeaker()));
                 NamedCommands.registerCommand("Launch", Commands.runOnce(() -> {shootingCommand.launch();}));
                 NamedCommands.registerCommand("stopEverything", Commands.runOnce(() -> {shootingCommand.stopAll();}));
                 NamedCommands.registerCommand("stopIntake", intakeSubsystem.stopIntakeCommand());
                 NamedCommands.registerCommand("homeShooter", Commands.runOnce(() -> {pitchSubsystem.autoSet();}));
+                NamedCommands.registerCommand("stopTransfer", intakeSubsystem.stopIntakeCommand());
+                NamedCommands.registerCommand("revPath2", Commands.runOnce(()->{shootingCommand.path2Shoot();}));
+                NamedCommands.registerCommand("breachTransfer", Commands.runOnce(()->{shooter_sub.setBreachSpeed(0.25);}));
+                NamedCommands.registerCommand("dropIntake", intakeSubsystem.dropIntakeCommand());
     }
 
 

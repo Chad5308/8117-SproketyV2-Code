@@ -84,7 +84,7 @@ public double positionTolerance = 1; //degrees
 public void periodic() {
     getPosition();
 
-    SmartDashboard.putNumber("Shooter Position", getPosition());
+    // SmartDashboard.putNumber("Shooter Position", getPosition());
     SmartDashboard.putNumber("Shooter test", rPitchEncoder.getPosition());
     SmartDashboard.putNumber("ABS reading", pitchEncoder.getAbsolutePosition());
 }

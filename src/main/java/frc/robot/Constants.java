@@ -160,6 +160,8 @@ public final class Constants {
     public static final double linearkI = 0;
     public static final double linearkD = 0;
 
+    public static final double angleOffset = 35; //degrees
+    public static final double percentOff = 0.1;
   }
 
 
@@ -207,10 +209,10 @@ public final class Constants {
 
 
     //Known Angles
-    public static final double sourceAngle = -125;
-    public static final double closeSpeakerAngle = -25;
-    public static final double podiumSpeakerAngle = -32;
-    public static final double path6Angle = -65;
+    public static final double sourceAngle = -100;
+    public static final double closeSpeakerAngle = -30;
+    public static final double podiumSpeakerAngle = -40;
+    public static final double path2Angle = -40;
   }
 
 

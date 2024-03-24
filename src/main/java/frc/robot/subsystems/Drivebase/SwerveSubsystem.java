@@ -180,7 +180,6 @@ public class SwerveSubsystem extends SubsystemBase{
                 //Odometer and other gyro values
                SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
                SmartDashboard.putNumber("Robot Heading", getHeading());
-               SmartDashboard.putNumber("test", getPositions(frontRightModule.getPosition(), frontLeftModule.getPosition(), backRightModule.getPosition(), backLeftModule.getPosition())[1].distanceMeters);       
               
                //AE Degrees Reading
             //     SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg(Constants.DriveConstants.kBLDegrees));

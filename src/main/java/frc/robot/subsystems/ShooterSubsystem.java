@@ -172,13 +172,13 @@ public void setBreachSpeed(double speed){
 public void periodic() {
     getUpToSpeed();
 
-    SmartDashboard.putNumber("Shooter/Top/Velocity RPS", getTopShooterVelocity());
-    SmartDashboard.putNumber("Shooter/Top/Desired Velocity RPS", desiredTopVelocity);
-    SmartDashboard.putBoolean("Shooter/Top/Up to Speed", isTopShooterUpToSpeed());
+    // SmartDashboard.putNumber("Shooter/Top/Velocity RPS", getTopShooterVelocity());
+    // SmartDashboard.putNumber("Shooter/Top/Desired Velocity RPS", desiredTopVelocity);
+    // SmartDashboard.putBoolean("Shooter/Top/Up to Speed", isTopShooterUpToSpeed());
 
-    SmartDashboard.putNumber("Shooter/Bottom/Velocity RPS", getBottomShooterVelocity());
-    SmartDashboard.putNumber("Shooter/Bottom/Desired Velocity RPS", desiredBottomVelocity);
-    SmartDashboard.putBoolean("Shooter/Bottom/Up to Speed", isBotomShooterUpToSpeed());
+    // SmartDashboard.putNumber("Shooter/Bottom/Velocity RPS", getBottomShooterVelocity());
+    // SmartDashboard.putNumber("Shooter/Bottom/Desired Velocity RPS", desiredBottomVelocity);
+    // SmartDashboard.putBoolean("Shooter/Bottom/Up to Speed", isBotomShooterUpToSpeed());
 
 
     // SmartDashboard.putBoolean("Shooter sensor", shooterSensor.get());
