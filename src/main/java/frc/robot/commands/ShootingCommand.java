@@ -15,7 +15,7 @@ public class ShootingCommand extends Command{
     public PitchSubsystem pitchSubsystem;
     public LimelightSubsystem limelightSubsystem;
     public boolean isFlipped = false;
-    public boolean autoAlign = false;
+    public boolean autoAim = false;
     
     public ShootingCommand(ShooterSubsystem shooterSubsystem, PitchSubsystem pitchSubsystem, LimelightSubsystem limelightSubsystem){
         this.shooterSubsystem = shooterSubsystem;
@@ -34,7 +34,7 @@ public class ShootingCommand extends Command{
     public void execute(){
         SmartDashboard.putBoolean("is flipped", isFlipped);
 
-        if(autoAlign){
+        if(autoAim){
             pitchSubsystem.setPosition(limelightSubsystem.autoAngle());
         }
 
