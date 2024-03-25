@@ -159,9 +159,7 @@ public final class Constants {
     public static final double linearkP = 0.4;
     public static final double linearkI = 0;
     public static final double linearkD = 0;
-
     public static final double angleOffset = 35; //degrees
-    public static final double percentOff = 0.1;
   }
 
 

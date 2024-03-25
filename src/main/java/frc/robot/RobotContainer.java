@@ -102,6 +102,7 @@ public RobotContainer() {
     opController.axisGreaterThan(2, 0.25).whileTrue(intakeSubsystem.dropIntakeCommand());
     opController.axisGreaterThan(2, 0.25).whileFalse(intakeSubsystem.liftIntakeCommand());
 
+    opController.rightBumper().onTrue(Commands.runOnce(() -> {d_Command.autoAlign = !d_Command.autoAlign;}));
     //shooter Controls
     // shootController.a().onTrue(shooter_sub.slowShooter());
     // shootController.y().onTrue(shooter_sub.fastShooter());
@@ -132,7 +133,6 @@ public RobotContainer() {
 
     shootController.rightBumper().onTrue(Commands.runOnce(() -> {shootingCommand.isFlipped = !shootingCommand.isFlipped;}));
     shootController.leftBumper().onTrue(Commands.runOnce(() -> {shootingCommand.autoAim = !shootingCommand.autoAim;}));
-    shootController.rightBumper().onTrue(Commands.runOnce(() -> {d_Command.autoAlign = !d_Command.autoAlign;}));
     
     // shootController.rightBumper().whileTrue(Commands.runOnce(()->{shootingCommand.autoAim();}));
 

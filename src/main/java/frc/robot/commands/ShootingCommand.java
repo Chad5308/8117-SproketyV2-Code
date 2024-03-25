@@ -29,75 +29,46 @@ public class ShootingCommand extends Command{
         pitchSubsystem.autoSet();
     }
 
-
     @Override
     public void execute(){
         SmartDashboard.putBoolean("is flipped", isFlipped);
-
         if(autoAim){
             pitchSubsystem.setPosition(limelightSubsystem.autoAngle());
         }
-
     }
     public int isFlipped(){
         int temp = 0;
         return temp = isFlipped ? -1 : 1;
     }
-
-
     public void closeSpeaker(){
         shooterSubsystem.setDesiredVelocities(60, 60);
         pitchSubsystem.setPosition(isFlipped() * Constants.ShooterConstants.closeSpeakerAngle);
     }
-
-    // public SequentialCommandGroup autoSpeaker(){
-    //     return new SequentialCommandGroup(Commands.run(() -> {shooterSubsystem.setDesiredVelocities(75, 75);}).andThen(
-    //         Commands.run(() -> {pitchSubsystem.setPosition(Constants.ShooterConstants.closeSpeakerAngle);})).andThen(
-    //             Commands.waitSeconds(1)).andThen(
-    //                 Commands.run(() -> { shootSpeedBreach();})).andThen(
-    //                     Commands.waitSeconds(1)).andThen(
-    //                         shooterSubsystem.stopShooter()).andThen(
-    //                             Commands.run(() -> {stopBreach();}))
-    //                         );
-    // }
-
     public void launch(){
         shooterSubsystem.setBreachSpeed(1);
     }
-
     public void stopAll(){
         shooterSubsystem.setBreachSpeed(0);
         shooterSubsystem.setDesiredVelocities(0, 0);
     }
-
-
-
     public void path2Shoot(){
         shooterSubsystem.setDesiredVelocities(75, 75);
         pitchSubsystem.setPosition(isFlipped() * Constants.ShooterConstants.path2Angle);
         Commands.waitUntil(shooterSubsystem::areBothShootersUpToSpeed).andThen(Commands.runOnce(() -> {shootSpeedBreach();}));
     }
-
     public void podiumShot(){
         shooterSubsystem.setDesiredVelocities(75, 75);
         pitchSubsystem.setPosition(isFlipped() * Constants.ShooterConstants.podiumSpeakerAngle);
     }
-
     public void stopBreach(){
         shooterSubsystem.setBreachSpeed(0);
     }
-
     public void shootSpeedBreach(){
         shooterSubsystem.setBreachSpeed(0.75);
     }
-
     public void reverseBreach(){
         shooterSubsystem.setBreachSpeed(-0.25);
     }
-
-    // public void autoAim(){
-    //     pitchSubsystem.setPosition(-1*(90-(Math.toDegrees(limelightSubsystem.yAng))));
-    // }
 
 
 }
