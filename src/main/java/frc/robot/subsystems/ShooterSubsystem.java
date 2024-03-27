@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix6.configs.*;
 import com.ctre.phoenix6.controls.*;
 import com.ctre.phoenix6.hardware.*;
@@ -24,6 +25,7 @@ public final TalonFX bottomMotor;
 public VelocityVoltage velocityRequest;
  MotionMagicVelocityVoltage motionMagicRequest;
  TalonFXConfiguration topConfig, bottomConfig;
+ NeutralOut neutralOut;
 public final CANSparkMax breachMotor;
 public final RelativeEncoder breachEncoder;
 public final SparkPIDController breachPID;
@@ -89,6 +91,8 @@ public void configure(){
     breachMotor.setInverted(Constants.ShooterConstants.breachReversed);
     breachMotor.setOpenLoopRampRate(Constants.ShooterConstants.ramp_rate);
     breachMotor.setIdleMode(IdleMode.kCoast);
+
+    neutralOut = new NeutralOut();
 }
 
 
@@ -104,7 +108,7 @@ public void getUpToSpeed() {
   }
 
 public void setShootingNeutralOutput() {
-    topMotor.setControl(new NeutralOut());
+    topMotor.setControl(neutralOut);
     bottomMotor.setControl(new NeutralOut());
 }
 
@@ -130,38 +134,9 @@ public void setDesiredVelocities(double desiredTopVelocity, double desiredBottom
     this.desiredBottomVelocity = desiredBottomVelocity;
 }
 
-public Command speedUpCommand(){
-    return runOnce(() -> {
-            desiredBottomVelocity = 75;
-            desiredTopVelocity = 75;
-    });
-}
-
-public Command slowShooter(){
-    return runOnce(() -> {
-        desiredBottomVelocity -= 5;
-        desiredTopVelocity -=5;
-    });
-}
-
-public Command stopShooter(){
-    return runOnce(() -> {
-        desiredBottomVelocity = 0;
-        desiredTopVelocity = 0;
-    });
-}
-
-public Command fastShooter(){
-    return runOnce(() -> {
-        desiredBottomVelocity += 5;
-        desiredTopVelocity +=5;
-    });
-}
 public void setBreachSpeed(double speed){
     breachMotor.set(speed);
 }
-
-
 
 
 // public boolean isGamePiece(){

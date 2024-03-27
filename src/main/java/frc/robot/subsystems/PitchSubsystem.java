@@ -83,10 +83,12 @@ public double positionTolerance = 1; //degrees
 @Override
 public void periodic() {
     getPosition();
+    rPitchEncoder.setPosition(getPosition());
 
-    // SmartDashboard.putNumber("Shooter Position", getPosition());
+
+    SmartDashboard.putNumber("Shooter Position", getPosition());
     SmartDashboard.putNumber("Shooter test", rPitchEncoder.getPosition());
-    SmartDashboard.putNumber("ABS reading", pitchEncoder.getAbsolutePosition());
+    // SmartDashboard.putNumber("ABS reading", pitchEncoder.getAbsolutePosition());
 }
 
 

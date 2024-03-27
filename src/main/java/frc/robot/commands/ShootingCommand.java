@@ -69,6 +69,14 @@ public class ShootingCommand extends Command{
     public void reverseBreach(){
         shooterSubsystem.setBreachSpeed(-0.25);
     }
+    public void speedUpFlyWheels(){
+        shooterSubsystem.setDesiredVelocities(100, 100);
+        pitchSubsystem.setPosition(pitchSubsystem.getPosition());
+    }
+    public void stopFlyWheels(){
+        shooterSubsystem.setDesiredVelocities(0, 0);
+        pitchSubsystem.setPosition(0);
+    }
 
 
 }

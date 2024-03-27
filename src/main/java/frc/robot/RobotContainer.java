@@ -41,7 +41,7 @@ public class RobotContainer {
   public IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
   public PitchSubsystem pitchSubsystem = new PitchSubsystem();
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, intakeSubsystem);
-  public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve);
+  public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve,pitchSubsystem);
   public ShootingCommand shootingCommand = new ShootingCommand(shooter_sub, pitchSubsystem, LL_sub);
   public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
   public TransferCommand transferCommand = new TransferCommand(shooter_sub, intakeSubsystem, pitchSubsystem);
@@ -112,8 +112,8 @@ public RobotContainer() {
     shootController.axisGreaterThan(3, 0.25).whileFalse(Commands.runOnce(()-> {shootingCommand.stopBreach();}));
     
     
-    shootController.povLeft().onTrue(shooter_sub.speedUpCommand());
-    shootController.povRight().onTrue(shooter_sub.stopShooter());
+    shootController.povLeft().onTrue(Commands.runOnce(()->{shootingCommand.speedUpFlyWheels();}));
+    shootController.povRight().onTrue(Commands.runOnce(()->{shootingCommand.stopFlyWheels();}));
     shootController.povUp().whileTrue(Commands.run(()->{pitchSubsystem.rotatePositive();}));
     shootController.povDown().whileTrue(Commands.run(()->{pitchSubsystem.rotateNegative();}));
 

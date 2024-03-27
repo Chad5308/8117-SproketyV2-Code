@@ -190,9 +190,9 @@ public final class Constants {
     public static final double kI_BottomShooter = 0;
     public static final double kD_BottomShooter = 0.01;
 
-    public static final double kP_pitch = 0.0055;
-    public static final double kI_pitch = 0;
-    public static final double kD_pitch = 0.00005;
+    public static final double kP_pitch = 0.0085;
+    public static final double kI_pitch = 0.0000001;
+    public static final double kD_pitch = 0.005;
     
 
     public static final double kP_breach = 0.01;

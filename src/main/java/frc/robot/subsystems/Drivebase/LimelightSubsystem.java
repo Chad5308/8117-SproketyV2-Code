@@ -17,10 +17,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.PitchSubsystem;
 
 public class LimelightSubsystem extends SubsystemBase{
     
 public SwerveSubsystem s_swerve;
+public PitchSubsystem pitchSubsystem;
 public NetworkTable networkTables;
 public IntegerSubscriber pipeline;
 public IntegerPublisher pipelinePublisher;
@@ -37,8 +39,9 @@ public ProfiledPIDController ZPIDController;
 public ProfiledPIDController XPIDController;
 public boolean autoAlign = false;
 
-    public LimelightSubsystem(SwerveSubsystem s_swerve){
+    public LimelightSubsystem(SwerveSubsystem s_swerve, PitchSubsystem pitchSubsystem){
         this.s_swerve = s_swerve;
+        this.pitchSubsystem = pitchSubsystem;
 
 // NetworkTableInstance.getDefault().getTable("limelight").getEntry("<variablename>").getDouble(0);
 
@@ -74,16 +77,20 @@ public boolean autoAlign = false;
         if (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) {
             double temp = 0;
             double distanceAway = 0;
-            distanceAway = (53 + 7/8 - 9.5) / Math.tan(yAng);
-            temp = -1*(90-((Math.toDegrees(Math.atan((78-20)/(distanceAway-4))))));
+            double fixedVerticalOffsetDistance = 18; //+ == degrees up
+            double verticalAngleMultiplier= 0.7;// varies the range of degrees of travel [Closer value to move the shooter more vertical]
+
+            distanceAway = (53 + 7/8 - 10.5) / Math.tan(yAng);
+
+            temp = -1*(90-(fixedVerticalOffsetDistance+(verticalAngleMultiplier*(Math.toDegrees(Math.atan((77-20)/(distanceAway-9.5)))))));
             return temp;
         }else {
-            return 0;
+            return pitchSubsystem.getPosition();
         }
     }
     public double autoAlign(){
         if(autoAlign == true && (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) && !thetaPIDController.atSetpoint()){
-            return thetaPIDController.getSetpoint().velocity + correctionT;
+            return (thetaPIDController.getSetpoint().velocity + correctionT);
         }else {
             return 0.0;
         }
@@ -113,7 +120,7 @@ targetID = networkTables.getEntry("tid").getDouble(0);
 // correctionZ = ZPIDController.calculate(distanceZ);//meters
 correctionT = thetaPIDController.calculate(xAng);//radians
 SmartDashboard.putNumber("Auto Angle", autoAngle());
-SmartDashboard.putNumber("AutoAlign", autoAlign());
+
 
 
 // SmartDashboard.putNumber("Distance X", distanceX);
@@ -121,7 +128,7 @@ SmartDashboard.putNumber("AutoAlign", autoAlign());
 // SmartDashboard.putNumber("Turning Speed", turningSpeed);
 // SmartDashboard.putNumber("X Speed", zSpeed);
 // SmartDashboard.putNumber("Y Speed", xSpeed);
-// SmartDashboard.putNumber("TX Value", xAng);
+SmartDashboard.putNumber("TX Value", xAng);
 // SmartDashboard.putNumber("TY Value", yAng);
 // SmartDashboard.putNumber("TY degrees", Math.toDegrees(yAng));
 // SmartDashboard.putBoolean("Is command running", autoAlign);

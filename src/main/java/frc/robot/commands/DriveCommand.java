@@ -70,8 +70,11 @@ public class DriveCommand extends Command{
         ll_zSpeed = LL_Sub.zSpeed;
         ll_turningSpeed = LL_Sub.autoAlign();
 
-
+        
+        SmartDashboard.putBoolean("auto align", autoAlign);
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
+        SmartDashboard.putNumber("AutoAlign", ll_turningSpeed);
+
 
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
