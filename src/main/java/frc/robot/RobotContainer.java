@@ -109,7 +109,7 @@ public RobotContainer() {
     shootController.axisGreaterThan(3, 0.25).whileTrue(Commands.runOnce(() -> {shootingCommand.shootSpeedBreach();}));
     shootController.axisGreaterThan(2, 0.25).whileTrue(Commands.runOnce(() -> {shootingCommand.reverseBreach();}));
     shootController.axisGreaterThan(3, 0.25).whileFalse(Commands.runOnce(()-> {shootingCommand.stopBreach();}));
-    shootController.axisGreaterThan(3, 0.25).whileFalse(Commands.runOnce(()-> {shootingCommand.stopBreach();}));
+    shootController.axisGreaterThan(2, 0.25).whileFalse(Commands.runOnce(()-> {shootingCommand.stopBreach();}));
     
     
     shootController.povLeft().onTrue(Commands.runOnce(()->{shootingCommand.speedUpFlyWheels();}));
