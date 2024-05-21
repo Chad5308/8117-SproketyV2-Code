@@ -119,7 +119,7 @@ targetID = networkTables.getEntry("tid").getDouble(0);
 // correctionX = XPIDController.calculate(distanceX);//meters
 // correctionZ = ZPIDController.calculate(distanceZ);//meters
 correctionT = thetaPIDController.calculate(xAng);//radians
-SmartDashboard.putNumber("Auto Angle", autoAngle());
+// SmartDashboard.putNumber("Auto Angle", autoAngle()); **
 
 
 
@@ -128,7 +128,7 @@ SmartDashboard.putNumber("Auto Angle", autoAngle());
 // SmartDashboard.putNumber("Turning Speed", turningSpeed);
 // SmartDashboard.putNumber("X Speed", zSpeed);
 // SmartDashboard.putNumber("Y Speed", xSpeed);
-SmartDashboard.putNumber("TX Value", xAng);
+// SmartDashboard.putNumber("TX Value", xAng); **
 // SmartDashboard.putNumber("TY Value", yAng);
 // SmartDashboard.putNumber("TY degrees", Math.toDegrees(yAng));
 // SmartDashboard.putBoolean("Is command running", autoAlign);

@@ -52,7 +52,7 @@ public final class Constants {
     public static final double kFLDegrees = 277.21;
     public static final double kFRDegrees = 217.529;
     public static final double kBRDegrees = 155.4785;
-    public static final double kBLDegrees = 45.791;
+    public static final double kBLDegrees = 207.45703125;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kFrontRightTurningEncoderReversed = false;
@@ -69,8 +69,8 @@ public final class Constants {
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-    public static final double kPhysicalMaxSpeedMetersPerSecond = 4.572;
-    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond =4.296;
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 8.572;
+    public static final double kPhysicalMaxAngularSpeedRadiansPerSecond =20.296;
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1;
     public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.15;
@@ -100,6 +100,8 @@ public final class Constants {
     public static final int kOPControllerPort = 1;
     public static final int kShooterControllerPort = 0;
     public static final double kDeadband = 0.09;
+    public static final int kLeftStickPort = 2;
+    public static final int kRightStickPort = 3;
   }
 
 
@@ -179,20 +181,20 @@ public final class Constants {
     public static final double kS_TopShooter = 0.4;
     public static final double kV_TopShooter = 0.12;
     public static final double kA_TopShooter = 0.1;
-    public static final double kP_TopShooter = 0.6;
+    public static final double kP_TopShooter = 1.0;
     public static final double kI_TopShooter = 0;
     public static final double kD_TopShooter = 0.01;
     
     public static final double kS_BottomShooter = 0.4;
     public static final double kV_BottomShooter = 0.12;
     public static final double kA_BottomShooter = 0.1;
-    public static final double kP_BottomShooter = 0.6;
+    public static final double kP_BottomShooter = 1.0;
     public static final double kI_BottomShooter = 0;
     public static final double kD_BottomShooter = 0.01;
 
-    public static final double kP_pitch = 0.0085;
-    public static final double kI_pitch = 0.0000001;
-    public static final double kD_pitch = 0.005;
+    public static final double kP_pitch = 0.008;
+    public static final double kI_pitch = 0.0000008;
+    public static final double kD_pitch = 0.03;
     
 
     public static final double kP_breach = 0.01;

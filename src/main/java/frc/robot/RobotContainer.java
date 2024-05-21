@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
@@ -35,7 +36,11 @@ public class RobotContainer {
 
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
   private final CommandXboxController shootController = new CommandXboxController(Constants.OIConstants.kShooterControllerPort);
-  // private CommandJoystick driveStick = new CommandJoystick(0);
+  private final CommandJoystick leftStick = new CommandJoystick(OIConstants.kLeftStickPort);
+  private final CommandJoystick rightStick = new CommandJoystick(OIConstants.kRightStickPort);
+  public boolean controllerType = false; //False = controllers , true = flight sticks
+  private SendableChooser<Command> controlType;
+
   public static Robot robot = new Robot();
   public ShooterSubsystem shooter_sub = new ShooterSubsystem();
   public IntakeSubsystem intakeSubsystem = new IntakeSubsystem();
@@ -43,15 +48,15 @@ public class RobotContainer {
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(robot, shooter_sub, intakeSubsystem);
   public LimelightSubsystem LL_sub = new LimelightSubsystem(s_Swerve,pitchSubsystem);
   public ShootingCommand shootingCommand = new ShootingCommand(shooter_sub, pitchSubsystem, LL_sub);
-  public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController);
+  public DriveCommand d_Command = new DriveCommand(s_Swerve, LL_sub, opController, leftStick, rightStick, this);
   public TransferCommand transferCommand = new TransferCommand(shooter_sub, intakeSubsystem, pitchSubsystem);
-  public AutoCommand autoCommand = new AutoCommand(shootingCommand, transferCommand, d_Command, s_Swerve, intakeSubsystem, shooter_sub, pitchSubsystem);
+  public AutoCommand autoCommand = new AutoCommand(shootingCommand, transferCommand, d_Command, s_Swerve, intakeSubsystem, shooter_sub, pitchSubsystem, LL_sub);
   private SendableChooser<Command> autoChooser;
 
 
  
 public RobotContainer() {
-  s_Swerve.setDefaultCommand(new DriveCommand(s_Swerve, LL_sub, opController));
+  s_Swerve.setDefaultCommand(d_Command);
   configureBindings();
 
   shooter_sub.setDefaultCommand(shootingCommand);
@@ -61,9 +66,11 @@ public RobotContainer() {
 
       
     autoChooser = AutoBuilder.buildAutoChooser();
-    SmartDashboard.putData("Auto Chooser", autoChooser);    
-
-
+    SmartDashboard.putData("Auto Chooser", autoChooser);   
+    
+    controlType = new SendableChooser<>();
+    configureControllers();
+    SmartDashboard.putData("Control Chooser", controlType); 
   }
 
   public void configureAutos(){
@@ -73,6 +80,20 @@ public RobotContainer() {
     autoChooser.addOption("SourceShootLeave", SourceShootLeave());
     autoChooser.addOption("AmpScoreLeave", AmpScoreLeave());
   }
+
+  public void configureControllers(){
+    controlType.addOption("Dual Controler", controllers());
+    controlType.addOption("Flight Stick", flightSticks());
+  }
+
+  public Command flightSticks(){
+    System.out.println("AHHHHHHHHHHHHHHHHHHHHHHH");
+    return Commands.run(() -> {controllerType = true;});
+  }
+  public Command controllers(){
+    return Commands.run(() -> {controllerType = false;});
+  }
+  
 
   public Command shootBreachStay(){
     return Commands.runOnce(() -> {shootingCommand.closeSpeaker();});}
@@ -103,6 +124,13 @@ public RobotContainer() {
     opController.axisGreaterThan(2, 0.25).whileFalse(intakeSubsystem.liftIntakeCommand());
 
     opController.rightBumper().onTrue(Commands.runOnce(() -> {d_Command.autoAlign = !d_Command.autoAlign;}));
+
+    rightStick.button(4).toggleOnTrue(Commands.runOnce(() -> s_Swerve.zeroHeading()));
+    rightStick.button(3).toggleOnTrue(s_Swerve.fieldOrientedToggle());
+    rightStick.button(2).onTrue(s_Swerve.resetWheels()); //window looking button
+    rightStick.button(1).whileTrue(intakeSubsystem.runIntakeCommand());
+    rightStick.button(1).whileFalse(intakeSubsystem.stopIntakeCommand());
+
     //shooter Controls
     // shootController.a().onTrue(shooter_sub.slowShooter());
     // shootController.y().onTrue(shooter_sub.fastShooter());

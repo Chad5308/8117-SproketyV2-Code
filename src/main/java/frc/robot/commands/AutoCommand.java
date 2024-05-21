@@ -14,6 +14,7 @@ import frc.robot.Constants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.PitchSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.Drivebase.LimelightSubsystem;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
 
 public class AutoCommand {
@@ -25,6 +26,7 @@ public SwerveSubsystem swerveSubsystem;
 public IntakeSubsystem intakeSubsystem;
 public ShooterSubsystem shooter_sub;
 public PitchSubsystem pitchSubsystem;
+public LimelightSubsystem limelightSubsystem;
 public PIDController translationConstants = new PIDController(Constants.AutoConstants.kPTranslation, Constants.AutoConstants.kITranslation, Constants.AutoConstants.kDTranslation);
 public PIDController rotationConstants = new PIDController(Constants.AutoConstants.kPTheta, Constants.AutoConstants.kITheta, Constants.AutoConstants.kDTheta);
 
@@ -32,7 +34,7 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
 
 
 
-    public AutoCommand(ShootingCommand shootingCommand, TransferCommand transferCommand, DriveCommand driveCommand, SwerveSubsystem swerveSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooter_sub, PitchSubsystem pitchSubsystem){
+    public AutoCommand(ShootingCommand shootingCommand, TransferCommand transferCommand, DriveCommand driveCommand, SwerveSubsystem swerveSubsystem, IntakeSubsystem intakeSubsystem, ShooterSubsystem shooter_sub, PitchSubsystem pitchSubsystem, LimelightSubsystem limelightSubsystem){
         this.shootingCommand = shootingCommand;
         this.transferCommand = transferCommand;
         this.driveCommand = driveCommand;
@@ -40,6 +42,7 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
         this.intakeSubsystem = intakeSubsystem;
         this.pitchSubsystem = pitchSubsystem;
         this.shooter_sub = shooter_sub;
+        this.limelightSubsystem = limelightSubsystem;
         // translationConstants.setTolerance(0.1);//meters
         // rotationConstants.setTolerance(10); //maybe degrees?
 
@@ -65,6 +68,8 @@ public PIDController rotationConstants = new PIDController(Constants.AutoConstan
                 NamedCommands.registerCommand("revPath2", Commands.runOnce(()->{shootingCommand.path2Shoot();}));
                 NamedCommands.registerCommand("breachTransfer", Commands.runOnce(()->{shooter_sub.setBreachSpeed(0.25);}));
                 NamedCommands.registerCommand("dropIntake", intakeSubsystem.dropIntakeCommand());
+                NamedCommands.registerCommand("AutoAim", Commands.runOnce(()-> {limelightSubsystem.autoAngle();}));
+                NamedCommands.registerCommand("AutoAlignSpeaker", Commands.runOnce(()->{limelightSubsystem.autoAlign();}));
     }
 
 

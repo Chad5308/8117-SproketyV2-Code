@@ -5,8 +5,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.Drivebase.LimelightSubsystem;
 import frc.robot.subsystems.Drivebase.SwerveSubsystem;
@@ -19,6 +21,10 @@ public class DriveCommand extends Command{
     private final SwerveSubsystem swerveSubsystem;
     public final LimelightSubsystem LL_Sub;
     public final CommandXboxController opController;
+    public final CommandJoystick leftStick;
+    public final CommandJoystick rightStick;
+    public boolean controllerType = true;
+    public final RobotContainer robotContainer;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=false;
@@ -31,7 +37,7 @@ public class DriveCommand extends Command{
 
 
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, LimelightSubsystem LL_Sub, CommandXboxController opController) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, LimelightSubsystem LL_Sub, CommandXboxController opController, CommandJoystick leftStick, CommandJoystick rightStick, RobotContainer robotContainer) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.LL_Sub = LL_Sub;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -39,8 +45,9 @@ public class DriveCommand extends Command{
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem, LL_Sub);
                 this.opController = opController;
-
-
+                this.leftStick = leftStick;
+                this.rightStick = rightStick;
+                this.robotContainer = robotContainer;
     }
 
 
@@ -56,14 +63,14 @@ public class DriveCommand extends Command{
 
     @Override
     public void execute() {
-
+        // controllerType = robotContainer.controllerType;
       
+        xSpeed = controllerType? -leftStick.getX(): -opController.getLeftX();
+        ySpeed = controllerType? -leftStick.getY(): -opController.getLeftY();
+        turningSpeed = controllerType? -rightStick.getX(): -opController.getRightX();
         
-        
-//Xbox joystick init and debugging code. Main drive method
-        xSpeed = opController.getLeftX() / 1;//1.35
-        ySpeed = opController.getLeftY() / 1;//1.35
-        turningSpeed = -opController.getRightX();//1.85
+       
+
         fieldOriented = swerveSubsystem.fieldOriented;
 
         ll_xSpeed = LL_Sub.xSpeed;
@@ -74,6 +81,10 @@ public class DriveCommand extends Command{
         SmartDashboard.putBoolean("auto align", autoAlign);
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
         SmartDashboard.putNumber("AutoAlign", ll_turningSpeed);
+
+        SmartDashboard.putNumber("Left stick", leftStick.getX());
+        SmartDashboard.putNumber("X Speed", xSpeed);
+        SmartDashboard.putBoolean("Controller type", controllerType);
 
 
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
@@ -88,9 +99,9 @@ public class DriveCommand extends Command{
         if (autoAlign){
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed * -1, xSpeed * -1, ll_turningSpeed, swerveSubsystem.geRotation2d());
         } else if(fieldOriented){
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed, swerveSubsystem.geRotation2d());
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
         }else {
-            chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
+            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
         }
 
         swerveSubsystem.setModuleStates(chassisSpeeds);
@@ -107,8 +118,6 @@ public class DriveCommand extends Command{
     public boolean isFinished() {
         return false;
     }
-
-
 
 
 
