@@ -73,16 +73,28 @@ public boolean autoAlign = false;
         XPIDController.setTolerance(0.25);
     }
   
+    // public double autoAngle(){
+    //     if (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) {
+    //         double temp = 0;
+    //         double distanceAway = 0;
+    //         double fixedVerticalOffsetDistance = 18; //+ == degrees up
+    //         double verticalAngleMultiplier= 0.7;// varies the range of degrees of travel [Closer value to move the shooter more vertical]
+
+    //         distanceAway = (53 + 7/8 - 10.5) / Math.tan(yAng);
+
+    //         temp = -1*(90-(fixedVerticalOffsetDistance+(verticalAngleMultiplier*(Math.toDegrees(Math.atan((77-20)/(distanceAway-9.5)))))));
+    //         return temp;
+    //     }else {
+    //         return pitchSubsystem.getPosition();
+    //     }
+    // }
+
     public double autoAngle(){
-        if (targetID == Constants.AprilTagIds.redSpeakerLeft || targetID == Constants.AprilTagIds.blueSpeakerLeft) {
+       if (targetID>=0) {
             double temp = 0;
-            double distanceAway = 0;
             double fixedVerticalOffsetDistance = 18; //+ == degrees up
-            double verticalAngleMultiplier= 0.7;// varies the range of degrees of travel [Closer value to move the shooter more vertical]
 
-            distanceAway = (53 + 7/8 - 10.5) / Math.tan(yAng);
-
-            temp = -1*(90-(fixedVerticalOffsetDistance+(verticalAngleMultiplier*(Math.toDegrees(Math.atan((77-20)/(distanceAway-9.5)))))));
+            temp = -1*(90-(fixedVerticalOffsetDistance-yAng));
             return temp;
         }else {
             return pitchSubsystem.getPosition();

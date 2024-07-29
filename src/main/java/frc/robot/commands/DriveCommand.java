@@ -97,13 +97,12 @@ public class DriveCommand extends Command{
 
         ChassisSpeeds chassisSpeeds;
         if (autoAlign){
-            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed * -1, xSpeed * -1, ll_turningSpeed, swerveSubsystem.geRotation2d());
+            chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, ll_turningSpeed, swerveSubsystem.geRotation2d());
         } else if(fieldOriented){
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
         }else {
             chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
         }
-
         swerveSubsystem.setModuleStates(chassisSpeeds);
 
     }

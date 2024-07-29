@@ -220,7 +220,7 @@ public final class Constants {
     public static final int blueSourceRight = 1;
     public static final int blueSourceLeft = 2;
     public static final int redSpeakerRight = 3;
-    public static final int redSpeakerLeft = 4;
+    public static final int redSpeakerLeft = 3;
     public static final int redAmp = 5;
     public static final int blueAmp = 6;
     public static final int blueSpeakerRight = 7;
